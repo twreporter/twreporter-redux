@@ -1,6 +1,7 @@
 import entities from './reducers/entities'
 import reduxStateFields from './constants/redux-state-fields'
 import indexPage from './reducers/index-page'
+import { denormalizePosts, denormalizeTopics } from './utils/denormalize-asset'
 import { post, posts } from './reducers/posts'
 import { topic, topics } from './reducers/topics'
 import { fetchIndexPageContent } from './actions/index-page'
@@ -30,4 +31,8 @@ export default {
     indexPage,
   },
   reduxStateFields,
+  utils: {
+    denormalizePosts,
+    denormalizeTopics,
+  },
 }
