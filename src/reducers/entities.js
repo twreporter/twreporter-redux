@@ -22,7 +22,7 @@ function putEntities(entityArr = [], entityMap) {
   }
 
   _entities.forEach((entity) => {
-    if (!entity) {
+    if (typeof entity !== 'object') {
       return
     }
     const slug = _.get(entity, 'slug')
@@ -116,18 +116,23 @@ function entities(state = {}, action = {}) {
   let payload
   switch (action.type) {
     case types.GET_CONTENT_FOR_INDEX_PAGE: {
-      putEntities(_.get(action, `payload.${fieldNames.latest}`, []), postEntityMap)
-      putEntities(_.get(action, `payload.${fieldNames.editorPicks}`, []), postEntityMap)
-      putEntities(_.get(action, `payload.${fieldNames.reviews}`, []), postEntityMap)
+      payload = action.payload
+      putEntities(_.get(payload, fieldNames.latest, []), postEntityMap)
+      putEntities(_.get(payload, fieldNames.editorPicks, []), postEntityMap)
+      putEntities(_.get(payload, fieldNames.reviews, []), postEntityMap)
+      putEntities(_.get(payload, fieldNames.photos, []), postEntityMap)
+      putEntities(_.get(payload, fieldNames.infographics, []), postEntityMap)
 
-      const latestTopic = _.get(action, `payload.${fieldNames.latestTopic}`, {})
+      const latestTopic = _.get(payload, [fieldNames.latestTopic, 0], {})
       const relatedPostsInTopic = _.get(latestTopic, fieldNames.relateds, [])
       latestTopic[fieldNames.relateds] = _.map(relatedPostsInTopic, (post) => {
         return _.get(post, 'slug')
       })
       putEntities(relatedPostsInTopic, postEntityMap)
+      putEntities(latestTopic, topicEntityMap)
 
-      putEntities(_.get(action, `payload.${fieldNames.latestTopic}`), topicEntityMap)
+      const topics = _.get(payload, fieldNames.topics, [])
+      putEntities(topics, topicEntityMap)
 
       return _.merge({}, state, {
         [fieldNames.posts]: postEntityMap,

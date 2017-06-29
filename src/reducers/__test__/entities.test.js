@@ -44,8 +44,8 @@ const fullTopic = {
 }
 
 const nonFullTopic = {
-  id: 'topic-id-1',
-  slug: 'topic-slug-1',
+  id: 'topic-id-2',
+  slug: 'topic-slug-2',
   full: false,
 }
 
@@ -71,7 +71,10 @@ describe('entities reducer', () => {
           [fieldNames.latest]: _.cloneDeep([post1, post2]),
           [fieldNames.editorPicks]: _.cloneDeep([post1]),
           [fieldNames.reviews]: _.cloneDeep([post3]),
-          [fieldNames.latestTopic]: _.cloneDeep(fullTopic),
+          [fieldNames.latestTopic]: _.cloneDeep([fullTopic]),
+          [fieldNames.topics]: _.cloneDeep([nonFullTopic]),
+          [fieldNames.photos]: _.cloneDeep([post1, post4]),
+          [fieldNames.infographics]: _.cloneDeep([post2, post3]),
         },
       }),
     ).to.deep.equal({
@@ -85,6 +88,7 @@ describe('entities reducer', () => {
         'topic-slug-1': _.merge({}, fullTopic, {
           relateds: [post3.slug, post4.slug],
         }),
+        'topic-slug-2': nonFullTopic,
       },
     })
   })
@@ -183,7 +187,7 @@ describe('entities reducer', () => {
     ).to.deep.equal({
       posts: {
         [post1.slug]: _.merge(
-          post1, {
+          {}, post1, {
             relateds: [post2.slug, post3.slug],
             topics: nonFullTopic.slug,
           },

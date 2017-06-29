@@ -100,7 +100,6 @@ function indexPage(state = {}, action = {}) {
     }
 
     case types.ERROR_TO_GET_INDEX_PAGE_CONTENT: {
-      console.log('action.error:', action.error)
       return _.merge({}, state, {
         error: action.error,
       })

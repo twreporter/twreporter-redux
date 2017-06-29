@@ -36,11 +36,14 @@ describe('post reducer', () => {
     expect(
       post({}, {
         type: types.START_TO_GET_A_FULL_POST,
-        url: 'http://localhost:8080/v1/posts/mock-post',
+        payload: {
+          slug: 'mock-slug',
+        },
       }),
     ).to.deep.equal({
       isFetching: true,
-      url: 'http://localhost:8080/v1/posts/mock-post',
+      slug: 'mock-slug',
+      error: null,
     })
   })
 
