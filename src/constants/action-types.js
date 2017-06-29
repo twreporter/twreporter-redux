@@ -1,4 +1,9 @@
 const types = {
+  // change selected post
+  CHANGE_SELECTED_POST: 'CHANGE_SELECTED_POST',
+
+  CHANGE_SELECTED_TOPIC: 'CHANGE_SELECTED_TOPIC',
+
   // actions fetching topics
   START_TO_GET_TOPICS: 'START_TO_GET_TOPICS',
 

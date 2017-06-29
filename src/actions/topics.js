@@ -20,7 +20,10 @@ export function fetchAFullTopic(slug) {
     const state = getState()
     const topic = _.get(state, `${fieldNames.entities}.${fieldNames.topics}.${slug}`, {})
     if (_.get(topic, 'full', false)) {
-      return Promise.resolve()
+      return dispatch({
+        type: types.CHANGE_SELECTED_TOPIC,
+        payload: topic,
+      })
     }
 
     const url = `${apiEndpoints.topics}/${slug}?full=true`
@@ -28,7 +31,9 @@ export function fetchAFullTopic(slug) {
     // Start to get topics
     dispatch({
       type: types.START_TO_GET_A_FULL_TOPIC,
-      url,
+      payload: {
+        slug,
+      },
     })
 
     return axios.get(formAPIURL(url))

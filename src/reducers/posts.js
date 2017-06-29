@@ -17,7 +17,8 @@ const _ = {
 
 function post(state = {}, action = {}) {
   switch (action.type) {
-    case types.GET_A_FULL_POST: {
+    case types.GET_A_FULL_POST:
+    case types.CHANGE_SELECTED_POST: {
       return {
         slug: _.get(action, 'payload.slug'),
         error: null,
@@ -28,7 +29,8 @@ function post(state = {}, action = {}) {
     case types.START_TO_GET_A_FULL_POST:
       return {
         isFetching: true,
-        url: action.url,
+        slug: _.get(action, 'payload.slug'),
+        error: null,
       }
 
     case types.ERROR_TO_GET_A_FULL_POST:

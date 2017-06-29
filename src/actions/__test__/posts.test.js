@@ -61,21 +61,23 @@ describe('Testing fetchAFullPost:', () => {
   context('Post is already existed', () => {
     it('Should dispatch no actions and return Promise.resolve()', () => {
       const mockSlug = 'mock-slug'
+      const mockPost = {
+        id: 'mock-id',
+        slug: 'mock-slug',
+        brief: {},
+        full: true,
+      }
       const store = mockStore({
         entities: {
           posts: {
-            'mock-slug': {
-              id: 'mock-id',
-              slug: 'mock-slug',
-              brief: {},
-              full: true,
-            },
+            'mock-slug': mockPost,
           },
         },
       })
       store.dispatch(actions.fetchAFullPost(mockSlug))
-      expect(store.getActions().length).to.equal(0) // no action is dispatched
-      return expect(store.dispatch(actions.fetchAFullPost(mockSlug))).eventually.equal(undefined)
+      expect(store.getActions().length).to.equal(1) // no action is dispatched
+      expect(store.getActions()[0].type).to.equal(types.CHANGE_SELECTED_POST)
+      expect(store.getActions()[0].payload).to.deep.equal(mockPost)
     })
   })
   context('It loads a full post successfully', () => {
@@ -93,10 +95,6 @@ describe('Testing fetchAFullPost:', () => {
           },
         },
       })
-      const mockUrl = formatUrl(`posts/${mockSlug}?full=true`)
-      const indexOfSlash = mockUrl.indexOf('/', 7)
-      const mockHost = mockUrl.slice(0, indexOfSlash) // example: 'http://localhost:8080'
-      const mockPath = mockUrl.slice(indexOfSlash) // example: '/posts?where=.....'
       const mockApiResponse = {
         record: {
           id: 'mock-id',
@@ -108,7 +106,9 @@ describe('Testing fetchAFullPost:', () => {
 
       const expectedRequestAction = {
         type: types.START_TO_GET_A_FULL_POST,
-        url: mockUrl,
+        payload: {
+          slug: mockSlug,
+        },
       }
       const expectedSuccessAction = {
         type: types.GET_A_FULL_POST,
@@ -119,8 +119,8 @@ describe('Testing fetchAFullPost:', () => {
           full: false,
         },
       }
-      nock(mockHost)
-        .get(mockPath)
+      nock('http://localhost:8080')
+        .get(encodeURI(`/v1/posts/${mockSlug}?full=true`))
         .reply(200, mockApiResponse)
 
       return store.dispatch(actions.fetchAFullPost(mockSlug))
@@ -136,26 +136,21 @@ describe('Testing fetchAFullPost:', () => {
     it('Should dispatch types.START_TO_GET_POSTS and types.ERROR_TO_GET_POSTS', () => {
       const store = mockStore()
       const mockSlug = 'mock-slug'
-      const mockUrl = formatUrl(`posts/${mockSlug}?full=true`)
-      const indexOfSlash = mockUrl.indexOf('/', 7)
-      const mockHost = mockUrl.slice(0, indexOfSlash) // example: 'http://localhost:8080'
-      const mockPath = mockUrl.slice(indexOfSlash) // example: '/posts?where=.....'
       const expectedRequestAction = {
         type: types.START_TO_GET_A_FULL_POST,
-        url: mockUrl,
+        payload: {
+          slug: mockSlug,
+        },
       }
-      const expectedFailureAction = {
-        type: types.ERROR_TO_GET_A_FULL_POST,
-      }
-      nock(mockHost)
-        .get(mockPath)
+      nock('http://localhost:8080')
+        .get(encodeURI(`/v1/posts/${mockSlug}?full=true`))
         .reply(404)
 
       return store.dispatch(actions.fetchAFullPost(mockSlug))
         .then(() => {
           expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && FAILURE
           expect(store.getActions()[0]).to.deep.equal(expectedRequestAction)
-          expect(store.getActions()[1].type).to.equal(expectedFailureAction.type)
+          expect(store.getActions()[1].type).to.equal(types.ERROR_TO_GET_A_FULL_POST)
           expect(store.getActions()[1].error).to.be.an.instanceof(Error)
         })
     })

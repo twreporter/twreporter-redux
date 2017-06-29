@@ -22,7 +22,10 @@ export function fetchAFullPost(slug) {
     const state = getState()
     const post = _.get(state, `${fieldNames.entities}.${fieldNames.posts}.${slug}`, {})
     if (_.get(post, 'full', false)) {
-      return Promise.resolve()
+      return dispatch({
+        type: types.CHANGE_SELECTED_POST,
+        payload: post,
+      })
     }
 
     const path = `${apiEndpoints.posts}/${slug}?full=true`
@@ -31,7 +34,9 @@ export function fetchAFullPost(slug) {
     // Start to get topics
     dispatch({
       type: types.START_TO_GET_A_FULL_POST,
-      url,
+      payload: {
+        slug,
+      },
     })
 
     return axios.get(url)

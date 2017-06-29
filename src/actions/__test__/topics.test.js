@@ -46,20 +46,22 @@ describe('Testing fetchAFullTopic:', () => {
   context('Topic is already existed', () => {
     it('Should dispatch no actions and return Promise.resolve()', () => {
       const mockSlug = 'mock-slug'
+      const mockTopic = {
+        id: 'mock-id',
+        slug: mockSlug,
+        full: true,
+      }
       const store = mockStore({
         entities: {
           topics: {
-            [mockSlug]: {
-              id: 'mock-id',
-              slug: mockSlug,
-              full: true,
-            },
+            [mockSlug]: mockTopic,
           },
         },
       })
       store.dispatch(actions.fetchAFullTopic(mockSlug))
-      expect(store.getActions().length).to.equal(0) // no action is dispatched
-      return expect(store.dispatch(actions.fetchAFullTopic(mockSlug))).eventually.equal(undefined)
+      expect(store.getActions().length).to.equal(1) // no action is dispatched
+      expect(store.getActions()[0].type).to.equal(types.CHANGE_SELECTED_TOPIC)
+      expect(store.getActions()[0].payload).to.deep.equal(mockTopic)
     })
   })
   context('It loads a full topic successfully', () => {
@@ -89,6 +91,9 @@ describe('Testing fetchAFullTopic:', () => {
         .then(() => {
           expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && SUCCESS
           expect(store.getActions()[0].type).to.deep.equal(types.START_TO_GET_A_FULL_TOPIC)
+          expect(store.getActions()[0].payload).to.deep.equal({
+            slug: mockSlug,
+          })
           expect(store.getActions()[1].type).to.equal(types.GET_A_FULL_TOPIC)
           expect(store.getActions()[1].payload).to.deep.equal(mockTopic)
         })

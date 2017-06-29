@@ -17,7 +17,8 @@ const _ = {
 
 function topic(state = {}, action = {}) {
   switch (action.type) {
-    case types.GET_A_FULL_TOPIC: {
+    case types.GET_A_FULL_TOPIC:
+    case types.CHANGE_SELECTED_TOPIC: {
       return {
         slug: _.get(action, 'payload.slug'),
         error: null,
@@ -25,8 +26,10 @@ function topic(state = {}, action = {}) {
     }
 
     case types.START_TO_GET_A_FULL_TOPIC:
-      console.log('url to fetch:', action.url)
-      return state
+      return {
+        slug: _.get(action, 'payload.slug'),
+        error: null,
+      }
 
     case types.ERROR_TO_GET_A_FULL_TOPIC:
       return {
