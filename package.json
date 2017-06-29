@@ -2,7 +2,7 @@
   "name": "twreporter-redux",
   "version": "1.0.0-alpha-0.1",
   "description": "redux actions and reducers for twreporter website",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha $(find src -name '*.test.js') --compilers js:babel-core/register",
     "build": "npm run prebuild:lib && npm run build:lib",
