@@ -1,6 +1,6 @@
 /* global describe, it*/
 
-import {topic, topics} from '../topics'
+import { topic, topics } from '../topics'
 import types from '../../constants/action-types'
 import { expect } from 'chai'
 
@@ -80,7 +80,7 @@ describe('topics reducer', () => {
         error: null,
       }, {
         type: types.ERROR_TO_GET_TOPICS,
-        error: err
+        error: err,
       }),
     ).to.deep.equal({
       items: [topic1.slug, topic2.slug],

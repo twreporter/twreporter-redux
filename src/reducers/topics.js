@@ -15,7 +15,7 @@ const _ = {
   set,
 }
 
-function topic(state={}, action ={} ){
+function topic(state = {}, action = {}) {
   switch (action.type) {
     case types.GET_A_FULL_TOPIC: {
       return {
@@ -30,7 +30,7 @@ function topic(state={}, action ={} ){
 
     case types.ERROR_TO_GET_A_FULL_TOPIC:
       return {
-        error: action.error
+        error: action.error,
       }
     default:
       return state
@@ -58,7 +58,7 @@ function topics(state = {}, action = {}) {
 
     case types.ERROR_TO_GET_TOPICS:
       return _.merge({}, state, {
-        error: _.get(action, 'error')
+        error: _.get(action, 'error'),
       })
     default:
       return state

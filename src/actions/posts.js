@@ -45,7 +45,7 @@ export function fetchAFullPost(slug) {
         // Error to get topics
         return dispatch({
           type: types.ERROR_TO_GET_A_FULL_POST,
-          error: error,
+          error,
         })
       })
   }
@@ -58,7 +58,7 @@ export function fetchAFullPost(slug) {
  * @param {string} failureActionType - action type
  * @param {object} defaultPayload
  */
-function _fetchPosts(dispatch, path, successActionType, failureActionType=types.ERROR_TO_GET_POSTS, defaultPayload = {}) {
+function _fetchPosts(dispatch, path, successActionType, failureActionType = types.ERROR_TO_GET_POSTS, defaultPayload = {}) {
   const url = formAPIURL(path)
   dispatch({
     type: types.START_TO_GET_POSTS,
@@ -79,7 +79,7 @@ function _fetchPosts(dispatch, path, successActionType, failureActionType=types.
       // Error to get topics
       return dispatch(_.merge({
         type: failureActionType,
-        error: error,
+        error,
       }, defaultPayload))
     })
 }

@@ -20,7 +20,7 @@ export function fetchIndexPageContent() {
   return (dispatch, getState) => {
     const state = getState()
     const indexPage = _.get(state, fieldNames.indexPage, {})
-    const fields = [fieldNames.latest, fieldNames.editorPicks, fieldNames.latestTopic, fieldNames.reviews, fieldNames.topics, fieldNames.photos, fieldNames.infographics ]
+    const fields = [fieldNames.latest, fieldNames.editorPicks, fieldNames.latestTopic, fieldNames.reviews, fieldNames.topics, fieldNames.photos, fieldNames.infographics]
     let isContentReady = true
 
     fields.forEach((field) => {
@@ -54,7 +54,7 @@ export function fetchIndexPageContent() {
         // Error to get topics
         return dispatch({
           type: types.ERROR_TO_GET_INDEX_PAGE_CONTENT,
-          error: error,
+          error,
         })
       })
   }

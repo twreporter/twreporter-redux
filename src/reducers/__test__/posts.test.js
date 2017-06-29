@@ -32,6 +32,18 @@ describe('post reducer', () => {
     ).to.deep.equal({})
   })
 
+  it('should handle START_TO_GET_A_FULL_POST', () => {
+    expect(
+      post({}, {
+        type: types.START_TO_GET_A_FULL_POST,
+        url: 'http://localhost:8080/v1/posts/mock-post',
+      }),
+    ).to.deep.equal({
+      isFetching: true,
+      url: 'http://localhost:8080/v1/posts/mock-post',
+    })
+  })
+
   it('should handle GET_A_FULL_POST', () => {
     expect(
       post({}, {
@@ -41,6 +53,7 @@ describe('post reducer', () => {
     ).to.deep.equal({
       slug: post1.slug,
       error: null,
+      isFetching: false,
     })
   })
 
@@ -92,7 +105,7 @@ describe('posts reducer', () => {
           items: [post1],
           total: 5,
           error: null,
-        }
+        },
       }, {
         type: types.ERROR_TO_GET_LISTED_POSTS,
         error: err,
@@ -103,7 +116,7 @@ describe('posts reducer', () => {
         items: [post1],
         total: 5,
         error: err,
-      }
+      },
     })
   })
 })

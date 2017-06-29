@@ -42,7 +42,7 @@ export function fetchAFullTopic(slug) {
         // Error to get topics
         return dispatch({
           type: types.ERROR_TO_GET_A_FULL_TOPIC,
-          error: error,
+          error,
         })
       })
   }
@@ -68,7 +68,7 @@ function _fetchTopics(dispatch, url, successActionType) {
       // Error to get topics
       return dispatch({
         type: types.ERROR_TO_GET_TOPICS,
-        error: error,
+        error,
       })
     })
 }

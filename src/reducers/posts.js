@@ -15,22 +15,25 @@ const _ = {
   set,
 }
 
-function post(state={}, action={}) {
+function post(state = {}, action = {}) {
   switch (action.type) {
     case types.GET_A_FULL_POST: {
       return {
         slug: _.get(action, 'payload.slug'),
         error: null,
+        isFetching: false,
       }
     }
 
     case types.START_TO_GET_A_FULL_POST:
-      console.log('url to fetch:', action.url)
-      return state
+      return {
+        isFetching: true,
+        url: action.url,
+      }
 
     case types.ERROR_TO_GET_A_FULL_POST:
       return {
-        error: action.error
+        error: action.error,
       }
     default:
       return state
@@ -64,7 +67,7 @@ function posts(state = {}, action = {}) {
       list.error = _.get(action, 'error')
 
       return _.merge({}, state, {
-        [listID]: list
+        [listID]: list,
       })
     }
 
@@ -74,7 +77,7 @@ function posts(state = {}, action = {}) {
 
     case types.ERROR_TO_GET_POSTS:
       console.warn(`${action.type} : ${action.errorMsg.toString()}`)
-      return
+      return state
     default:
       return state
   }
