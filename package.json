@@ -1,6 +1,6 @@
 {
   "name": "twreporter-redux",
-  "version": "1.0.0-alpha-0.1",
+  "version": "1.0.0-alpha-0.2",
   "description": "redux actions and reducers for twreporter website",
   "main": "lib/index.js",
   "scripts": {
@@ -30,6 +30,7 @@
   "homepage": "https://github.com/twreporter/twreporter-redux/#readme",
   "dependencies": {
     "axios": "^0.16.1",
+    "es6-error": "^4.0.2",
     "lodash": "^4.17.4",
     "redux": "^3.6.0"
   },

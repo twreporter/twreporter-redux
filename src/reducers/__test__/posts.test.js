@@ -1,6 +1,6 @@
 /* global describe, it*/
 
-import reducer from '../posts'
+import { post, posts } from '../posts'
 import types from '../../constants/action-types'
 
 import { expect } from 'chai'
@@ -25,25 +25,48 @@ const post4 = {
   slug: 'post-slug-4',
 }
 
-describe('posts reducer', () => {
+describe('post reducer', () => {
   it('should return the initial state', () => {
     expect(
-      reducer({}, {}),
+      post({}, {}),
     ).to.deep.equal({})
   })
 
   it('should handle GET_A_FULL_POST', () => {
     expect(
-      reducer({}, {
+      post({}, {
         type: types.GET_A_FULL_POST,
         payload: post1,
       }),
-    ).to.deep.equal(post1.slug)
+    ).to.deep.equal({
+      slug: post1.slug,
+      error: null,
+    })
+  })
+
+  it('should handle ERROR_TO_GET_A_FULL_POST', () => {
+    const err = new Error('error occurs')
+    expect(
+      post({}, {
+        type: types.ERROR_TO_GET_A_FULL_POST,
+        error: err,
+      }),
+    ).to.deep.equal({
+      error: err,
+    })
+  })
+})
+
+describe('posts reducer', () => {
+  it('should return the initial state', () => {
+    expect(
+      posts({}, {}),
+    ).to.deep.equal({})
   })
 
   it('should handle GET_LISTED_POSTS', () => {
     expect(
-      reducer({
+      posts({
       }, {
         type: types.GET_LISTED_POSTS,
         payload: {
@@ -56,7 +79,31 @@ describe('posts reducer', () => {
       'mock-list-id': {
         items: [post1.slug, post2.slug, post3.slug, post4.slug],
         total: 10,
+        error: null,
       },
+    })
+  })
+
+  it('should handle ERROR_TO_GET_LISTED_POSTS', () => {
+    const err = new Error('error occurs')
+    expect(
+      posts({
+        'mock-list-id': {
+          items: [post1],
+          total: 5,
+          error: null,
+        }
+      }, {
+        type: types.ERROR_TO_GET_LISTED_POSTS,
+        error: err,
+        listID: 'mock-list-id',
+      }),
+    ).to.deep.equal({
+      'mock-list-id': {
+        items: [post1],
+        total: 5,
+        error: err,
+      }
     })
   })
 })

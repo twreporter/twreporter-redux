@@ -45,7 +45,7 @@ export function fetchAFullPost(slug) {
         // Error to get topics
         return dispatch({
           type: types.ERROR_TO_GET_A_FULL_POST,
-          errorMsg: error.toString(),
+          error: error,
         })
       })
   }
@@ -55,9 +55,10 @@ export function fetchAFullPost(slug) {
  * @param {function} dispatch - dispatch of redux
  * @param {string} path - uri
  * @param {string} successActionType - action type
+ * @param {string} failureActionType - action type
  * @param {object} defaultPayload
  */
-function _fetchPosts(dispatch, path, successActionType, defaultPayload = {}) {
+function _fetchPosts(dispatch, path, successActionType, failureActionType=types.ERROR_TO_GET_POSTS, defaultPayload = {}) {
   const url = formAPIURL(path)
   dispatch({
     type: types.START_TO_GET_POSTS,
@@ -76,10 +77,10 @@ function _fetchPosts(dispatch, path, successActionType, defaultPayload = {}) {
     })
     .catch((error) => {
       // Error to get topics
-      return dispatch({
-        type: types.ERROR_TO_GET_POSTS,
-        errorMsg: error.toString(),
-      })
+      return dispatch(_.merge({
+        type: failureActionType,
+        error: error,
+      }, defaultPayload))
     })
 }
 
@@ -108,7 +109,7 @@ export function fetchListedPosts(listID, listType, limit = 10) {
     const offset = _.get(list, 'items.length', 0)
     const path = `${apiEndpoints.posts}?where=${JSON.stringify(where)}&limit=${limit}&offset=${offset}`
 
-    return _fetchPosts(dispatch, path, types.GET_LISTED_POSTS, { listID })
+    return _fetchPosts(dispatch, path, types.GET_LISTED_POSTS, types.ERROR_TO_GET_LISTED_POSTS, { listID })
   }
 }
 

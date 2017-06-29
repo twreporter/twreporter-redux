@@ -59,7 +59,7 @@ export function fetchIndexPageContent() {
         // Error to get topics
         return dispatch({
           type: types.ERROR_TO_GET_INDEX_PAGE_CONTENT,
-          errorMsg: error.toString(),
+          error: error,
         })
       })
   }

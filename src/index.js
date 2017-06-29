@@ -1,8 +1,8 @@
 import entities from './reducers/entities'
 import reduxStateFields from './constants/redux-state-fields'
 import indexPage from './reducers/index-page'
-import posts from './reducers/posts'
-import topics from './reducers/topics'
+import {post, posts} from './reducers/posts'
+import {topic, topics} from './reducers/topics'
 import { fetchIndexPageContent } from './actions/index-page'
 import { fetchAFullPost, fetchListedPosts, fetchEditorPickedPosts,
   fetchInfographicPostsOnIndexPage, fetchPhotographyPostsOnIndexPage } from './actions/posts'
@@ -23,7 +23,9 @@ export default {
   },
   reducers: {
     entities,
+    post,
     posts,
+    topic,
     topics,
     indexPage,
   },

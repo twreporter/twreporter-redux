@@ -156,7 +156,7 @@ describe('Testing fetchAFullPost:', () => {
           expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && FAILURE
           expect(store.getActions()[0]).to.deep.equal(expectedRequestAction)
           expect(store.getActions()[1].type).to.equal(expectedFailureAction.type)
-          expect(store.getActions()[1].errorMsg).to.not.equal('')
+          expect(store.getActions()[1].error).to.be.an.instanceof(Error)
         })
     })
   })
@@ -278,7 +278,7 @@ describe('Testing fetchListedPosts:', () => {
         url: mockUrl,
       }
       const expectedFailedAction = {
-        type: types.ERROR_TO_GET_POSTS,
+        type: types.ERROR_TO_GET_LISTED_POSTS,
       }
       nock(mockHost)
         .get(mockPath)
@@ -288,7 +288,7 @@ describe('Testing fetchListedPosts:', () => {
           expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && SUCCESS
           expect(store.getActions()[0]).to.deep.equal(expectedRequestAction)
           expect(store.getActions()[1].type).to.equal(expectedFailedAction.type)
-          expect(store.getActions()[1].errorMsg).to.not.equal('')
+          expect(store.getActions()[1].error).to.be.an.instanceof(Error)
         })
     })
   })

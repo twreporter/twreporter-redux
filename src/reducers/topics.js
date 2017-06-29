@@ -15,12 +15,30 @@ const _ = {
   set,
 }
 
-function topics(state = {}, action = {}) {
+function topic(state={}, action ={} ){
   switch (action.type) {
     case types.GET_A_FULL_TOPIC: {
-      return _.get(action, 'payload.slug')
+      return {
+        slug: _.get(action, 'payload.slug'),
+        error: null,
+      }
     }
 
+    case types.START_TO_GET_A_FULL_TOPIC:
+      console.log('url to fetch:', action.url)
+      return state
+
+    case types.ERROR_TO_GET_A_FULL_TOPIC:
+      return {
+        error: action.error
+      }
+    default:
+      return state
+  }
+}
+
+function topics(state = {}, action = {}) {
+  switch (action.type) {
     case types.GET_TOPICS: {
       const items = _.get(action, 'payload.items', [])
       const total = _.get(action, 'payload.total', 0)
@@ -30,21 +48,24 @@ function topics(state = {}, action = {}) {
       return _.merge({}, state, {
         items: concatItems,
         total,
+        error: null,
       })
     }
 
-    case types.START_TO_GET_A_FULL_TOPIC:
     case types.START_TO_GET_TOPICS:
       console.log('url to fetch:', action.url)
       return state
 
-    case types.ERROR_TO_GET_A_FULL_TOPIC:
     case types.ERROR_TO_GET_TOPICS:
-      console.warn(`${action.type} : ${action.errorMsg.toString()}`)
-      return state
+      return _.merge({}, state, {
+        error: _.get(action, 'error')
+      })
     default:
       return state
   }
 }
 
-export default topics
+export {
+  topic,
+  topics,
+}
