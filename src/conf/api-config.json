@@ -1,0 +1,9 @@
+{
+  "API_PROTOCOL": "http",
+  "API_HOST_ON_CLIENT": "localhost",
+  "API_PORT_ON_CLIENT": "8080",
+  "API_HOST_ON_SERVER": "localhost",
+  "API_PORT_ON_SERVER": "8080",
+  "API_DEFAULT_VERSION": "v1",
+  "API_TIME_OUT": 1000
+}

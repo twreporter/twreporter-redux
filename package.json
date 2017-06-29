@@ -1,0 +1,59 @@
+{
+  "name": "twreporter-redux",
+  "version": "1.0.0-alpha-0.1",
+  "description": "redux actions and reducers for twreporter website",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha $(find src -name '*.test.js') --compilers js:babel-core/register",
+    "build": "npm run prebuild:lib && npm run build:lib",
+    "prebuild:lib": "rimraf lib/*",
+    "build:lib": "babel --out-dir lib src --copy-files",
+    "lint": "eslint -c .eslintrc src ",
+    "validate": "npm ls"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twreporter/twreporter-redux.git"
+  },
+  "keywords": [
+    "twreporter",
+    "website",
+    "redux",
+    "actions",
+    "reducers"
+  ],
+  "author": "reporterdev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/twreporter/twreporter-redux/issues"
+  },
+  "homepage": "https://github.com/twreporter/twreporter-redux/#readme",
+  "dependencies": {
+    "axios": "^0.16.1",
+    "lodash": "^4.17.4",
+    "redux": "^3.6.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-core": "^6.17.0",
+    "babel-eslint": "^7.2.3",
+    "babel-preset-env": "^1.5.2",
+    "babel-preset-stage-0": "^6.24.1",
+    "chai": "^4.0.2",
+    "chai-as-promised": "^7.0.0",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb": "^15.0.1",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-jsx-a11y": "^5.1.0",
+    "eslint-plugin-react": "^7.1.0",
+    "mocha": "^3.4.2",
+    "nock": "^9.0.13",
+    "precommit-hook": "^3.0.0",
+    "redux-mock-store": "^1.2.3",
+    "redux-thunk": "^2.2.0",
+    "rimraf": "^2.6.1"
+  },
+  "pre-commit": [
+    "lint"
+  ]
+}
