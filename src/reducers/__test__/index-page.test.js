@@ -64,7 +64,10 @@ describe('index-page reducer', () => {
           [fieldNames.latest]: _.cloneDeep([post1, post2]),
           [fieldNames.editorPicks]: _.cloneDeep([post4]),
           [fieldNames.reviews]: _.cloneDeep([post3]),
-          [fieldNames.latestTopic]: _.cloneDeep(fullTopic),
+          [fieldNames.latestTopic]: _.cloneDeep([fullTopic]),
+          [fieldNames.topics]: _.cloneDeep([fullTopic, nonFullTopic]),
+          [fieldNames.photos]: _.cloneDeep([post1, post4]),
+          [fieldNames.infographics]: _.cloneDeep([post2, post3]),
         },
       }),
     ).to.deep.equal({
@@ -72,6 +75,38 @@ describe('index-page reducer', () => {
       [fieldNames.editorPicks]: [post4.slug],
       [fieldNames.reviews]: [post3.slug],
       [fieldNames.latestTopic]: fullTopic.slug,
+      [fieldNames.topics]: [fullTopic.slug, nonFullTopic.slug],
+      [fieldNames.photos]: [post1.slug, post4.slug],
+      [fieldNames.infographics]: [post2.slug, post3.slug],
+      error: null,
+    })
+  })
+
+  it('should handle ERROR_TO_GET_CONTENT_FOR_INDEX_PAGE', () => {
+    const err = new Error('error occurs')
+    expect(
+      reducer({
+        [fieldNames.latest]: [post1.slug, post2.slug],
+        [fieldNames.editorPicks]: [post4.slug],
+        [fieldNames.reviews]: [post3.slug],
+        [fieldNames.latestTopic]: fullTopic.slug,
+        [fieldNames.topics]: [fullTopic.slug, nonFullTopic.slug],
+        [fieldNames.photos]: [post1.slug, post4.slug],
+        [fieldNames.infographics]: [post2.slug, post3.slug],
+        error: null,
+      }, {
+        type: types.ERROR_TO_GET_INDEX_PAGE_CONTENT,
+        error: err,
+      }),
+    ).to.deep.equal({
+      [fieldNames.latest]: [post1.slug, post2.slug],
+      [fieldNames.editorPicks]: [post4.slug],
+      [fieldNames.reviews]: [post3.slug],
+      [fieldNames.latestTopic]: fullTopic.slug,
+      [fieldNames.topics]: [fullTopic.slug, nonFullTopic.slug],
+      [fieldNames.photos]: [post1.slug, post4.slug],
+      [fieldNames.infographics]: [post2.slug, post3.slug],
+      error: err,
     })
   })
 
@@ -99,7 +134,7 @@ describe('index-page reducer', () => {
         },
       }),
     ).to.deep.equal({
-      [fieldNames.photographies]: [post1.slug],
+      [fieldNames.photos]: [post1.slug],
     })
   })
 

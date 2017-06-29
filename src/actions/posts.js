@@ -138,7 +138,7 @@ export function fetchEditorPickedPosts() {
 export function fetchPhotographyPostsOnIndexPage() {
   return (dispatch, getState) => {
     const state = getState()
-    const posts = _.get(state, `${fieldNames.indexPage}.${fieldNames.photographies}`, [])
+    const posts = _.get(state, `${fieldNames.indexPage}.${fieldNames.photos}`, [])
     if (Array.isArray(posts) && posts.length > 0) {
       return Promise.resolve()
     }

@@ -47,6 +47,12 @@ const fullTopic = {
   full: true,
 }
 
+const nonFullTopic = {
+  id: 'topic-id-1',
+  slug: 'topic-slug-1',
+  full: false,
+}
+
 process.env.NODE_ENV = 'development'
 
 /* Fetch a full post, whose assets like relateds, leading_video ...etc are all complete,
@@ -67,6 +73,9 @@ describe('Testing fetchIndexPageContent:', () => {
           [fieldNames.editorPicks]: [post3],
           [fieldNames.latestTopic]: fullTopic,
           [fieldNames.reviews]: [post4],
+          [fieldNames.topics]: [nonFullTopic],
+          [fieldNames.photos]: [post2],
+          [fieldNames.infographics]: [post3],
         },
       })
       store.dispatch(actions.fetchIndexPageContent())
@@ -83,6 +92,9 @@ describe('Testing fetchIndexPageContent:', () => {
           [fieldNames.editorPicks]: [post3],
           [fieldNames.latestTopic]: [fullTopic],
           [fieldNames.reviews]: [post4],
+          [fieldNames.topics]: [nonFullTopic],
+          [fieldNames.photos]: [post2],
+          [fieldNames.infographics]: [post3],
         },
       }
       nock('http://localhost:8080')
@@ -97,8 +109,11 @@ describe('Testing fetchIndexPageContent:', () => {
           expect(store.getActions()[1].payload).to.deep.equal({
             [fieldNames.latest]: [post1, post2],
             [fieldNames.editorPicks]: [post3],
-            [fieldNames.latestTopic]: fullTopic,
+            [fieldNames.latestTopic]: [fullTopic],
             [fieldNames.reviews]: [post4],
+            [fieldNames.topics]: [nonFullTopic],
+            [fieldNames.photos]: [post2],
+            [fieldNames.infographics]: [post3],
           })
         })
     })

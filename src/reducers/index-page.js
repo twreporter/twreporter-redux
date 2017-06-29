@@ -11,24 +11,38 @@ const _ = {
 }
 
 function indexPage(state = {}, action = {}) {
+  let payload
   switch (action.type) {
     case types.GET_CONTENT_FOR_INDEX_PAGE: {
+      payload = action.payload
       // only store the post slugs,
       // the full content will be handled by entities reducer
-      const latest = _.map(_.get(action, `payload.${fieldNames.latest}`), (post) => {
+      const latest = _.map(_.get(payload, fieldNames.latest), (post) => {
         return _.get(post, 'slug')
       })
 
       // only store the post slugs
-      const editorPicks = _.map(_.get(action, `payload.${fieldNames.editorPicks}`), (post) => {
+      const editorPicks = _.map(_.get(payload, fieldNames.editorPicks), (post) => {
         return _.get(post, 'slug')
       })
 
       // only store the topic slug
-      const latestTopic = _.get(action, `payload.${fieldNames.latestTopic}.slug`, '')
+      const latestTopic = _.get(payload, [fieldNames.latestTopic, 0, 'slug'], '')
 
       // only store the post slugs
-      const reviews = _.map(_.get(action, `payload.${fieldNames.reviews}`), (post) => {
+      const reviews = _.map(_.get(payload, fieldNames.reviews), (post) => {
+        return _.get(post, 'slug')
+      })
+
+      const topics = _.map(_.get(payload, fieldNames.topics), (topic) => {
+        return _.get(topic, 'slug')
+      })
+
+      const photos = _.map(_.get(payload, fieldNames.photos), (post) => {
+        return _.get(post, 'slug')
+      })
+
+      const infographics = _.map(_.get(payload, fieldNames.infographics), (post) => {
         return _.get(post, 'slug')
       })
 
@@ -37,6 +51,10 @@ function indexPage(state = {}, action = {}) {
         [fieldNames.editorPicks]: editorPicks,
         [fieldNames.latestTopic]: latestTopic,
         [fieldNames.reviews]: reviews,
+        [fieldNames.topics]: topics,
+        [fieldNames.photos]: photos,
+        [fieldNames.infographics]: infographics,
+        error: null,
       })
     }
 
@@ -52,7 +70,7 @@ function indexPage(state = {}, action = {}) {
     case types.GET_PHOTOGRAPHY_POSTS_FOR_INDEX_PAGE: {
       return _.merge({}, state, {
         // only store the posts slugs
-        [fieldNames.photographies]: _.map(_.get(action, 'payload.items'), (item) => {
+        [fieldNames.photos]: _.map(_.get(action, 'payload.items'), (item) => {
           return _.get(item, 'slug')
         }),
       })
@@ -82,8 +100,10 @@ function indexPage(state = {}, action = {}) {
     }
 
     case types.ERROR_TO_GET_INDEX_PAGE_CONTENT: {
-      console.warn(`${action.type} : ${action.errorMsg.toString()}`)
-      return state
+      console.log('action.error:', action.error)
+      return _.merge({}, state, {
+        error: action.error
+      })
     }
 
     default:

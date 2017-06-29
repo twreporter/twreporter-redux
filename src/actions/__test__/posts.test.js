@@ -354,7 +354,7 @@ describe('Testing fetchPhotographyPostsOnIndexPage:', () => {
     it('Should do nothing', () => {
       const store = mockStore({
         [fieldNames.indexPage]: {
-          [fieldNames.photographies]: [
+          [fieldNames.photos]: [
             post1, post2, post3, post4,
           ],
         },

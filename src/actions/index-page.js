@@ -20,7 +20,7 @@ export function fetchIndexPageContent() {
   return (dispatch, getState) => {
     const state = getState()
     const indexPage = _.get(state, fieldNames.indexPage, {})
-    const fields = [fieldNames.latest, fieldNames.editorPicks, fieldNames.latestTopic, fieldNames.reviews]
+    const fields = [fieldNames.latest, fieldNames.editorPicks, fieldNames.latestTopic, fieldNames.reviews, fieldNames.topics, fieldNames.photos, fieldNames.infographics ]
     let isContentReady = true
 
     fields.forEach((field) => {
@@ -47,12 +47,7 @@ export function fetchIndexPageContent() {
         // dispatch content for each sections
         return dispatch({
           type: types.GET_CONTENT_FOR_INDEX_PAGE,
-          payload: {
-            [fieldNames.latest]: _.get(items, fieldNames.latest, []),
-            [fieldNames.editorPicks]: _.get(items, fieldNames.editorPicks, []),
-            [fieldNames.latestTopic]: _.get(items, `${fieldNames.latestTopic}.0`, {}),
-            [fieldNames.reviews]: _.get(items, fieldNames.reviews, []),
-          },
+          payload: items,
         })
       })
       .catch((error) => {

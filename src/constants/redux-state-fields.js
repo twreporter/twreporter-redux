@@ -7,7 +7,7 @@
  *      latest_topic: [],
  *      reviews: [],
  *      topics: [],
- *      photographies: [],
+ *      photos: [],
  *      infographics: [],
  *    },
  *    entities: {
@@ -41,8 +41,8 @@ const latest = 'latest'
 const editorPicks = 'editor_picks'
 const reviews = 'reviews'
 const relateds = 'relateds'
-const photographies = 'photography_section'
-const infographics = 'infographic_section'
+const photos = 'photographies'
+const infographics = 'infographics'
 const lists = 'lists'
 const selectedArticle = 'selected_article'
 
@@ -56,7 +56,7 @@ export default {
   editorPicks,
   reviews,
   relateds,
-  photographies,
+  photos,
   infographics,
   lists,
   selectedArticle,
