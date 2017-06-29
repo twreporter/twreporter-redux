@@ -41,10 +41,11 @@ const latest = 'latest'
 const editorPicks = 'editor_picks'
 const reviews = 'reviews'
 const relateds = 'relateds'
-const photos = 'photographies'
+const photos = 'photos'
 const infographics = 'infographics'
 const lists = 'lists'
-const selectedArticle = 'selected_article'
+const selectedPost = 'selected_post'
+const selectedTopic = 'selected_topic'
 
 export default {
   indexPage,
@@ -59,5 +60,6 @@ export default {
   photos,
   infographics,
   lists,
-  selectedArticle,
+  selectedPost,
+  selectedTopic,
 }
