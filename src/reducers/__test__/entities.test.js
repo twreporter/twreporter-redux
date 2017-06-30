@@ -16,24 +16,22 @@ const _ = {
   merge,
 }
 
-const post1 = {
-  id: 'post-id-1',
-  slug: 'post-slug-1',
-}
-
 const post2 = {
   id: 'post-id-2',
   slug: 'post-slug-2',
+  full: false,
 }
 
 const post3 = {
   id: 'post-id-3',
   slug: 'post-slug-3',
+  full: false,
 }
 
 const post4 = {
   id: 'post-id-4',
   slug: 'post-slug-4',
+  full: false,
 }
 
 const fullTopic = {
@@ -49,6 +47,14 @@ const nonFullTopic = {
   full: false,
 }
 
+const post1 = {
+  id: 'post-id-1',
+  slug: 'post-slug-1',
+  relateds: [post2],
+  topics: fullTopic,
+  full: true,
+}
+
 describe('entities reducer', () => {
   it('should return the initial state', () => {
     expect(
@@ -60,35 +66,37 @@ describe('entities reducer', () => {
     expect(
       reducer({
         posts: {
-          [post1.slug]: _.cloneDeep(post1),
+          [post3.slug]: post3,
         },
         topics: {
-          [fullTopic.slug]: _.cloneDeep(fullTopic),
+          [nonFullTopic.slug]: nonFullTopic,
         },
       }, {
         type: types.GET_CONTENT_FOR_INDEX_PAGE,
         payload: {
-          [fieldNames.latest]: _.cloneDeep([post1, post2]),
-          [fieldNames.editorPicks]: _.cloneDeep([post1]),
+          [fieldNames.latest]: _.cloneDeep([post2]),
+          [fieldNames.editorPicks]: _.cloneDeep([post2]),
           [fieldNames.reviews]: _.cloneDeep([post3]),
           [fieldNames.latestTopic]: _.cloneDeep([fullTopic]),
           [fieldNames.topics]: _.cloneDeep([nonFullTopic]),
-          [fieldNames.photos]: _.cloneDeep([post1, post4]),
-          [fieldNames.infographics]: _.cloneDeep([post2, post3]),
+          [fieldNames.photos]: _.cloneDeep([post2]),
+          [fieldNames.infographics]: _.cloneDeep([post4]),
         },
       }),
     ).to.deep.equal({
       posts: {
-        'post-slug-1': post1,
-        'post-slug-2': post2,
-        'post-slug-3': post3,
-        'post-slug-4': post4,
+        [post2.slug]: post2,
+        [post3.slug]: post3,
+        [post4.slug]: post4,
       },
       topics: {
-        'topic-slug-1': _.merge({}, fullTopic, {
+        [fullTopic.slug]: {
+          id: fullTopic.id,
+          slug: fullTopic.slug,
+          full: fullTopic.full,
           relateds: [post3.slug, post4.slug],
-        }),
-        'topic-slug-2': nonFullTopic,
+        },
+        [nonFullTopic.slug]: nonFullTopic,
       },
     })
   })
@@ -103,6 +111,7 @@ describe('entities reducer', () => {
         },
       }),
     ).to.deep.equal({
+      posts: {},
       topics: {
         [nonFullTopic.slug]: nonFullTopic,
       },
@@ -115,13 +124,14 @@ describe('entities reducer', () => {
       }, {
         type: types.GET_EDITOR_PICKED_POSTS,
         payload: {
-          items: _.cloneDeep([post1]),
+          items: _.cloneDeep([post2]),
         },
       }),
     ).to.deep.equal({
       posts: {
-        [post1.slug]: post1,
+        [post2.slug]: post2,
       },
+      topics: {},
     })
   })
 
@@ -131,13 +141,14 @@ describe('entities reducer', () => {
       }, {
         type: types.GET_PHOTOGRAPHY_POSTS_FOR_INDEX_PAGE,
         payload: {
-          items: _.cloneDeep([post1]),
+          items: _.cloneDeep([post2]),
         },
       }),
     ).to.deep.equal({
       posts: {
-        [post1.slug]: post1,
+        [post2.slug]: post2,
       },
+      topics: {},
     })
   })
 
@@ -147,13 +158,14 @@ describe('entities reducer', () => {
       }, {
         type: types.GET_INFOGRAPHIC_POSTS_FOR_INDEX_PAGE,
         payload: {
-          items: _.cloneDeep([post1]),
+          items: _.cloneDeep([post2]),
         },
       }),
     ).to.deep.equal({
       posts: {
-        [post1.slug]: post1,
+        [post2.slug]: post2,
       },
+      topics: {},
     })
   })
 
@@ -163,20 +175,19 @@ describe('entities reducer', () => {
       }, {
         type: types.GET_LISTED_POSTS,
         payload: {
-          items: _.cloneDeep([post1]),
+          items: _.cloneDeep([post2]),
         },
       }),
     ).to.deep.equal({
       posts: {
-        [post1.slug]: post1,
+        [post2.slug]: post2,
       },
+      topics: {},
     })
   })
 
   it('should handle GET_A_FULL_POST', () => {
     const post = _.cloneDeep(post1)
-    post.relateds = [post2, post3]
-    post.topics = nonFullTopic
 
     expect(
       reducer({
@@ -186,17 +197,24 @@ describe('entities reducer', () => {
       }),
     ).to.deep.equal({
       posts: {
-        [post1.slug]: _.merge(
-          {}, post1, {
-            relateds: [post2.slug, post3.slug],
-            topics: nonFullTopic.slug,
-          },
-        ),
+        [post1.slug]: {
+          slug: post.slug,
+          id: post.id,
+          relateds: [post2.slug],
+          topics: fullTopic.slug,
+          full: true,
+        },
         [post2.slug]: post2,
         [post3.slug]: post3,
+        [post4.slug]: post4,
       },
       topics: {
-        [nonFullTopic.slug]: nonFullTopic,
+        [fullTopic.slug]: {
+          id: 'topic-id-1',
+          slug: 'topic-slug-1',
+          relateds: [post3.slug, post4.slug],
+          full: true,
+        },
       },
     })
   })

@@ -3,34 +3,108 @@ import fieldNames from '../constants/redux-state-fields'
 import types from '../constants/action-types'
 
 // lodash
-import clone from 'lodash/clone'
 import get from 'lodash/get'
 import map from 'lodash/map'
 import merge from 'lodash/merge'
 
 const _ = {
   get,
-  clone,
   map,
   merge,
 }
 
-function putEntities(entityArr = [], entityMap) {
-  let _entities = entityArr
-  if (!Array.isArray(entityArr)) {
-    _entities = [entityArr]
+function normalizeTopic(topic, postEntities, topicEntities) {
+  if (typeof topic !== 'object') {
+    return {
+      postEntities,
+      topicEntities,
+    }
   }
 
-  _entities.forEach((entity) => {
-    if (typeof entity !== 'object') {
-      return
+  if (topic.full) {
+    const relateds = _.get(topic, fieldNames.relateds, [])
+
+    topic.relateds = relateds.map((post) => {
+      if (typeof post === 'object') {
+        if (!postEntities[post.slug] || post.full) {
+          postEntities[post.slug] = post
+        }
+      }
+      return _.get(post, 'slug', '')
+    })
+  }
+
+  if (!topicEntities[topic.slug] || topic.full) {
+    topicEntities[topic.slug] = topic
+  }
+
+  return {
+    postEntities,
+    topicEntities,
+  }
+}
+
+function normalizePost(post, _postEntities, _topicEntities) {
+  let postEntities = _postEntities
+  let topicEntities = _topicEntities
+  if (typeof post !== 'object') {
+    return {
+      postEntities,
+      topicEntities,
     }
-    const slug = _.get(entity, 'slug')
-    const isFull = _.get(entity, 'full', false)
-    if (!Object.prototype.hasOwnProperty.call(entityMap, slug) || isFull) {
-      entityMap[slug] = entity
+  }
+
+  const postSlug = post.slug
+
+  if (post.full) {
+    const topic = _.get(post, fieldNames.topics)
+    const normalizedObj = normalizeTopic(topic, postEntities, topicEntities)
+    postEntities = normalizedObj.postEntities
+    topicEntities = normalizedObj.topicEntities
+    post[fieldNames.topics] = _.get(topic, 'slug', topic)
+
+    post[fieldNames.relateds] = _.map(post.relateds, (_post) => {
+      if (typeof _post === 'object') {
+        if (!postEntities[_post.slug] || _post.full) {
+          postEntities[_post.slug] = _post
+        }
+      }
+      return _.get(_post, 'slug', _post)
+    })
+  }
+
+  if (!postEntities[postSlug] || post.full) {
+    postEntities[postSlug] = post
+  }
+
+  return {
+    postEntities,
+    topicEntities,
+  }
+}
+
+function normalizeAssets(assets, _postEntities, _topicEntities, style) {
+  let postEntities = _postEntities
+  let topicEntities = _topicEntities
+  if (!Array.isArray(assets)) {
+    return {
+      postEntities,
+      topicEntities,
     }
+  }
+
+  const normalize = style === 'post' ? normalizePost : normalizeTopic
+
+  assets.forEach((asset) => {
+    const normalizedObj = normalize(asset, postEntities, topicEntities)
+    postEntities = normalizedObj.postEntities
+    topicEntities = normalizedObj.topicEntities
   })
+
+  return {
+    postEntities,
+    topicEntities,
+  }
 }
 
 // This will normalize the posts and topics.
@@ -111,43 +185,38 @@ function putEntities(entityArr = [], entityMap) {
 //   }
 // }
 function entities(state = {}, action = {}) {
-  const postEntityMap = _.clone(_.get(state, fieldNames.posts, {}))
-  const topicEntityMap = _.clone(_.get(state, fieldNames.topics, {}))
   let payload
+  let normalizedObj = {
+    postEntities: _.get(state, fieldNames.posts, {}),
+    topicEntities: _.get(state, fieldNames.topics, {}),
+  }
   switch (action.type) {
     case types.GET_CONTENT_FOR_INDEX_PAGE: {
       payload = action.payload
-      putEntities(_.get(payload, fieldNames.latest, []), postEntityMap)
-      putEntities(_.get(payload, fieldNames.editorPicks, []), postEntityMap)
-      putEntities(_.get(payload, fieldNames.reviews, []), postEntityMap)
-      putEntities(_.get(payload, fieldNames.photos, []), postEntityMap)
-      putEntities(_.get(payload, fieldNames.infographics, []), postEntityMap)
+      const sections = [fieldNames.latest, fieldNames.editorPicks, fieldNames.reviews, fieldNames.photos, fieldNames.infographics]
 
-      const latestTopic = _.get(payload, [fieldNames.latestTopic, 0], {})
-      const relatedPostsInTopic = _.get(latestTopic, fieldNames.relateds, [])
-      latestTopic[fieldNames.relateds] = _.map(relatedPostsInTopic, (post) => {
-        return _.get(post, 'slug')
+      sections.forEach((section) => {
+        const posts = _.get(payload, section, [])
+        normalizedObj = normalizeAssets(posts, normalizedObj.postEntities, normalizedObj.topicEntities, 'post')
       })
-      putEntities(relatedPostsInTopic, postEntityMap)
-      putEntities(latestTopic, topicEntityMap)
 
-      const topics = _.get(payload, fieldNames.topics, [])
-      putEntities(topics, topicEntityMap)
+      normalizedObj = normalizeTopic(_.get(payload, [fieldNames.latestTopic, 0]), normalizedObj.postEntities, normalizedObj.topicEntities)
+      normalizedObj = normalizeAssets(_.get(payload, fieldNames.topics, []), normalizedObj.postEntities, normalizedObj.topicEntities, 'topic')
 
       return _.merge({}, state, {
-        [fieldNames.posts]: postEntityMap,
-        [fieldNames.topics]: topicEntityMap,
+        [fieldNames.posts]: normalizedObj.postEntities,
+        [fieldNames.topics]: normalizedObj.topicEntities,
       })
     }
 
     case types.GET_TOPICS_FOR_INDEX_PAGE: {
-      // topics we get from api
       payload = _.get(action, 'payload.items', [])
 
-      putEntities(payload, topicEntityMap)
+      normalizedObj = normalizeAssets(payload, normalizedObj.postEntities, normalizedObj.topicEntities, 'topic')
 
       return _.merge({}, state, {
-        [fieldNames.topics]: topicEntityMap,
+        [fieldNames.posts]: normalizedObj.postEntities,
+        [fieldNames.topics]: normalizedObj.topicEntities,
       })
     }
 
@@ -155,52 +224,33 @@ function entities(state = {}, action = {}) {
     case types.GET_PHOTOGRAPHY_POSTS_FOR_INDEX_PAGE:
     case types.GET_INFOGRAPHIC_POSTS_FOR_INDEX_PAGE:
     case types.GET_LISTED_POSTS: {
-      // topics we get from api
       payload = _.get(action, 'payload.items', [])
 
-      putEntities(payload, postEntityMap)
+      normalizedObj = normalizeAssets(payload, normalizedObj.postEntities, normalizedObj.topicEntities, 'post')
 
       return _.merge({}, state, {
-        [fieldNames.posts]: postEntityMap,
+        [fieldNames.posts]: normalizedObj.postEntities,
+        [fieldNames.topics]: normalizedObj.topicEntities,
       })
     }
 
     case types.GET_A_FULL_POST: {
       const post = _.get(action, 'payload', {})
-      const topic = _.get(post, fieldNames.topics, {})
-      putEntities(topic, topicEntityMap)
-      post[fieldNames.topics] = _.get(topic, 'slug')
-
-      const relatedPosts = _.get(post, fieldNames.relateds, [])
-      post[fieldNames.relateds] = _.map(relatedPosts, (_post) => {
-        return _.get(_post, 'slug')
-      })
-      putEntities(relatedPosts, postEntityMap)
-
-      // set full post into post entities
-      putEntities([post], postEntityMap)
+      normalizedObj = normalizePost(post, normalizedObj.postEntities, normalizedObj.topicEntities)
 
       return _.merge({}, state, {
-        [fieldNames.posts]: postEntityMap,
-        [fieldNames.topics]: topicEntityMap,
+        [fieldNames.posts]: normalizedObj.postEntities,
+        [fieldNames.topics]: normalizedObj.topicEntities,
       })
     }
 
     case types.GET_A_FULL_TOPIC: {
       const topic = _.get(action, 'payload', {})
-
-      const relatedPosts = _.get(topic, fieldNames.relateds, [])
-      topic[fieldNames.relateds] = _.map(relatedPosts, (post) => {
-        return _.get(post, 'slug')
-      })
-      putEntities(relatedPosts, postEntityMap)
-
-      // set full topic into topic entities
-      putEntities([topic], topicEntityMap)
+      normalizedObj = normalizeTopic(topic, normalizedObj.postEntities, normalizedObj.topicEntities)
 
       return _.merge({}, state, {
-        [fieldNames.posts]: postEntityMap,
-        [fieldNames.topics]: topicEntityMap,
+        [fieldNames.posts]: normalizedObj.postEntities,
+        [fieldNames.topics]: normalizedObj.topicEntities,
       })
     }
 
