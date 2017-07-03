@@ -193,7 +193,10 @@ function entities(state = {}, action = {}) {
   switch (action.type) {
     case types.GET_CONTENT_FOR_INDEX_PAGE: {
       payload = action.payload
-      const sections = [fieldNames.latest, fieldNames.editorPicks, fieldNames.reviews, fieldNames.photos, fieldNames.infographics]
+      const sections = [fieldNames.latest, fieldNames.editorPicks, fieldNames.reviews, fieldNames.photos,
+        fieldNames.infographics, fieldNames.humanRights, fieldNames.landEnvironment,
+        fieldNames.politicalSociety, fieldNames.cultureMovie, fieldNames.photoAudio,
+        fieldNames.international, fieldNames.character, fieldNames.transformedJustice]
 
       sections.forEach((section) => {
         const posts = _.get(payload, section, [])

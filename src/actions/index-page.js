@@ -11,6 +11,35 @@ const _ = {
   get,
 }
 
+function _fetch(dispatch, path) {
+  const url = formAPIURL(path)
+
+  // Start to get content
+  dispatch({
+    type: types.START_TO_GET_INDEX_PAGE_CONTENT,
+    url,
+  })
+
+  return axios.get(url)
+  // Get content successfully
+    .then((response) => {
+      const items = _.get(response, 'data.records', {})
+
+      // dispatch content for each sections
+      return dispatch({
+        type: types.GET_CONTENT_FOR_INDEX_PAGE,
+        payload: items,
+      })
+    })
+    .catch((error) => {
+      // Error to get topics
+      return dispatch({
+        type: types.ERROR_TO_GET_INDEX_PAGE_CONTENT,
+        error,
+      })
+    })
+}
+
 /**
  * fetchIndexPageContent
  * This function will fetch the top fourth sections on the index page,
@@ -34,28 +63,25 @@ export function fetchIndexPageContent() {
 
     const path = `${apiEndpoints.indexPage}`
 
-    // Start to get content
-    dispatch({
-      type: types.START_TO_GET_INDEX_PAGE_CONTENT,
-    })
+    return _fetch(dispatch, path)
+  }
+}
 
-    return axios.get(formAPIURL(path))
-      // Get content successfully
-      .then((response) => {
-        const items = _.get(response, 'data.records', {})
+/**
+ * fetchCategoriesPostsOnIndexPage
+ * This function will fetch all the posts of each category, total 8 categories, for category section on the index page.
+ */
+export function fetchCategoriesPostsOnIndexPage() {
+  return (dispatch, getState) => {
+    const state = getState()
+    const categorySection = _.get(state, [fieldNames.indexPage, fieldNames.category], {})
 
-        // dispatch content for each sections
-        return dispatch({
-          type: types.GET_CONTENT_FOR_INDEX_PAGE,
-          payload: items,
-        })
-      })
-      .catch((error) => {
-        // Error to get topics
-        return dispatch({
-          type: types.ERROR_TO_GET_INDEX_PAGE_CONTENT,
-          error,
-        })
-      })
+    if (typeof categorySection === 'object') {
+      return Promise.resolve()
+    }
+
+    const path = `${apiEndpoints.indexPageCategories}`
+
+    return _fetch(dispatch, path)
   }
 }

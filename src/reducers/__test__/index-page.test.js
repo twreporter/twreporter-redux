@@ -58,7 +58,9 @@ describe('index-page reducer', () => {
 
   it('should handle GET_CONTENT_FOR_INDEX_PAGE', () => {
     expect(
-      reducer({}, {
+      reducer({
+        [fieldNames.latestTopic]: 'topic-slug-3',
+      }, {
         type: types.GET_CONTENT_FOR_INDEX_PAGE,
         payload: {
           [fieldNames.latest]: _.cloneDeep([post1, post2]),
@@ -78,6 +80,14 @@ describe('index-page reducer', () => {
       [fieldNames.topics]: [fullTopic.slug, nonFullTopic.slug],
       [fieldNames.photos]: [post1.slug, post4.slug],
       [fieldNames.infographics]: [post2.slug, post3.slug],
+      [fieldNames.humanRights]: [],
+      [fieldNames.landEnvironment]: [],
+      [fieldNames.politicalSociety]: [],
+      [fieldNames.cultureMovie]: [],
+      [fieldNames.photoAudio]: [],
+      [fieldNames.international]: [],
+      [fieldNames.character]: [],
+      [fieldNames.transformedJustice]: [],
       error: null,
     })
   })

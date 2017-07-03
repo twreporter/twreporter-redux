@@ -80,7 +80,8 @@ describe('entities reducer', () => {
           [fieldNames.latestTopic]: _.cloneDeep([fullTopic]),
           [fieldNames.topics]: _.cloneDeep([nonFullTopic]),
           [fieldNames.photos]: _.cloneDeep([post2]),
-          [fieldNames.infographics]: _.cloneDeep([post4]),
+          [fieldNames.infographics]: _.cloneDeep([post3]),
+          [fieldNames.humanRights]: _.cloneDeep([post4]),
         },
       }),
     ).to.deep.equal({

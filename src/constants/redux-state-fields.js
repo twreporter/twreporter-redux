@@ -34,8 +34,13 @@
 
 const indexPage = 'index_page'
 const entities = 'entities'
+const lists = 'lists'
+const selectedPost = 'selected_post'
+const selectedTopic = 'selected_topic'
+
 const posts = 'posts'
 const topics = 'topics'
+
 const latestTopic = 'latest_topic'
 const latest = 'latest'
 const editorPicks = 'editor_picks'
@@ -43,23 +48,37 @@ const reviews = 'reviews'
 const relateds = 'relateds'
 const photos = 'photos'
 const infographics = 'infographics'
-const lists = 'lists'
-const selectedPost = 'selected_post'
-const selectedTopic = 'selected_topic'
+
+const humanRights = 'human_rights'
+const landEnvironment = 'land_environment'
+const politicalSociety = 'political_society'
+const cultureMovie = 'culture_movie'
+const photoAudio = 'photo_audio'
+const international = 'international'
+const character = 'character'
+const transformedJustice = 'transformed_justice'
 
 export default {
   indexPage,
   entities,
-  latest,
-  latestTopic,
+  lists,
+  selectedPost,
+  selectedTopic,
   posts,
   topics,
+  latest,
+  latestTopic,
   editorPicks,
   reviews,
   relateds,
   photos,
   infographics,
-  lists,
-  selectedPost,
-  selectedTopic,
+  humanRights,
+  landEnvironment,
+  politicalSociety,
+  cultureMovie,
+  photoAudio,
+  international,
+  character,
+  transformedJustice,
 }
