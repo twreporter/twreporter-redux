@@ -74,9 +74,18 @@ export function fetchIndexPageContent() {
 export function fetchCategoriesPostsOnIndexPage() {
   return (dispatch, getState) => {
     const state = getState()
-    const categorySection = _.get(state, [fieldNames.indexPage, fieldNames.category], {})
+    const indexPage = _.get(state, fieldNames.indexPage, {})
+    const fields = [fieldNames.humanRights, fieldNames.landEnvironment, fieldNames.politicalSociety,
+      fieldNames.cultureMovie, fieldNames.photoAudio, fieldNames.international, fieldNames.character,
+      fieldNames.transformedJustice]
+    let isContentReady = true
 
-    if (typeof categorySection === 'object') {
+    fields.forEach((field) => {
+      if (!Object.prototype.hasOwnProperty.call(indexPage, field)) {
+        isContentReady = false
+      }
+    })
+    if (isContentReady) {
       return Promise.resolve()
     }
 
