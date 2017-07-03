@@ -4,7 +4,7 @@ import indexPage from './reducers/index-page'
 import { denormalizePosts, denormalizeTopics } from './utils/denormalize-asset'
 import { post, posts } from './reducers/posts'
 import { topic, topics } from './reducers/topics'
-import { fetchIndexPageContent } from './actions/index-page'
+import { fetchIndexPageContent, fetchCategoriesPostsOnIndexPage } from './actions/index-page'
 import { fetchAFullPost, fetchListedPosts, fetchEditorPickedPosts,
   fetchInfographicPostsOnIndexPage, fetchPhotographyPostsOnIndexPage } from './actions/posts'
 import { fetchAFullTopic, fetchTopics, fetchTopicsOnIndexPage } from './actions/topics'
@@ -13,6 +13,7 @@ import { fetchAFullTopic, fetchTopics, fetchTopicsOnIndexPage } from './actions/
 export default {
   actions: {
     fetchEditorPickedPosts,
+    fetchCategoriesPostsOnIndexPage,
     fetchTopics,
     fetchAFullPost,
     fetchAFullTopic,
