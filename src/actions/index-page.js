@@ -81,7 +81,7 @@ export function fetchCategoriesPostsOnIndexPage() {
     let isContentReady = true
 
     fields.forEach((field) => {
-      if (!Object.prototype.hasOwnProperty.call(indexPage, field)) {
+      if (_.get(indexPage, [field, 'length']) === 0) {
         isContentReady = false
       }
     })

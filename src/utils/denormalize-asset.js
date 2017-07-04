@@ -9,7 +9,7 @@ const _ = {
   set,
 }
 
-const denormalizePosts = (slugs, entities) => {
+const denormalizePosts = (slugs, entities = {}) => {
   let _slugs = slugs
   if (!Array.isArray(slugs)) {
     _slugs = [slugs]
@@ -21,7 +21,7 @@ const denormalizePosts = (slugs, entities) => {
   return posts
 }
 
-const denormalizeTopics = (topicSlugs, topicEntities, postEntities) => {
+const denormalizeTopics = (topicSlugs, topicEntities = {}, postEntities = {}) => {
   let slugs = topicSlugs
   if (!Array.isArray(topicSlugs)) {
     slugs = [topicSlugs]
