@@ -1,3 +1,4 @@
+import apiConfig from '../conf/api-config.json'
 import apiEndpoints from '../constants/api-endpoints'
 import axios from 'axios'
 import fieldNames from '../constants/redux-state-fields'
@@ -39,7 +40,9 @@ export function fetchAFullPost(slug) {
       },
     })
 
-    return axios.get(url)
+    return axios.get(url, {
+      timeout: apiConfig.API_TIME_OUT,
+    })
       .then((response) => {
         return dispatch({
           type: types.GET_A_FULL_POST,
@@ -70,7 +73,9 @@ function _fetchPosts(dispatch, path, successActionType, failureActionType = type
     url,
   })
 
-  return axios.get(url)
+  return axios.get(url, {
+    timeout: apiConfig.API_TIME_OUT,
+  })
     .then((response) => {
       return dispatch({
         type: successActionType,

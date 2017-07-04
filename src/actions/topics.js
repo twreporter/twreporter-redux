@@ -1,4 +1,4 @@
-
+import apiConfig from '../conf/api-config.json'
 import axios from 'axios'
 // lodash
 import get from 'lodash/get'
@@ -26,7 +26,7 @@ export function fetchAFullTopic(slug) {
       })
     }
 
-    const url = `${apiEndpoints.topics}/${slug}?full=true`
+    const path = `${apiEndpoints.topics}/${slug}?full=true`
 
     // Start to get topics
     dispatch({
@@ -36,7 +36,9 @@ export function fetchAFullTopic(slug) {
       },
     })
 
-    return axios.get(formAPIURL(url))
+    return axios.get(formAPIURL(path), {
+      timeout: apiConfig.API_TIME_OUT,
+    })
       .then((response) => {
         return dispatch({
           type: types.GET_A_FULL_TOPIC,
@@ -53,13 +55,15 @@ export function fetchAFullTopic(slug) {
   }
 }
 
-function _fetchTopics(dispatch, url, successActionType) {
+function _fetchTopics(dispatch, path, successActionType) {
   // Start to get topics
   dispatch({
     type: types.START_TO_GET_TOPICS,
   })
 
-  return axios.get(formAPIURL(url))
+  return axios.get(formAPIURL(path), {
+    timeout: apiConfig.API_TIME_OUT,
+  })
     .then((response) => {
       return dispatch({
         type: successActionType,

@@ -1,4 +1,4 @@
-
+import apiConfig from '../conf/api-config.json'
 import axios from 'axios'
 // lodash
 import get from 'lodash/get'
@@ -20,7 +20,9 @@ function _fetch(dispatch, path) {
     url,
   })
 
-  return axios.get(url)
+  return axios.get(url, {
+    timeout: apiConfig.API_TIME_OUT,
+  })
   // Get content successfully
     .then((response) => {
       const items = _.get(response, 'data.records', {})
