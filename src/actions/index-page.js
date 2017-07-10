@@ -83,7 +83,7 @@ export function fetchCategoriesPostsOnIndexPage() {
     let isContentReady = true
 
     fields.forEach((field) => {
-      if (_.get(indexPage, [field, 'length']) === 0) {
+      if (_.get(indexPage, [field, 'length'], 0) === 0) {
         isContentReady = false
       }
     })
