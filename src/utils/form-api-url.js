@@ -1,11 +1,12 @@
 import config from '../conf/api-config.json'
 
-const formAPIURL = (path) => {
+const formAPIURL = (path, toEncode = true) => {
   let protocol
   let host
   let port
+  const _path = toEncode ? encodeURI(path) : path
   if (process.env.NODE_ENV === 'development') {
-    return `http://localhost:8080/v1/${encodeURI(path)}`
+    return `http://localhost:8080/v1/${_path}`
   }
 
   // process.env.BROWSER is defined in next.config.js
@@ -19,7 +20,7 @@ const formAPIURL = (path) => {
     port = config.API_PORT_ON_SERVER
   }
 
-  return `${protocol}://${host}:${port}/v1/${encodeURI(path)}`
+  return `${protocol}://${host}:${port}/v1/${_path}`
 }
 
 export default formAPIURL
