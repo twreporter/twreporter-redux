@@ -364,7 +364,7 @@ describe('Testing fetchPhotographyPostsOnIndexPage:', () => {
     it('Should dispatch types.GET_PHOTOGRAPHY_POSTS_FOR_INDEX_PAGE', () => {
       const store = mockStore({})
       nock('http://localhost:8080')
-        .get(encodeURI(`/v1/posts?where={"style":"${postStyles.photography}"}&limit=10`))
+        .get(encodeURI(`/v1/posts?where={"style":"${postStyles.photography}","is_featured":true}&limit=6`))
         .reply(200, {
           records: [{ slug: 'slug-1' }, { slug: 'slug-2' }, { slug: 'slug-3' }],
         })

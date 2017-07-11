@@ -142,7 +142,7 @@ export function fetchEditorPickedPosts() {
 
 /**
  * fetchPhotographyPostsOnIndexPage
- * This function will fetch 10 latest posts with photography style,
+ * This function will fetch 6 latest posts with photography style and `is_featured: true`,
  * It's specifically made for index page
  */
 export function fetchPhotographyPostsOnIndexPage() {
@@ -153,7 +153,7 @@ export function fetchPhotographyPostsOnIndexPage() {
       return Promise.resolve()
     }
 
-    const path = `${apiEndpoints.posts}?where={"style":"${postStyles.photography}"}&limit=10`
+    const path = `${apiEndpoints.posts}?where={"style":"${postStyles.photography}","is_featured":true}&limit=6`
 
     return _fetchPosts(dispatch, path, types.GET_PHOTOGRAPHY_POSTS_FOR_INDEX_PAGE)
   }

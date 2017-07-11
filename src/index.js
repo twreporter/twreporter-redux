@@ -1,4 +1,5 @@
 import entities from './reducers/entities'
+import formAPIURL from './utils/form-api-url'
 import reduxStateFields from './constants/redux-state-fields'
 import indexPage from './reducers/index-page'
 import { denormalizePosts, denormalizeTopics } from './utils/denormalize-asset'
@@ -35,5 +36,6 @@ export default {
   utils: {
     denormalizePosts,
     denormalizeTopics,
+    formAPIURL,
   },
 }
