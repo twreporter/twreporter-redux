@@ -1,6 +1,6 @@
 import indexPage from './index-page'
 import entities from './entities'
-import fieldNames from '../constants/redux-state-fields'
+import fieldNames from '../constants/redux-state-field-names'
 import posts from './posts'
 import { combineReducers } from 'redux'
 

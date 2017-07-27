@@ -9,7 +9,7 @@
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import configureMockStore from 'redux-mock-store'
-import fieldNames from '../../constants/redux-state-fields'
+import fieldNames from '../../constants/redux-state-field-names'
 import nock from 'nock'
 import thunk from 'redux-thunk'
 import types from '../../constants/action-types'
@@ -69,13 +69,13 @@ describe('Testing fetchIndexPageContent:', () => {
     it('Should dispatch no actions and return Promise.resolve()', () => {
       const store = mockStore({
         [fieldNames.indexPage]: {
-          [fieldNames.latest]: [post1, post2],
-          [fieldNames.editorPicks]: [post3],
-          [fieldNames.latestTopic]: fullTopic,
-          [fieldNames.reviews]: [post4],
-          [fieldNames.topics]: [nonFullTopic],
-          [fieldNames.photos]: [post2],
-          [fieldNames.infographics]: [post3],
+          [fieldNames.sections.latestSection]: [post1, post2],
+          [fieldNames.sections.editorPicksSection]: [post3],
+          [fieldNames.sections.latestTopicSection]: fullTopic,
+          [fieldNames.sections.reviewsSection]: [post4],
+          [fieldNames.sections.topicsSection]: [nonFullTopic],
+          [fieldNames.sections.photosSection]: [post2],
+          [fieldNames.sections.infographicsSection]: [post3],
         },
       })
       store.dispatch(actions.fetchIndexPageContent())
@@ -88,13 +88,13 @@ describe('Testing fetchIndexPageContent:', () => {
       const store = mockStore()
       const mockApiResponse = {
         records: {
-          [fieldNames.latest]: [post1, post2],
-          [fieldNames.editorPicks]: [post3],
-          [fieldNames.latestTopic]: [fullTopic],
-          [fieldNames.reviews]: [post4],
-          [fieldNames.topics]: [nonFullTopic],
-          [fieldNames.photos]: [post2],
-          [fieldNames.infographics]: [post3],
+          [fieldNames.sections.latestSection]: [post1, post2],
+          [fieldNames.sections.editorPicksSection]: [post3],
+          [fieldNames.sections.latestTopicSection]: [fullTopic],
+          [fieldNames.sections.reviewsSection]: [post4],
+          [fieldNames.sections.topicsSection]: [nonFullTopic],
+          [fieldNames.sections.photosSection]: [post2],
+          [fieldNames.sections.infographicsSection]: [post3],
         },
       }
       nock('http://localhost:8080')
@@ -107,13 +107,13 @@ describe('Testing fetchIndexPageContent:', () => {
           expect(store.getActions()[0].type).to.deep.equal(types.START_TO_GET_INDEX_PAGE_CONTENT)
           expect(store.getActions()[1].type).to.equal(types.GET_CONTENT_FOR_INDEX_PAGE)
           expect(store.getActions()[1].payload).to.deep.equal({
-            [fieldNames.latest]: [post1, post2],
-            [fieldNames.editorPicks]: [post3],
-            [fieldNames.latestTopic]: [fullTopic],
-            [fieldNames.reviews]: [post4],
-            [fieldNames.topics]: [nonFullTopic],
-            [fieldNames.photos]: [post2],
-            [fieldNames.infographics]: [post3],
+            [fieldNames.sections.latestSection]: [post1, post2],
+            [fieldNames.sections.editorPicksSection]: [post3],
+            [fieldNames.sections.latestTopicSection]: [fullTopic],
+            [fieldNames.sections.reviewsSection]: [post4],
+            [fieldNames.sections.topicsSection]: [nonFullTopic],
+            [fieldNames.sections.photosSection]: [post2],
+            [fieldNames.sections.infographicsSection]: [post3],
           })
         })
     })

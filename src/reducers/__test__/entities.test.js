@@ -1,7 +1,6 @@
 /* global describe, it*/
 
-
-import fieldNames from '../../constants/redux-state-fields'
+import fieldNames from '../../constants/redux-state-field-names'
 import reducer from '../entities'
 import types from '../../constants/action-types'
 
@@ -74,14 +73,14 @@ describe('entities reducer', () => {
       }, {
         type: types.GET_CONTENT_FOR_INDEX_PAGE,
         payload: {
-          [fieldNames.latest]: _.cloneDeep([post2]),
-          [fieldNames.editorPicks]: _.cloneDeep([post2]),
-          [fieldNames.reviews]: _.cloneDeep([post3]),
-          [fieldNames.latestTopic]: _.cloneDeep([fullTopic]),
-          [fieldNames.topics]: _.cloneDeep([nonFullTopic]),
-          [fieldNames.photos]: _.cloneDeep([post2]),
-          [fieldNames.infographics]: _.cloneDeep([post3]),
-          [fieldNames.humanRights]: _.cloneDeep([post4]),
+          [fieldNames.sections.latestSection]: _.cloneDeep([post2]),
+          [fieldNames.sections.editorPicksSection]: _.cloneDeep([post2]),
+          [fieldNames.sections.reviewsSection]: _.cloneDeep([post3]),
+          [fieldNames.sections.latestTopicSection]: _.cloneDeep([fullTopic]),
+          [fieldNames.sections.topicsSection]: _.cloneDeep([nonFullTopic]),
+          [fieldNames.sections.photosSection]: _.cloneDeep([post2]),
+          [fieldNames.sections.infographicsSection]: _.cloneDeep([post3]),
+          [fieldNames.categories.humanRightsAndSociety]: _.cloneDeep([post4]),
         },
       }),
     ).to.deep.equal({

@@ -1,7 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 import get from 'lodash/get'
 import set from 'lodash/set'
-import reduxStateFields from '../constants/redux-state-fields'
 
 const _ = {
   cloneDeep,
@@ -28,9 +27,9 @@ const denormalizeTopics = (topicSlugs, topicEntities = {}, postEntities = {}) =>
   }
   const topics = slugs.map((slug) => {
     const topic = _.cloneDeep(topicEntities[slug])
-    const relatedSlugs = _.get(topic, reduxStateFields.relateds, [])
+    const relatedSlugs = _.get(topic, 'relateds', [])
     const relateds = denormalizePosts(relatedSlugs, postEntities)
-    _.set(topic, reduxStateFields.relateds, relateds)
+    _.set(topic, 'relateds', relateds)
     return topic
   })
 

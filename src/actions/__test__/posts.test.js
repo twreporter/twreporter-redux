@@ -13,7 +13,7 @@
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import configureMockStore from 'redux-mock-store'
-import fieldNames from '../../constants/redux-state-fields'
+import fieldNames from '../../constants/redux-state-field-names'
 import formatUrl from '../../utils/form-api-url'
 import nock from 'nock'
 import postStyles from '../../constants/post-styles'
@@ -303,7 +303,7 @@ describe('Testing fetchEditorPickedPosts:', () => {
     it('Should do nothing', () => {
       const store = mockStore({
         [fieldNames.indexPage]: {
-          [fieldNames.editorPicks]: [
+          [fieldNames.sections.editorPicksSection]: [
             post1, post2, post3, post4,
           ],
         },
@@ -349,7 +349,7 @@ describe('Testing fetchPhotographyPostsOnIndexPage:', () => {
     it('Should do nothing', () => {
       const store = mockStore({
         [fieldNames.indexPage]: {
-          [fieldNames.photos]: [
+          [fieldNames.sections.photosSection]: [
             post1, post2, post3, post4,
           ],
         },
@@ -395,7 +395,7 @@ describe('Testing fetchInfographicPostsOnIndexPage:', () => {
     it('Should do nothing', () => {
       const store = mockStore({
         [fieldNames.indexPage]: {
-          [fieldNames.infographics]: [
+          [fieldNames.sections.infographicsSection]: [
             post1, post2, post3, post4,
           ],
         },

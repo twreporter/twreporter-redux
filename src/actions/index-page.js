@@ -1,14 +1,17 @@
 import apiConfig from '../conf/api-config.json'
 import axios from 'axios'
-// lodash
-import get from 'lodash/get'
 import types from '../constants/action-types'
-import fieldNames from '../constants/redux-state-fields'
+import fieldNames from '../constants/redux-state-field-names'
 import apiEndpoints from '../constants/api-endpoints'
 import formAPIURL from '../utils/form-api-url'
 
+// lodash
+import get from 'lodash/get'
+import values from 'lodash/values'
+
 const _ = {
   get,
+  values,
 }
 
 function _fetch(dispatch, path) {
@@ -44,21 +47,26 @@ function _fetch(dispatch, path) {
 
 /**
  * fetchIndexPageContent
- * This function will fetch the top fourth sections on the index page,
- * including latest, editor_picks, latest_topic and reviews
+ * This function will fetch the all sections except categories_section
+ * on the index page,
+ * including latest_section, editor_picks_section, latest_topic_section,
+ * infographics_section, reviews_section, and photos_section.
  */
 export function fetchIndexPageContent() {
   return (dispatch, getState) => {
     const state = getState()
     const indexPage = _.get(state, fieldNames.indexPage, {})
-    const fields = [fieldNames.latest, fieldNames.editorPicks, fieldNames.latestTopic, fieldNames.reviews, fieldNames.topics, fieldNames.photos, fieldNames.infographics]
+
+    // categories_section is not part of the result
+    const sections = _.values(fieldNames.sections)
     let isContentReady = true
 
-    fields.forEach((field) => {
-      if (!Object.prototype.hasOwnProperty.call(indexPage, field)) {
+    sections.forEach((section) => {
+      if (!Object.prototype.hasOwnProperty.call(indexPage, section)) {
         isContentReady = false
       }
     })
+
     if (isContentReady) {
       return Promise.resolve()
     }
@@ -71,22 +79,21 @@ export function fetchIndexPageContent() {
 
 /**
  * fetchCategoriesPostsOnIndexPage
- * This function will fetch all the posts of each category, total 8 categories, for category section on the index page.
+ * This function will fetch all the posts of each category, total 6 categories, for categories_section on the index page.
  */
 export function fetchCategoriesPostsOnIndexPage() {
   return (dispatch, getState) => {
     const state = getState()
     const indexPage = _.get(state, fieldNames.indexPage, {})
-    const fields = [fieldNames.humanRights, fieldNames.landEnvironment, fieldNames.politicalSociety,
-      fieldNames.cultureMovie, fieldNames.photoAudio, fieldNames.international, fieldNames.character,
-      fieldNames.transformedJustice]
+    const categories = _.values(fieldNames.categories)
     let isContentReady = true
 
-    fields.forEach((field) => {
-      if (_.get(indexPage, [field, 'length'], 0) === 0) {
+    categories.forEach((category) => {
+      if (_.get(indexPage, [category, 'length'], 0) === 0) {
         isContentReady = false
       }
     })
+
     if (isContentReady) {
       return Promise.resolve()
     }

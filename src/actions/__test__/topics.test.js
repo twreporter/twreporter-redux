@@ -11,7 +11,7 @@
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import configureMockStore from 'redux-mock-store'
-import fieldNames from '../../constants/redux-state-fields'
+import fieldNames from '../../constants/redux-state-field-names'
 import nock from 'nock'
 import thunk from 'redux-thunk'
 import types from '../../constants/action-types'
@@ -132,7 +132,7 @@ describe('Testing fetchTopics:', () => {
   context('There is no more topics to load', () => {
     it('Should dispatch no actions and return Promise.resolve()', () => {
       const store = mockStore({
-        [fieldNames.topics]: {
+        [fieldNames.topicList]: {
           total: 2,
           items: [topic1, topic2],
         },
@@ -145,7 +145,7 @@ describe('Testing fetchTopics:', () => {
   context('It loads topics successfully', () => {
     it('Should dispatch types.GET_TOPICS', () => {
       const store = mockStore({
-        [fieldNames.topics]: {
+        [fieldNames.topicList]: {
           items: [topic1],
           total: 2,
         },
@@ -213,7 +213,7 @@ describe('Testing fetchTopicsOnIndexPage:', () => {
     it('Should do nothing', () => {
       const store = mockStore({
         [fieldNames.indexPage]: {
-          [fieldNames.topics]: [
+          [fieldNames.sections.topicsSection]: [
             topic1, topic2,
           ],
         },

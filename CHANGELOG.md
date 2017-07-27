@@ -1,3 +1,6 @@
+### 2.0.0
+- code refactoring, especially change the redux-state-fields data structure
+
 ### 1.0.7
 - expose formatAPIURL function 
 - update fetchPhotographyPostsOnIndexPage function. Fetch featured posts. 

@@ -1,7 +1,6 @@
 /* global describe, it*/
 
-
-import fieldNames from '../../constants/redux-state-fields'
+import fieldNames from '../../constants/redux-state-field-names'
 import reducer from '../index-page'
 import types from '../../constants/action-types'
 
@@ -59,35 +58,33 @@ describe('index-page reducer', () => {
   it('should handle GET_CONTENT_FOR_INDEX_PAGE', () => {
     expect(
       reducer({
-        [fieldNames.latestTopic]: 'topic-slug-3',
+        [fieldNames.sections.latestTopicSection]: 'topic-slug-3',
       }, {
         type: types.GET_CONTENT_FOR_INDEX_PAGE,
         payload: {
-          [fieldNames.latest]: _.cloneDeep([post1, post2]),
-          [fieldNames.editorPicks]: _.cloneDeep([post4]),
-          [fieldNames.reviews]: _.cloneDeep([post3]),
-          [fieldNames.latestTopic]: _.cloneDeep([fullTopic]),
-          [fieldNames.topics]: _.cloneDeep([fullTopic, nonFullTopic]),
-          [fieldNames.photos]: _.cloneDeep([post1, post4]),
-          [fieldNames.infographics]: _.cloneDeep([post2, post3]),
+          [fieldNames.sections.latestSection]: _.cloneDeep([post1, post2]),
+          [fieldNames.sections.editorPicksSection]: _.cloneDeep([post4]),
+          [fieldNames.sections.reviewsSection]: _.cloneDeep([post3]),
+          [fieldNames.sections.latestTopicSection]: _.cloneDeep([fullTopic]),
+          [fieldNames.sections.topicsSection]: _.cloneDeep([fullTopic, nonFullTopic]),
+          [fieldNames.sections.photosSection]: _.cloneDeep([post1, post4]),
+          [fieldNames.sections.infographicsSection]: _.cloneDeep([post2, post3]),
         },
       }),
     ).to.deep.equal({
-      [fieldNames.latest]: [post1.slug, post2.slug],
-      [fieldNames.editorPicks]: [post4.slug],
-      [fieldNames.reviews]: [post3.slug],
-      [fieldNames.latestTopic]: fullTopic.slug,
-      [fieldNames.topics]: [fullTopic.slug, nonFullTopic.slug],
-      [fieldNames.photos]: [post1.slug, post4.slug],
-      [fieldNames.infographics]: [post2.slug, post3.slug],
-      [fieldNames.humanRights]: [],
-      [fieldNames.landEnvironment]: [],
-      [fieldNames.politicalSociety]: [],
-      [fieldNames.cultureMovie]: [],
-      [fieldNames.photoAudio]: [],
-      [fieldNames.international]: [],
-      [fieldNames.character]: [],
-      [fieldNames.transformedJustice]: [],
+      [fieldNames.sections.latestSection]: [post1.slug, post2.slug],
+      [fieldNames.sections.editorPicksSection]: [post4.slug],
+      [fieldNames.sections.reviewsSection]: [post3.slug],
+      [fieldNames.sections.latestTopicSection]: [fullTopic.slug],
+      [fieldNames.sections.topicsSection]: [fullTopic.slug, nonFullTopic.slug],
+      [fieldNames.sections.photosSection]: [post1.slug, post4.slug],
+      [fieldNames.sections.infographicsSection]: [post2.slug, post3.slug],
+      [fieldNames.categories.humanRightsAndSociety]: [],
+      [fieldNames.categories.environmentAndEducation]: [],
+      [fieldNames.categories.politicsAndEconomy]: [],
+      [fieldNames.categories.cultureAndArt]: [],
+      [fieldNames.categories.livingAndMedicalCare]: [],
+      [fieldNames.categories.international]: [],
       error: null,
     })
   })
@@ -96,26 +93,26 @@ describe('index-page reducer', () => {
     const err = new Error('error occurs')
     expect(
       reducer({
-        [fieldNames.latest]: [post1.slug, post2.slug],
-        [fieldNames.editorPicks]: [post4.slug],
-        [fieldNames.reviews]: [post3.slug],
-        [fieldNames.latestTopic]: fullTopic.slug,
-        [fieldNames.topics]: [fullTopic.slug, nonFullTopic.slug],
-        [fieldNames.photos]: [post1.slug, post4.slug],
-        [fieldNames.infographics]: [post2.slug, post3.slug],
+        [fieldNames.sections.latestSection]: [post1.slug, post2.slug],
+        [fieldNames.sections.editorPicksSection]: [post4.slug],
+        [fieldNames.sections.reviewsSection]: [post3.slug],
+        [fieldNames.sections.latestTopicSection]: [fullTopic.slug],
+        [fieldNames.sections.topicsSection]: [fullTopic.slug, nonFullTopic.slug],
+        [fieldNames.sections.photosSection]: [post1.slug, post4.slug],
+        [fieldNames.sections.infographicsSection]: [post2.slug, post3.slug],
         error: null,
       }, {
         type: types.ERROR_TO_GET_INDEX_PAGE_CONTENT,
         error: err,
       }),
     ).to.deep.equal({
-      [fieldNames.latest]: [post1.slug, post2.slug],
-      [fieldNames.editorPicks]: [post4.slug],
-      [fieldNames.reviews]: [post3.slug],
-      [fieldNames.latestTopic]: fullTopic.slug,
-      [fieldNames.topics]: [fullTopic.slug, nonFullTopic.slug],
-      [fieldNames.photos]: [post1.slug, post4.slug],
-      [fieldNames.infographics]: [post2.slug, post3.slug],
+      [fieldNames.sections.latestSection]: [post1.slug, post2.slug],
+      [fieldNames.sections.editorPicksSection]: [post4.slug],
+      [fieldNames.sections.reviewsSection]: [post3.slug],
+      [fieldNames.sections.latestTopicSection]: [fullTopic.slug],
+      [fieldNames.sections.topicsSection]: [fullTopic.slug, nonFullTopic.slug],
+      [fieldNames.sections.photosSection]: [post1.slug, post4.slug],
+      [fieldNames.sections.infographicsSection]: [post2.slug, post3.slug],
       error: err,
     })
   })
@@ -130,7 +127,7 @@ describe('index-page reducer', () => {
         },
       }),
     ).to.deep.equal({
-      [fieldNames.topics]: [nonFullTopic.slug, fullTopic.slug],
+      [fieldNames.sections.topicsSection]: [nonFullTopic.slug, fullTopic.slug],
     })
   })
 
@@ -144,7 +141,7 @@ describe('index-page reducer', () => {
         },
       }),
     ).to.deep.equal({
-      [fieldNames.photos]: [post1.slug],
+      [fieldNames.sections.photosSection]: [post1.slug],
     })
   })
 
@@ -158,7 +155,7 @@ describe('index-page reducer', () => {
         },
       }),
     ).to.deep.equal({
-      [fieldNames.infographics]: [post1.slug],
+      [fieldNames.sections.infographicsSection]: [post1.slug],
     })
   })
 
@@ -172,7 +169,7 @@ describe('index-page reducer', () => {
         },
       }),
     ).to.deep.equal({
-      [fieldNames.editorPicks]: [post1.slug],
+      [fieldNames.sections.editorPicksSection]: [post1.slug],
     })
   })
 })
