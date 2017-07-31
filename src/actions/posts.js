@@ -53,7 +53,10 @@ export function fetchAFullPost(slug) {
         // Error to get topics
         return dispatch({
           type: types.ERROR_TO_GET_A_FULL_POST,
-          error,
+          payload: {
+            error,
+            slug,
+          },
         })
       })
   }

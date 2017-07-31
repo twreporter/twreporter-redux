@@ -65,9 +65,13 @@ describe('post reducer', () => {
     expect(
       post({}, {
         type: types.ERROR_TO_GET_A_FULL_POST,
-        error: err,
+        payload: {
+          slug: 'mock-slug',
+          error: err,
+        },
       }),
     ).to.deep.equal({
+      slug: 'mock-slug',
       error: err,
     })
   })
