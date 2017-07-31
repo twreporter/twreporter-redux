@@ -1,19 +1,20 @@
 import types from '../constants/action-types'
-import fieldNames from '../constants/redux-state-fields'
+import fieldNames from '../constants/redux-state-field-names'
+
+// lodash
+import concat from 'lodash/concat'
 import get from 'lodash/get'
 import map from 'lodash/map'
 import merge from 'lodash/merge'
+import values from 'lodash/values'
 
 const _ = {
+  concat,
   get,
   map,
   merge,
+  values,
 }
-
-const { latest, latestTopic, editorPicks, reviews, topics, photos,
-  infographics, humanRights, landEnvironment, politicalSociety,
-  cultureMovie, photoAudio, international, character,
-  transformedJustice } = fieldNames
 
 function indexPage(state = {}, action = {}) {
   let payload
@@ -21,9 +22,9 @@ function indexPage(state = {}, action = {}) {
     case types.GET_CONTENT_FOR_INDEX_PAGE: {
       payload = action.payload
       const rtn = {}
-      const fields = [latest, editorPicks, reviews, topics,
-        photos, infographics, humanRights, landEnvironment, politicalSociety,
-        cultureMovie, photoAudio, international, character, transformedJustice]
+      const sections = _.values(fieldNames.sections)
+      const categories = _.values(fieldNames.categories)
+      const fields = _.concat(sections, categories)
 
       fields.forEach((field) => {
         rtn[field] = _.map(_.get(payload, field), (post) => {
@@ -31,16 +32,13 @@ function indexPage(state = {}, action = {}) {
         })
       })
 
-
-      return _.merge({}, state, rtn, {
-        [latestTopic]: _.get(payload, [latestTopic, 0, 'slug']),
-      }, { error: null })
+      return _.merge({}, state, rtn, { error: null })
     }
 
     case types.GET_TOPICS_FOR_INDEX_PAGE: {
       return _.merge({}, state, {
         // only store the topic slugs
-        [topics]: _.map(_.get(action, 'payload.items'), (item) => {
+        [fieldNames.sections.topicsSection]: _.map(_.get(action, 'payload.items'), (item) => {
           return _.get(item, 'slug')
         }),
       })
@@ -49,7 +47,7 @@ function indexPage(state = {}, action = {}) {
     case types.GET_PHOTOGRAPHY_POSTS_FOR_INDEX_PAGE: {
       return _.merge({}, state, {
         // only store the posts slugs
-        [photos]: _.map(_.get(action, 'payload.items'), (item) => {
+        [fieldNames.sections.photosSection]: _.map(_.get(action, 'payload.items'), (item) => {
           return _.get(item, 'slug')
         }),
       })
@@ -58,7 +56,7 @@ function indexPage(state = {}, action = {}) {
     case types.GET_INFOGRAPHIC_POSTS_FOR_INDEX_PAGE: {
       return _.merge({}, state, {
         // only store the posts slugs
-        [infographics]: _.map(_.get(action, 'payload.items'), (item) => {
+        [fieldNames.sections.infographicsSection]: _.map(_.get(action, 'payload.items'), (item) => {
           return _.get(item, 'slug')
         }),
       })
@@ -67,7 +65,7 @@ function indexPage(state = {}, action = {}) {
     case types.GET_EDITOR_PICKED_POSTS: {
       return _.merge({}, state, {
         // only store the posts slugs
-        [editorPicks]: _.map(_.get(action, 'payload.items'), (item) => {
+        [fieldNames.sections.editorPicksSection]: _.map(_.get(action, 'payload.items'), (item) => {
           return _.get(item, 'slug')
         }),
       })

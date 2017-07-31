@@ -1,11 +1,12 @@
 import apiConfig from '../conf/api-config.json'
 import axios from 'axios'
+import fieldNames from '../constants/redux-state-field-names'
+import apiEndpoints from '../constants/api-endpoints'
+import formAPIURL from '../utils/form-api-url'
+
 // lodash
 import get from 'lodash/get'
 import types from '../constants/action-types'
-import fieldNames from '../constants/redux-state-fields'
-import apiEndpoints from '../constants/api-endpoints'
-import formAPIURL from '../utils/form-api-url'
 
 const _ = {
   get,
@@ -18,7 +19,7 @@ const _ = {
 export function fetchAFullTopic(slug) {
   return (dispatch, getState) => {
     const state = getState()
-    const topic = _.get(state, `${fieldNames.entities}.${fieldNames.topics}.${slug}`, {})
+    const topic = _.get(state, `${fieldNames.entities}.${fieldNames.topicsInEntities}.${slug}`, {})
     if (_.get(topic, 'full', false)) {
       return dispatch({
         type: types.CHANGE_SELECTED_TOPIC,
@@ -89,7 +90,7 @@ function _fetchTopics(dispatch, path, successActionType) {
 export function fetchTopics(limit) {
   return (dispatch, getState) => {
     const state = getState()
-    const topics = _.get(state, fieldNames.topics)
+    const topics = _.get(state, fieldNames.topicList)
 
     // if topics already exsited and there is nothing more to load
     if (topics && _.get(topics, 'total', 0) <= _.get(topics, 'items.length', 0)) {
@@ -111,7 +112,7 @@ export function fetchTopics(limit) {
 export function fetchTopicsOnIndexPage() {
   return (dispatch, getState) => {
     const state = getState()
-    const topics = _.get(state, `${fieldNames.indexPage}.${fieldNames.topics}`, [])
+    const topics = _.get(state, `${fieldNames.indexPage}.${fieldNames.sections.topicsSection}`, [])
     if (Array.isArray(topics) && topics.length > 0) {
       return Promise.resolve()
     }

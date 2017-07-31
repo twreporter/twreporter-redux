@@ -1,7 +1,7 @@
 import apiConfig from '../conf/api-config.json'
 import apiEndpoints from '../constants/api-endpoints'
 import axios from 'axios'
-import fieldNames from '../constants/redux-state-fields'
+import fieldNames from '../constants/redux-state-field-names'
 import formAPIURL from '../utils/form-api-url'
 import postStyles from '../constants/post-styles'
 import types from '../constants/action-types'
@@ -21,7 +21,7 @@ const _ = {
 export function fetchAFullPost(slug) {
   return (dispatch, getState) => {
     const state = getState()
-    const post = _.get(state, `${fieldNames.entities}.${fieldNames.posts}.${slug}`, {})
+    const post = _.get(state, `${fieldNames.entities}.${fieldNames.postsInEntities}.${slug}`, {})
     if (_.get(post, 'full', false)) {
       return dispatch({
         type: types.CHANGE_SELECTED_POST,
@@ -128,7 +128,7 @@ export function fetchListedPosts(listID, listType, limit = 10) {
 export function fetchEditorPickedPosts() {
   return (dispatch, getState) => {
     const state = getState()
-    const posts = _.get(state, `${fieldNames.indexPage}.${fieldNames.editorPicks}`, [])
+    const posts = _.get(state, `${fieldNames.indexPage}.${fieldNames.sections.editorPicksSection}`, [])
 
     if (posts.length > 0) {
       return Promise.resolve()
@@ -148,7 +148,7 @@ export function fetchEditorPickedPosts() {
 export function fetchPhotographyPostsOnIndexPage() {
   return (dispatch, getState) => {
     const state = getState()
-    const posts = _.get(state, `${fieldNames.indexPage}.${fieldNames.photos}`, [])
+    const posts = _.get(state, `${fieldNames.indexPage}.${fieldNames.sections.photosSection}`, [])
     if (Array.isArray(posts) && posts.length > 0) {
       return Promise.resolve()
     }
@@ -167,7 +167,7 @@ export function fetchPhotographyPostsOnIndexPage() {
 export function fetchInfographicPostsOnIndexPage() {
   return (dispatch, getState) => {
     const state = getState()
-    const posts = _.get(state, `${fieldNames.indexPage}.${fieldNames.infographics}`, [])
+    const posts = _.get(state, `${fieldNames.indexPage}.${fieldNames.sections.infographicsSection}`, [])
     if (Array.isArray(posts) && posts.length > 0) {
       return Promise.resolve()
     }
