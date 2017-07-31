@@ -151,7 +151,7 @@ describe('Testing fetchAFullPost:', () => {
           expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && FAILURE
           expect(store.getActions()[0]).to.deep.equal(expectedRequestAction)
           expect(store.getActions()[1].type).to.equal(types.ERROR_TO_GET_A_FULL_POST)
-          expect(store.getActions()[1].error).to.be.an.instanceof(Error)
+          expect(store.getActions()[1].payload.error).to.be.an.instanceof(Error)
         })
     })
   })

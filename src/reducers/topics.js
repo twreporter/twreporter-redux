@@ -32,9 +32,7 @@ function topic(state = {}, action = {}) {
       }
 
     case types.ERROR_TO_GET_A_FULL_TOPIC:
-      return {
-        error: action.error,
-      }
+      return action.payload
     default:
       return state
   }

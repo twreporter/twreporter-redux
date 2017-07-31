@@ -112,7 +112,7 @@ describe('Testing fetchAFullTopic:', () => {
           expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && FAILURE
           expect(store.getActions()[0].type).to.deep.equal(types.START_TO_GET_A_FULL_TOPIC)
           expect(store.getActions()[1].type).to.equal(types.ERROR_TO_GET_A_FULL_TOPIC)
-          expect(store.getActions()[1].error).to.be.an.instanceof(Error)
+          expect(store.getActions()[1].payload.error).to.be.an.instanceof(Error)
         })
     })
   })

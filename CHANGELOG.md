@@ -1,3 +1,6 @@
+### 2.0.1
+- store slug in payload if action error occurs 
+
 ### 2.0.0
 - code refactoring, especially change the redux-state-fields data structure
 

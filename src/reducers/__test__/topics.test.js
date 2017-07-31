@@ -39,9 +39,13 @@ describe('topic reducer', () => {
       topic({
       }, {
         type: types.ERROR_TO_GET_A_FULL_TOPIC,
-        error: err,
+        payload: {
+          slug: 'mock-slug',
+          error: err,
+        },
       }),
     ).to.deep.equal({
+      slug: 'mock-slug',
       error: err,
     })
   })
