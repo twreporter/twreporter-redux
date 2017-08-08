@@ -4,23 +4,21 @@ const formAPIURL = (path, toEncode = true) => {
   let protocol
   let host
   let port
+  let version
   const _path = toEncode ? encodeURI(path) : path
   if (process.env.NODE_ENV === 'development') {
-    return `http://localhost:8080/v1/${_path}`
-  }
-
-  // process.env.BROWSER is defined in next.config.js
-  if (process.env.BROWSER) {
-    protocol = config.API_PROTOCOL_ON_CLIENT
-    host = config.API_HOST_ON_CLIENT
-    port = config.API_PORT_ON_CLIENT
+    protocol = process.env.API_PROTOCOL || 'http'
+    host = process.env.API_HOST || 'localhost'
+    port = process.env.API_PORT || '8080'
+    version = process.env.API_DEFAULT_VERSION || '/v1/'
   } else {
-    protocol = config.API_PROTOCOL_ON_SERVER
-    host = config.API_HOST_ON_SERVER
-    port = config.API_PORT_ON_SERVER
+    protocol = process.env.API_PROTOCOL || config.API_PROTOCOL
+    host = process.env.API_HOST || config.API_HOST
+    port = process.env.API_PORT || config.API_PORT
+    version = process.env.API_DEFAULT_VERSION || config.API_DEFAULT_VERSION
   }
 
-  return `${protocol}://${host}:${port}/v1/${_path}`
+  return `${protocol}://${host}:${port}${version}${_path}`
 }
 
 export default formAPIURL
