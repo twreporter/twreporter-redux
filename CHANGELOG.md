@@ -1,3 +1,6 @@
+### 2.1.1
+- Add isFetching for GET_CONTENT_FOR_INDEX_PAGE
+
 ### 2.1.0
 - Add process.env.API_HOST, process.env.API_PORT, process.env.API_PROTOCOL and process.env.API_DEFAULT_VERSION
 variables for clients to overwrite the api config 
