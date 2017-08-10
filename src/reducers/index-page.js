@@ -32,7 +32,7 @@ function indexPage(state = {}, action = {}) {
         })
       })
 
-      return _.merge({}, state, rtn, { error: null })
+      return _.merge({}, state, rtn, { error: null, isFetching: false })
     }
 
     case types.GET_TOPICS_FOR_INDEX_PAGE: {
@@ -73,12 +73,15 @@ function indexPage(state = {}, action = {}) {
 
     case types.START_TO_GET_INDEX_PAGE_CONTENT: {
       console.log('url to fetch:', action.url)
-      return state
+      return _.merge({}, state, {
+        isFetching: true
+      })
     }
 
     case types.ERROR_TO_GET_INDEX_PAGE_CONTENT: {
       return _.merge({}, state, {
         error: action.error,
+        isFetching: false
       })
     }
 
