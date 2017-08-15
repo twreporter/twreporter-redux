@@ -1,3 +1,7 @@
+### 2.1.2
+- Fetch topics if topics exist but is empty object
+- Fix indexpage to fit lint and test
+
 ### 2.1.1
 - Add isFetching for GET_CONTENT_FOR_INDEX_PAGE
 
