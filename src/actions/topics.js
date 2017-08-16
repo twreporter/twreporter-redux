@@ -3,10 +3,10 @@ import axios from 'axios'
 import fieldNames from '../constants/redux-state-field-names'
 import apiEndpoints from '../constants/api-endpoints'
 import formAPIURL from '../utils/form-api-url'
+import types from '../constants/action-types'
 
 // lodash
 import get from 'lodash/get'
-import types from '../constants/action-types'
 
 const _ = {
   get,
@@ -61,11 +61,13 @@ export function fetchAFullTopic(slug) {
 
 function _fetchTopics(dispatch, path, successActionType) {
   // Start to get topics
+  const url = formAPIURL(path)
   dispatch({
     type: types.START_TO_GET_TOPICS,
+    url,
   })
 
-  return axios.get(formAPIURL(path), {
+  return axios.get(url, {
     timeout: apiConfig.API_TIME_OUT,
   })
     .then((response) => {
@@ -94,13 +96,15 @@ export function fetchTopics(limit) {
   return (dispatch, getState) => {
     const state = getState()
     const topics = _.get(state, fieldNames.topicList)
+    const items = _.get(topics, 'items')
 
-    // if topics already exsited and there is nothing more to load
-    if (topics && _.get(topics, 'total', 0) <= _.get(topics, 'items.length', 0)) {
+    // if items already exsited and there is nothing more to load
+    if (Array.isArray(items) && _.get(topics, 'total', 0) <= items.length) {
       return Promise.resolve()
     }
 
     const offset = _.get(topics, 'items.length', 0)
+
     const path = `${apiEndpoints.topics}?limit=${limit}&offset=${offset}`
 
     return _fetchTopics(dispatch, path, types.GET_TOPICS)

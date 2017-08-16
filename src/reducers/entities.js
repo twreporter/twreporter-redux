@@ -225,6 +225,7 @@ function entities(state = {}, action = {}) {
       })
     }
 
+    case types.GET_TOPICS:
     case types.GET_TOPICS_FOR_INDEX_PAGE: {
       payload = _.get(action, 'payload.items', [])
 

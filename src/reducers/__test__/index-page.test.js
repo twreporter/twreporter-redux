@@ -86,6 +86,7 @@ describe('index-page reducer', () => {
       [fieldNames.categories.livingAndMedicalCare]: [],
       [fieldNames.categories.international]: [],
       error: null,
+      isFetching: false,
     })
   })
 
@@ -114,6 +115,7 @@ describe('index-page reducer', () => {
       [fieldNames.sections.photosSection]: [post1.slug, post4.slug],
       [fieldNames.sections.infographicsSection]: [post2.slug, post3.slug],
       error: err,
+      isFetching: false,
     })
   })
 
