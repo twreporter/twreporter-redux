@@ -19,20 +19,26 @@ function topic(state = {}, action = {}) {
   switch (action.type) {
     case types.GET_A_FULL_TOPIC:
     case types.CHANGE_SELECTED_TOPIC: {
-      return {
+      return _.merge({}, state, {
         slug: _.get(action, 'payload.slug'),
         error: null,
-      }
+        isFetching: false,
+      })
     }
 
     case types.START_TO_GET_A_FULL_TOPIC:
-      return {
+      return _.merge({}, state, {
         slug: _.get(action, 'payload.slug'),
         error: null,
-      }
+        isFetching: true,
+      })
 
     case types.ERROR_TO_GET_A_FULL_TOPIC:
-      return action.payload
+      return _.merge({}, state, {
+        slug: _.get(action, 'payload.slug'),
+        error: _.get(action, 'payload.error'),
+        isFetching: false,
+      })
     default:
       return state
   }
@@ -50,16 +56,21 @@ function topics(state = {}, action = {}) {
         items: concatItems,
         total,
         error: null,
+        isFetching: false,
       })
     }
 
     case types.START_TO_GET_TOPICS:
       console.log('url to fetch:', action.url)
-      return state
+      return _.merge({}, state, {
+        error: null,
+        isFetching: true,
+      })
 
     case types.ERROR_TO_GET_TOPICS:
       return _.merge({}, state, {
         error: _.get(action, 'error'),
+        isFetching: false,
       })
     default:
       return state

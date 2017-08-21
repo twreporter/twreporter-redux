@@ -30,6 +30,7 @@ describe('topic reducer', () => {
     ).to.deep.equal({
       slug: topic1.slug,
       error: null,
+      isFetching: false,
     })
   })
 
@@ -47,6 +48,7 @@ describe('topic reducer', () => {
     ).to.deep.equal({
       slug: 'mock-slug',
       error: err,
+      isFetching: false,
     })
   })
 })
@@ -72,6 +74,7 @@ describe('topics reducer', () => {
       items: [topic1.slug, topic2.slug],
       total: 10,
       error: null,
+      isFetching: false,
     })
   })
 
@@ -90,6 +93,7 @@ describe('topics reducer', () => {
       items: [topic1.slug, topic2.slug],
       total: 10,
       error: err,
+      isFetching: false,
     })
   })
 })

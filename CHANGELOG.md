@@ -1,3 +1,6 @@
+### 2.1.3
+- Add isFetching in topics and topic reducers
+
 ### 2.1.2
 - Fetch topics if topics exist but is empty object
 - Fix indexpage to fit lint and test
