@@ -156,7 +156,7 @@ export function fetchPhotographyPostsOnIndexPage() {
       return Promise.resolve()
     }
 
-    const path = `${apiEndpoints.posts}?where={"style":"${postStyles.photography}","is_featured":true}&limit=6`
+    const path = `${apiEndpoints.posts}?where={"style":"${postStyles.photography}"}&limit=6`
 
     return _fetchPosts(dispatch, path, types.GET_PHOTOGRAPHY_POSTS_FOR_INDEX_PAGE)
   }
