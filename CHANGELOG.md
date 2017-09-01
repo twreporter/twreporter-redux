@@ -1,3 +1,6 @@
+### 2.1.4
+- Remove is_feature:true param in fetchPhotographyPostsOnIndexPage function
+
 ### 2.1.3
 - Add isFetching in topics and topic reducers
 
