@@ -16,6 +16,9 @@ import nock from 'nock'
 import thunk from 'redux-thunk'
 import types from '../../constants/action-types'
 import * as actions from '../topics'
+import pagination from '../../utils/pagination'
+
+const { pageToOffset } = pagination
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -43,8 +46,8 @@ describe('Testing fetchAFullTopic:', () => {
   afterEach(() => {
     nock.cleanAll()
   })
-  context('Topic is already existed', () => {
-    it('Should dispatch no actions and return Promise.resolve()', () => {
+  context('Topic is already existed in entities', () => {
+    it('Should dispatch types.CHANGE_SELECTED_TOPIC with topic', () => {
       const mockSlug = 'mock-slug'
       const mockTopic = {
         id: 'mock-id',
@@ -52,14 +55,14 @@ describe('Testing fetchAFullTopic:', () => {
         full: true,
       }
       const store = mockStore({
-        entities: {
-          topics: {
+        [fieldNames.entities]: {
+          [fieldNames.topicsInEntities]: {
             [mockSlug]: mockTopic,
           },
         },
       })
       store.dispatch(actions.fetchAFullTopic(mockSlug))
-      expect(store.getActions().length).to.equal(1) // no action is dispatched
+      expect(store.getActions().length).to.equal(1) // dispatch types.CHANGE_SELECTED_TOPIC
       expect(store.getActions()[0].type).to.equal(types.CHANGE_SELECTED_TOPIC)
       expect(store.getActions()[0].payload).to.deep.equal(mockTopic)
     })
@@ -129,36 +132,27 @@ describe('Testing fetchTopics:', () => {
   afterEach(() => {
     nock.cleanAll()
   })
-  context('There is no more topics to load', () => {
-    it('Should dispatch no actions and return Promise.resolve()', () => {
+  context('There is no such page of topics to load', () => {
+    it('Should dispatch types.GET_TOPICS with empty items array', () => {
       const store = mockStore({
         [fieldNames.topicList]: {
-          total: 2,
-          items: [topic1, topic2],
+          page: 2,
+          totalPages: 2,
+          items: {
+            1: [topic1.slug],
+            2: [topic2.slug],
+          },
         },
       })
-      store.dispatch(actions.fetchTopics(10))
-      expect(store.getActions().length).to.equal(0) // no action is dispatched
-      return expect(store.dispatch(actions.fetchTopics(10))).eventually.equal(undefined)
-    })
-  })
-  context('It loads topics successfully', () => {
-    it('Should dispatch types.GET_TOPICS', () => {
-      const store = mockStore({
-        [fieldNames.topicList]: {
-          items: [topic1],
-          total: 2,
-        },
-      })
-      const limit = 1
-      const offset = 1
+      const page = 3
+      const nPerPage = 1
+      const { limit, offset } = pageToOffset({ page, nPerPage })
+      const total = 5
       const mockApiResponse = {
-        records: [
-          topic2,
-        ],
+        records: [],
         meta: {
           limit,
-          total: 2,
+          total,
           offset,
         },
       }
@@ -166,14 +160,57 @@ describe('Testing fetchTopics:', () => {
         .get(encodeURI(`/v1/topics?limit=${limit}&offset=${offset}`))
         .reply(200, mockApiResponse)
 
-      return store.dispatch(actions.fetchTopics(limit))
+      return store.dispatch(actions.fetchTopics(page, nPerPage))
+        .then(() => {
+          expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && SUCCESS
+          expect(store.getActions()[1].type).to.equal(types.GET_TOPICS)
+          expect(store.getActions()[1].payload).to.deep.equal({
+            items: [],
+            total,
+            limit,
+            offset,
+          })
+        })
+    })
+  })
+  context('It loads topics successfully', () => {
+    it('Should dispatch types.GET_TOPICS', () => {
+      const store = mockStore({
+        [fieldNames.topicList]: {
+          items: {
+            1: [topic1.slug],
+          },
+          totalPages: 5,
+        },
+      })
+      const page = 2
+      const nPerPage = 1
+      const { limit, offset } = pageToOffset({ page, nPerPage })
+      const total = 5
+      const mockApiResponse = {
+        records: [
+          topic2,
+        ],
+        meta: {
+          limit,
+          total,
+          offset,
+        },
+      }
+      nock('http://localhost:8080')
+        .get(encodeURI(`/v1/topics?limit=${limit}&offset=${offset}`))
+        .reply(200, mockApiResponse)
+
+      return store.dispatch(actions.fetchTopics(page, nPerPage))
         .then(() => {
           expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && SUCCESS
           expect(store.getActions()[0].type).to.deep.equal(types.START_TO_GET_TOPICS)
           expect(store.getActions()[1].type).to.equal(types.GET_TOPICS)
           expect(store.getActions()[1].payload).to.deep.equal({
             items: [topic2],
-            total: 2,
+            total,
+            limit,
+            offset,
           })
         })
     })
@@ -191,8 +228,26 @@ describe('Testing fetchTopics:', () => {
           expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && FAILURE
           expect(store.getActions()[0].type).to.deep.equal(types.START_TO_GET_TOPICS)
           expect(store.getActions()[1].type).to.equal(types.ERROR_TO_GET_TOPICS)
-          expect(store.getActions()[1].error).to.be.an.instanceof(Error)
+          expect(store.getActions()[1].payload.error).to.be.an.instanceof(Error)
         })
+    })
+  })
+  context('If the parameter nPerPage is invalid', () => {
+    it('Should dispatch no action and return a Promise.reject(err)', () => {
+      const store = mockStore({})
+      const page = 1
+      const nPerPage = -1
+      expect(store.dispatch(actions.fetchTopics(page, nPerPage))).eventually.to.be.an.instanceof(Error)
+      return expect(store.getActions().length).to.equal(0)  // no action
+    })
+  })
+  context('If the parameter page is invalid', () => {
+    it('Should dispatch no action and return a Promise.reject(err)', () => {
+      const store = mockStore({})
+      const page = -1
+      const nPerPage = 10
+      expect(store.dispatch(actions.fetchTopics(page, nPerPage))).eventually.to.be.an.instanceof(Error)
+      return expect(store.getActions().length).to.equal(0)  // no action
     })
   })
 })
