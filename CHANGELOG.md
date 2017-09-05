@@ -1,3 +1,8 @@
+### 2.1.5
+- Add gulpfile
+- Update topics actions and reducers
+- Update topics action and reducer tests
+
 ### 2.1.4
 - Remove is_feature:true param in fetchPhotographyPostsOnIndexPage function
 
