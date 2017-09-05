@@ -5,7 +5,7 @@ import apiEndpoints from '../constants/api-endpoints'
 import formAPIURL from '../utils/form-api-url'
 import types from '../constants/action-types'
 import pagination from '../utils/pagination'
-import { NotFoundError } from '../utils/error'
+import { BadRequestError } from '../utils/error'
 
 // lodash
 import get from 'lodash/get'
@@ -107,12 +107,12 @@ export function fetchTopics(page = 1, nPerPage = 5) {
   return (dispatch) => {
     /* If nPerPage number is invalid, return a Promise.reject(err) */
     if (!_.isInteger(nPerPage) || nPerPage <= 0) {
-      const err = new NotFoundError(`nPerPage value must be an interger larger than 0, but is ${nPerPage}`)
+      const err = new BadRequestError(`nPerPage value must be an interger larger than 0, but is ${nPerPage}`)
       return Promise.reject(err)
     }
     /* If page number is invalid, , return a Promise.reject(err) */
     if (!_.isInteger(page) || page <= 0) {
-      const err = new NotFoundError(`page value must be an interger larger than 0, but is ${page}`)
+      const err = new BadRequestError(`page value must be an interger larger than 0, but is ${page}`)
       return Promise.reject(err)
     }
 

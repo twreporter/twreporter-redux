@@ -6,6 +6,16 @@ class FatalError extends ExtendableError {
   }
 }
 
+class BadRequestError extends FatalError {
+  constructor(props) {
+    super(props)
+    this.status = 400
+  }
+  getStatus() {
+    return this.status
+  }
+}
+
 class NotFoundError extends FatalError {
   constructor(props) {
     super(props)
@@ -26,4 +36,4 @@ class InternalServerError extends FatalError {
   }
 }
 
-export { FatalError, InternalServerError, NotFoundError }
+export { FatalError, InternalServerError, NotFoundError, BadRequestError }
