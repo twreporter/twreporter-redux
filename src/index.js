@@ -1,5 +1,6 @@
 import entities from './reducers/entities'
 import formAPIURL from './utils/form-api-url'
+import pagination from './utils/pagination'
 import reduxStateFields from './constants/redux-state-field-names'
 import indexPage from './reducers/index-page'
 import { denormalizePosts, denormalizeTopics } from './utils/denormalize-asset'
@@ -9,7 +10,6 @@ import { fetchIndexPageContent, fetchCategoriesPostsOnIndexPage } from './action
 import { fetchAFullPost, fetchListedPosts, fetchEditorPickedPosts,
   fetchInfographicPostsOnIndexPage, fetchPhotographyPostsOnIndexPage } from './actions/posts'
 import { fetchAFullTopic, fetchTopics, fetchTopicsOnIndexPage } from './actions/topics'
-
 
 export default {
   actions: {
@@ -37,5 +37,6 @@ export default {
     denormalizePosts,
     denormalizeTopics,
     formAPIURL,
+    pagination,
   },
 }

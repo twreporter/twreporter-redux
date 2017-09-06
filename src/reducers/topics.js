@@ -1,4 +1,5 @@
 import types from '../constants/action-types'
+import pagination from '../utils/pagination'
 
 // lodash
 import concat from 'lodash/concat'
@@ -14,6 +15,7 @@ const _ = {
   merge,
   set,
 }
+const { offsetToPage } = pagination
 
 function topic(state = {}, action = {}) {
   switch (action.type) {
@@ -47,14 +49,20 @@ function topic(state = {}, action = {}) {
 function topics(state = {}, action = {}) {
   switch (action.type) {
     case types.GET_TOPICS: {
-      const items = _.get(action, 'payload.items', [])
-      const total = _.get(action, 'payload.total', 0)
-
-      const concatItems = _.concat(_.get(state, 'items', []), _.map(items, item => item.slug))
-
+      const { payload } = action
+      const total = _.get(payload, 'total')
+      const offset = _.get(payload, 'offset')
+      const limit = _.get(payload, 'limit')
+      const { page, nPerPage, totalPages } = offsetToPage({ limit, offset, total })
+      const pageItems = _.map(_.get(payload, 'items'), item => item.slug)
+      /* If nPerPage changed, overwrite the items in state, otherwise merge items with which in state */
+      const items = (nPerPage !== state.nPerPage) ? { [page]: pageItems } :
+        _.merge({}, state.items, { [page]: pageItems })
       return _.merge({}, state, {
-        items: concatItems,
-        total,
+        items,
+        totalPages,
+        page,
+        nPerPage,
         error: null,
         isFetching: false,
       })
@@ -63,15 +71,18 @@ function topics(state = {}, action = {}) {
     case types.START_TO_GET_TOPICS:
       console.log('url to fetch:', action.url)
       return _.merge({}, state, {
+        // page: action.page,
+        // nPerPage: action.nPerPage,
         error: null,
         isFetching: true,
       })
 
     case types.ERROR_TO_GET_TOPICS:
       return _.merge({}, state, {
-        error: _.get(action, 'error'),
+        error: _.get(action, 'payload.error'),
         isFetching: false,
       })
+
     default:
       return state
   }

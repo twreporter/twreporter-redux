@@ -3,6 +3,9 @@
 import { topic, topics } from '../topics'
 import types from '../../constants/action-types'
 import { expect } from 'chai'
+import pagination from '../../utils/pagination'
+
+const { offsetToPage } = pagination
 
 const topic1 = {
   id: 'topic-id-1',
@@ -61,18 +64,28 @@ describe('topics reducer', () => {
   })
 
   it('should handle GET_TOPICS', () => {
+    const total = 10
+    const limit = 3
+    const offset = 6
+    const { page, nPerPage, totalPages } = offsetToPage({ total, limit, offset })
     expect(
       topics({
       }, {
         type: types.GET_TOPICS,
         payload: {
           items: [topic1, topic2],
-          total: 10,
+          total,
+          limit,
+          offset,
         },
       }),
     ).to.deep.equal({
-      items: [topic1.slug, topic2.slug],
-      total: 10,
+      items: {
+        [page]: [topic1.slug, topic2.slug],
+      },
+      page,
+      nPerPage,
+      totalPages,
       error: null,
       isFetching: false,
     })
@@ -87,7 +100,9 @@ describe('topics reducer', () => {
         error: null,
       }, {
         type: types.ERROR_TO_GET_TOPICS,
-        error: err,
+        payload: {
+          error: err,
+        },
       }),
     ).to.deep.equal({
       items: [topic1.slug, topic2.slug],

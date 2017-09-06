@@ -1,15 +1,17 @@
 {
   "name": "twreporter-redux",
-  "version": "2.1.4",
+  "version": "2.1.5",
   "description": "redux actions and reducers for twreporter website",
   "main": "lib/index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha $(find src -name '*.test.js') --compilers js:babel-core/register",
-    "build": "npm run prebuild:lib && npm run build:lib",
-    "prebuild:lib": "rimraf lib/*",
-    "build:lib": "babel --out-dir lib src --copy-files",
+    "build": "npm run build:lib",
+    "clean:lib": "rimraf lib/*",
+    "build:lib": "npm run clean:lib && gulp babel-src",
+    "build:cus": "gulp build-to-customer-folder",
     "lint": "eslint -c .eslintrc src ",
-    "validate": "npm ls"
+    "validate": "npm ls",
+    "dev": "npm run build:cus && gulp watch"
   },
   "repository": {
     "type": "git",
@@ -47,6 +49,8 @@
     "eslint-plugin-import": "^2.3.0",
     "eslint-plugin-jsx-a11y": "^5.1.0",
     "eslint-plugin-react": "^7.1.0",
+    "gulp": "gulpjs/gulp#4.0",
+    "gulp-babel": "^7.0.0",
     "mocha": "^3.4.2",
     "nock": "^9.0.13",
     "precommit-hook": "^3.0.0",
