@@ -1,4 +1,4 @@
-/* global describe, context, it*/
+/* global describe, context, it */
 
 import { expect } from 'chai'
 import { denormalizePosts, denormalizeTopics } from '../denormalize-asset'
