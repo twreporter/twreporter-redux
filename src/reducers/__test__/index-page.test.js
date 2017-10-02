@@ -1,4 +1,4 @@
-/* global describe, it*/
+/* global describe, it */
 
 import fieldNames from '../../constants/redux-state-field-names'
 import reducer from '../index-page'

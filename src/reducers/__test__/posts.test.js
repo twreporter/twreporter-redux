@@ -1,4 +1,4 @@
-/* global describe, it*/
+/* global describe, it */
 
 import { post, posts } from '../posts'
 import types from '../../constants/action-types'
