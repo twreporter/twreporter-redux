@@ -1,9 +1,16 @@
-import { ID, TOKEN } from '../constants/local-storage-key'
+import { ID, TOKEN, AUTH_INFO } from '../constants/local-storage-key'
+import get from 'lodash/get'
+
+const _ = {
+  get,
+}
 
 const getVerifiedToken = () => {
   const browserLocalStorage = (typeof localStorage === 'undefined') ? null : localStorage
   if (browserLocalStorage) {
-    return browserLocalStorage.getItem(TOKEN)
+    const authInfoString = browserLocalStorage.getItem(AUTH_INFO)
+    const authInfoObj = JSON.parse(authInfoString)
+    return _.get(authInfoObj, TOKEN, '')
   }
   return null
 }
@@ -11,7 +18,9 @@ const getVerifiedToken = () => {
 const getUserId = () => {
   const browserLocalStorage = (typeof localStorage === 'undefined') ? null : localStorage
   if (browserLocalStorage) {
-    return browserLocalStorage.getItem(ID)
+    const authInfoString = browserLocalStorage.getItem(AUTH_INFO)
+    const authInfoObj = JSON.parse(authInfoString)
+    return _.get(authInfoObj, ID, '')
   }
   return null
 }
