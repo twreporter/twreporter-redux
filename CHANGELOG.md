@@ -1,3 +1,6 @@
+### Unrelease
+- Update localstorage get process of bookmark action
+
 ### 2.2.0-beta.1.0.0
 - Create Bookmark Feature
 
