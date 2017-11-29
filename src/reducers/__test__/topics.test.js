@@ -1,4 +1,4 @@
-/* global describe, it*/
+/* global describe, it */
 
 import { topic, topics } from '../topics'
 import types from '../../constants/action-types'
