@@ -1,7 +1,7 @@
 ### Unrelease
 - Update localstorage get process of bookmark action
 
-### 2.2.0
+### 2.2.1
 - Create Bookmark Feature
 
 ### 2.1.5
