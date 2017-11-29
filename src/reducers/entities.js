@@ -1,4 +1,4 @@
-/* eslint no-param-reassign: ["error", { "props": false }]*/
+/* eslint no-param-reassign: ["error", { "props": false }] */
 import fieldNames from '../constants/redux-state-field-names'
 import types from '../constants/action-types'
 

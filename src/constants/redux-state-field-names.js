@@ -48,6 +48,14 @@
  *      error: null
  *    },
  *
+ *    // bookmarks state for BookmarkList page
+ *    bookmarks: {
+ *      error: obj,
+ *      data: array,
+ *      total: number,
+ *      initialized: bool,
+ *    }
+ *
  *  }
  *
  */
@@ -61,6 +69,7 @@ const lists = 'lists'
 const topicList = 'topic_list'
 const selectedPost = 'selected_post'
 const selectedTopic = 'selected_topic'
+const bookmarks = 'bookmarks'
 
 // sections in index_page
 const editorPicksSection = 'editor_picks_section'
@@ -111,4 +120,5 @@ export default {
   topicList,
   postsInEntities,
   topicsInEntities,
+  bookmarks,
 }
