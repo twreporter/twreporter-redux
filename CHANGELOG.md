@@ -1,4 +1,5 @@
 ### Unrelease
+- Move bookmark feature to @twreporter/registration
 
 ### 3.0.0
 - Create bookmark feature for registration
