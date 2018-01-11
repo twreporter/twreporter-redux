@@ -35,11 +35,17 @@ or what other posts it is releated to.
 
 ### reducers
 #### index-page
-* define the key value pair in the redux state.
-
 reduxState.indexPage will contain each sections(like editor_picks, review, latest ...etc) in the [homepage of twreporter](https://www.twreporter.org)
 
 #### posts
+reduxState.post will store `slug`, `error` and `isFetching`
+reduxState.posts will store `items`, `error`and `total`
+
 #### topics
+reduxState.topic will store `slug`, `error` and `isFetching`
+reduxState.topics will store `items`, `totalPages`, `page`, `nPerPage`, `error` and `isFetching`
+
 #### entities
+reduxState.entities.posts will store ${POST_SLUG}: ${POST_DATA} (string: Object) pair in a map
+reduxState.entities.topics will store ${TOPIC_SLUG}: ${TOPIC_DATA} {string: Object} pair in a map
 
