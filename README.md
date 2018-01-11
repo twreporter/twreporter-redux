@@ -47,5 +47,6 @@ reduxState.topics will store `items`, `totalPages`, `page`, `nPerPage`, `error` 
 
 #### entities
 reduxState.entities.posts will store ${POST_SLUG}: ${POST_DATA} (string: Object) pair in a map
+
 reduxState.entities.topics will store ${TOPIC_SLUG}: ${TOPIC_DATA} {string: Object} pair in a map
 
