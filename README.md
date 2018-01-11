@@ -39,10 +39,12 @@ reduxState.indexPage will contain each sections(like editor_picks, review, lates
 
 #### posts
 reduxState.post will store `slug`, `error` and `isFetching`
+
 reduxState.posts will store `items`, `error`and `total`
 
 #### topics
 reduxState.topic will store `slug`, `error` and `isFetching`
+
 reduxState.topics will store `items`, `totalPages`, `page`, `nPerPage`, `error` and `isFetching`
 
 #### entities
