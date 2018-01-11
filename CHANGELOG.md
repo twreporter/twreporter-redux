@@ -1,4 +1,5 @@
 ### Unrelease
+### 4.0.0 
 - Move bookmark feature to @twreporter/registration
 
 ### 3.0.0
