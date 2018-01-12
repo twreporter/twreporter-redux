@@ -20,35 +20,35 @@ CUSTOMER_FOLDER=../entry_project/ npm run dev
 ## Publish
 `npm publish`
 
-### actions
-#### index-page 
+## actions
+### index-page 
 Fetch all posts and topics [index page](https://www.twreporter.org) needed.
 
-#### posts
+### posts
 * Fetch a full post, which will include details, other than metadata, like what topic it belongs to, 
 or what other posts it is releated to.
 * Fetch a list of posts, which will only include the metadata(like slug, title, description, published data ...etc) of posts. 
 
-#### topics
+### topics
 * Fetch a full topic, which will include all the posts belonging to it.
 * Fetch a list of topics, which will only include the metadata(like slug, title, description, published data ...etc) of topics.
 
-### reducers
-#### index-page
-reduxState.indexPage will contain each sections(like editor_picks, review, latest ...etc) in the [homepage of twreporter](https://www.twreporter.org)
+## reducers
+### index-page
+`reduxState.indexPage` will contain each sections(like editor_picks, review, latest ...etc) in the [homepage of twreporter](https://www.twreporter.org)
 
-#### posts
-reduxState.post will store `slug`, `error` and `isFetching`
+### posts
+`reduxState.post` will store `slug`, `error` and `isFetching`
 
-reduxState.posts will store `items`, `error`and `total`
+`reduxState.posts` will store `items`, `error`and `total`
 
-#### topics
-reduxState.topic will store `slug`, `error` and `isFetching`
+### topics
+`reduxState.topic` will store `slug`, `error` and `isFetching`
 
-reduxState.topics will store `items`, `totalPages`, `page`, `nPerPage`, `error` and `isFetching`
+`reduxState.topics` will store `items`, `totalPages`, `page`, `nPerPage`, `error` and `isFetching`
 
-#### entities
-reduxState.entities.posts will store ${POST_SLUG}: ${POST_DATA} (string: Object) pair in a map
+### entities
+`reduxState.entities.posts` will store ${POST_SLUG}: ${POST_DATA} (string: Object) pair in a map
 
-reduxState.entities.topics will store ${TOPIC_SLUG}: ${TOPIC_DATA} {string: Object} pair in a map
+`reduxState.entities.topics` will store ${TOPIC_SLUG}: ${TOPIC_DATA} {string: Object} pair in a map
 
