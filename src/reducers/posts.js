@@ -46,15 +46,32 @@ function posts(state = {}, action = {}) {
       const items = _.get(action, 'payload.items', [])
       const total = _.get(action, 'payload.total', 0)
       const listID = _.get(action, 'payload.listID', '')
+      const page = _.get(action, 'payload.page', 0)
       const list = _.get(state, listID, {
+        // pages is used to store items position,
+        // say, if
+        // pages = {
+        //  1: [0, 9]
+        // }
+        // which means, items of page 1 are stored
+        // from items[0] to items[9]
+        pages: {},
         items: [],
         total: 0,
         error: null,
       })
 
+      const itemsNum = list.items.length || 0
+
       list.items = _.concat(list.items, _.map(items, item => item.slug))
       list.total = total
       list.error = null
+
+      // not support page = 0
+      // page starts from 1, not 0
+      if (page > 0) {
+        _.set(list.pages, page, [itemsNum, (itemsNum + (items.length - 1))])
+      }
 
       return _.merge({}, state, {
         [listID]: list,

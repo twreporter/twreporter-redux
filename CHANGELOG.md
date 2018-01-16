@@ -1,4 +1,7 @@
 ### Unrelease
+### 4.0.1
+- Enable pagination on posts action and reducer
+
 ### 4.0.0 
 - Move bookmark feature to @twreporter/registration
 

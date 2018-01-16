@@ -103,7 +103,7 @@ function _fetchPosts(dispatch, path, successActionType, failureActionType = type
  * @param {string} listType - tags, categories or topics
  * @param {number} limit - the number of posts you want to get in one request
  */
-export function fetchListedPosts(listID, listType, limit = 10) {
+export function fetchListedPosts(listID, listType, limit = 10, page = 0) {
   return (dispatch, getState) => {
     const state = getState()
     const list = _.get(state, [fieldNames.lists, listID])
@@ -113,16 +113,25 @@ export function fetchListedPosts(listID, listType, limit = 10) {
       return Promise.resolve()
     }
 
+    // items of page are already fetched
+    if (page > 0 && Array.isArray(_.get(list, ['pages', page]))) {
+      return Promise.resolve()
+    }
+
     const where = {
       [listType]: {
         in: [listID],
       },
     }
 
-    const offset = _.get(list, 'items.length', 0)
+    // if page provided(should bigger than 0),
+    // use page to count offset,
+    // otherwise, use current length of items
+    const offset = page > 0 ? (page - 1) * limit : _.get(list, 'items.length', 0)
+
     const path = `${apiEndpoints.posts}?where=${JSON.stringify(where)}&limit=${limit}&offset=${offset}`
 
-    return _fetchPosts(dispatch, path, types.GET_LISTED_POSTS, types.ERROR_TO_GET_LISTED_POSTS, { listID })
+    return _fetchPosts(dispatch, path, types.GET_LISTED_POSTS, types.ERROR_TO_GET_LISTED_POSTS, { listID, page })
   }
 }
 
