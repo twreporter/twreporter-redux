@@ -93,6 +93,7 @@ describe('posts reducer', () => {
           items: [post1, post2, post3, post4],
           total: 10,
           listID: 'mock-list-id',
+          page: 0,
         },
       }),
     ).to.deep.equal({
@@ -100,6 +101,30 @@ describe('posts reducer', () => {
         items: [post1.slug, post2.slug, post3.slug, post4.slug],
         total: 10,
         error: null,
+        pages: {},
+      },
+    })
+
+    // page is provided
+    expect(
+      posts({
+      }, {
+        type: types.GET_LISTED_POSTS,
+        payload: {
+          items: [post1, post2, post3, post4],
+          total: 10,
+          listID: 'mock-list-id',
+          page: 2,
+        },
+      }),
+    ).to.deep.equal({
+      'mock-list-id': {
+        items: [post1.slug, post2.slug, post3.slug, post4.slug],
+        total: 10,
+        error: null,
+        pages: {
+          2: [0, 3],
+        },
       },
     })
   })

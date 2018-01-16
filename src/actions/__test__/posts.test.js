@@ -189,13 +189,37 @@ describe('Testing fetchListedPosts:', () => {
       expect(store.getActions().length).to.equal(0) // no action is dispatched
       return expect(store.dispatch(actions.fetchListedPosts(...mockArgs))).eventually.equal(undefined)
     })
+    it('Items of page are already fetched', () => {
+      const mockArgs = [
+        'mock_target_uuid',  // listID
+        'categories',  // type
+        10, // limit
+        1, // page
+      ]
+      const store = mockStore({
+        lists: {
+          mock_target_uuid: {
+            total: 10,
+            items: [post1, post2, post3, post4],
+            pages: {
+              // page 1 already fetched, and items post1, post2, post3 and post4
+              1: [0, 3],
+            },
+          },
+        },
+      })
+      store.dispatch(actions.fetchListedPosts(...mockArgs))
+      expect(store.getActions().length).to.equal(0) // no action is dispatched
+      return expect(store.dispatch(actions.fetchListedPosts(...mockArgs))).eventually.equal(undefined)
+    })
   })
   context('It loads posts successfully', () => {
-    it('Should dispatch types.START_TO_GET_POSTS and types.GET_LISTED_POSTS', () => {
+    it('Should load items when there is no items in the store', () => {
       const mockArgs = [
         'mock_target_uuid',  // listID
         'categories',  // type
         1, // limit
+        0, // page
       ]
       const store = mockStore({
         // empty lists
@@ -238,6 +262,69 @@ describe('Testing fetchListedPosts:', () => {
           }],
           total: 2,
           listID: 'mock_target_uuid',
+          page: 0,
+        },
+      }
+      nock(mockHost)
+        .get(mockPath)
+        .reply(200, mockApiResponse)
+      return store.dispatch(actions.fetchListedPosts(...mockArgs))
+        .then(() => {
+          expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && SUCCESS
+          expect(store.getActions()[0]).to.deep.equal(expectedRequestAction)
+          expect(store.getActions()[1].type).to.equal(expectedSuccessAction.type)
+          expect(store.getActions()[1].payload).to.deep.equal(expectedSuccessAction.payload)
+        })
+    })
+    it('Should load items when page is provided', () => {
+      const mockArgs = [
+        'mock_target_uuid',  // listID
+        'categories',  // type
+        1, // limit
+        2, // page
+      ]
+      const store = mockStore({
+        // empty lists
+        lists: {
+        },
+      })
+      const mockUrl = formatUrl('posts?where={"categories":{"in":["mock_target_uuid"]}}&limit=1&offset=1')
+      const indexOfSlash = mockUrl.indexOf('/', 7)
+      const mockHost = mockUrl.slice(0, indexOfSlash) // example: 'http://localhost:8080'
+      const mockPath = mockUrl.slice(indexOfSlash) // example: '/posts?where=.....'
+      const mockApiResponse = {
+        records: [
+          {
+            _id: 'mock_category_article_id_01',
+            title: 'mock_category_article_title',
+            slug: 'mock-category-article-slug',
+            style: 'article',
+            og_description: 'mock_category_article_title_og_description',
+          },
+        ],
+        meta: {
+          limit: 1,
+          total: 2,
+          offset: 0,
+        },
+      }
+      const expectedRequestAction = {
+        type: types.START_TO_GET_POSTS,
+        url: mockUrl,
+      }
+      const expectedSuccessAction = {
+        type: types.GET_LISTED_POSTS,
+        payload: {
+          items: [{
+            _id: 'mock_category_article_id_01',
+            title: 'mock_category_article_title',
+            slug: 'mock-category-article-slug',
+            style: 'article',
+            og_description: 'mock_category_article_title_og_description',
+          }],
+          total: 2,
+          listID: 'mock_target_uuid',
+          page: 2,
         },
       }
       nock(mockHost)

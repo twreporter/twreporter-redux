@@ -10,6 +10,7 @@
     "build:lib": "npm run clean:lib && gulp babel-src",
     "build:cus": "gulp build-to-customer-folder",
     "lint": "eslint -c .eslintrc src ",
+    "lint-fix": "eslint -c .eslintrc src --fix",
     "validate": "npm ls",
     "dev": "npm run build:cus && gulp watch"
   },
