@@ -1,6 +1,6 @@
 {
   "name": "@twreporter/redux",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "redux actions and reducers for twreporter website",
   "main": "lib/index.js",
   "scripts": {
