@@ -58,8 +58,8 @@ describe('Testing fetchAFullPost:', () => {
   afterEach(() => {
     nock.cleanAll()
   })
-  context('Post is already existed', () => {
-    it('Should dispatch no actions and return Promise.resolve()', () => {
+  context('Post is already fully fetched', () => {
+    it('Change the selected post if selected post slug is not the same as the post slug we want to fetch', () => {
       const mockSlug = 'mock-slug'
       const mockPost = {
         id: 'mock-id',
@@ -75,9 +75,32 @@ describe('Testing fetchAFullPost:', () => {
         },
       })
       store.dispatch(actions.fetchAFullPost(mockSlug))
-      expect(store.getActions().length).to.equal(1) // no action is dispatched
+      expect(store.getActions().length).to.equal(1)
       expect(store.getActions()[0].type).to.equal(types.CHANGE_SELECTED_POST)
       expect(store.getActions()[0].payload).to.deep.equal(mockPost)
+    })
+    it('Do nothing if selected post slug is the same as the post slug we want to fetch', () => {
+      const mockSlug = 'mock-slug'
+      const mockPost = {
+        id: 'mock-id',
+        slug: 'mock-slug',
+        brief: {},
+        full: true,
+      }
+      const store = mockStore({
+        entities: {
+          posts: {
+            'mock-slug': mockPost,
+          },
+        },
+        selected_post: {
+          error: null,
+          slug: 'mock-slug',
+          isFetching: false,
+        },
+      })
+      store.dispatch(actions.fetchAFullPost(mockSlug))
+      expect(store.getActions().length).to.equal(0)
     })
   })
   context('It loads a full post successfully', () => {

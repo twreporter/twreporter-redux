@@ -22,11 +22,20 @@ export function fetchAFullPost(slug) {
   return (dispatch, getState) => {
     const state = getState()
     const post = _.get(state, `${fieldNames.entities}.${fieldNames.postsInEntities}.${slug}`, {})
+
+    // post is already fully fetched
     if (_.get(post, 'full', false)) {
-      return dispatch({
-        type: types.CHANGE_SELECTED_POST,
-        payload: post,
-      })
+      // current selected post is not the post just been fetched,
+      // change the selected post
+      if (slug !== _.get(state, `${fieldNames.selectedPost}.slug`)) {
+        return dispatch({
+          type: types.CHANGE_SELECTED_POST,
+          payload: post,
+        })
+      }
+        // current selected post is the post just been fetched,
+        // do nothing
+      return Promise.resolve()
     }
 
     const path = `${apiEndpoints.posts}/${slug}?full=true`
