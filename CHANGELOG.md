@@ -1,4 +1,8 @@
 ### Unrelease
+### 4.0.2
+- Reduce the action sent while fetchAFullPost
+  - Do nothing if the post we want to fetch is fully fetched and is the current selected post
+
 ### 4.0.1
 - Enable pagination on posts action and reducer
 

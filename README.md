@@ -20,6 +20,83 @@ CUSTOMER_FOLDER=../entry_project/ npm run dev
 ## Publish
 `npm publish`
 
+## state
+The redux state will be like the following example.
+
+If you use this library,
+please make sure the field name of your redux state should match the [field name we define](https://github.com/nickhsine/twreporter-redux/blob/master/src/constants/redux-state-field-names.js).
+```
+{
+  index_page: {
+    latest_section: [],
+    editor_picks_section: [],
+    latest_topic_section: [],
+    reviews_section: [],
+    opics_section: [],
+    photos_section: [],
+    infographics_section: [],
+  },
+  // full topics and posts will be stored here
+  entities: {
+    posts: {},
+    topics: {},
+  },
+  lists: {
+    // list might be any group of posts
+    listID1: {
+      total: 10,
+      // there will be only slugs in items
+      items: ['slug-1', 'slug-2', 'slug-4'],
+      error: null,
+      
+      // pages is used to store items position,
+      // say, if
+      // pages = {
+      //  1: [0, 2]
+      // }
+      // which means, items of page 1 are stored
+      // from items[0] to items[2]
+      pages: {
+        1: [0, 3],
+      }
+    },
+    listID2: {
+      total: 15,
+      // there will be only slugs in items
+      items: [],
+      error: null,
+      pages: {},
+    }
+  },
+  // list topics we already get
+  topic_list: {
+    total: 10,
+    // only store topic slug
+    items: [],
+    totalPages: 1,
+    
+    // current page
+    page: 1,
+    
+    // number per page
+    nPerPage: 10,
+    error: null,
+    isFetching: false,  
+  },
+  // current post we want to show in article page
+  selected_post: {
+    isFetching: true,
+    slug: 'post-slug',
+    error: null
+  },
+  // current topic we want to show in topic landing page
+  selected_topic: {
+    isFetching: true,
+    slug: 'topic-slug',
+    error: null
+  }
+```
+
 ## actions
 ### index-page 
 Fetch all posts and topics [index page](https://www.twreporter.org) needed.
