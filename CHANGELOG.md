@@ -1,4 +1,7 @@
 ### Unrelease
+### 4.0.3
+-  Bug fix. `fetchAFullTopic` should return a promise.
+
 ### 4.0.2
 - Reduce the action sent while fetchAFullPost
   - Do nothing if the post we want to fetch is fully fetched and is the current selected post

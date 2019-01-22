@@ -26,10 +26,11 @@ export function fetchAFullTopic(slug) {
     const state = getState()
     const topic = _.get(state, `${fieldNames.entities}.${fieldNames.topicsInEntities}.${slug}`, {})
     if (_.get(topic, 'full', false)) {
-      return dispatch({
+      dispatch({
         type: types.CHANGE_SELECTED_TOPIC,
         payload: topic,
       })
+      return Promise.resolve()
     }
 
     const path = `${apiEndpoints.topics}/${slug}?full=true`
