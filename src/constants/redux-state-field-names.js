@@ -9,7 +9,14 @@
  *      topics_section: [],
  *      photos_section: [],
  *      infographics_section: [],
+ *      culture_and_art: [],
+ *      environment_and_education: [],
+ *      human_rights_and_society: [],
+ *      international: [],
+ *      living_and_medical_care: [],
+ *      politics_and_economy: [],
  *    },
+ *
  *    entities: {
  *      posts: {},
  *      topics: {},
@@ -80,12 +87,12 @@ const reviewsSection = 'reviews_section'
 const topicsSection = 'topics_section'
 
 // categories in index_page
-const humanRightsAndSociety = 'human_rights_society'
-const environmentAndEducation = 'environment_education'
-const politicsAndEconomy = 'politics_economy'
-const cultureAndArt = 'culture_art'
+const humanRightsAndSociety = 'human_rights_and_society'
+const environmentAndEducation = 'environment_and_education'
+const politicsAndEconomy = 'politics_and_economy'
+const cultureAndArt = 'culture_and_art'
 const international = 'international'
-const livingAndMedicalCare = 'living_medical_care'
+const livingAndMedicalCare = 'living_and_medical_care'
 
 // time stamp for next popup
 const nextNotifyPopupTS = 'nextNotifyPopupTS'
