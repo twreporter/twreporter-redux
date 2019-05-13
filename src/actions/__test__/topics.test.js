@@ -1,4 +1,4 @@
-/* global describe, context, it, afterEach */
+/* global describe, context, it, after, afterEach */
 
 /*
   Testing functions:

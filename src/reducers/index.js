@@ -1,8 +1,8 @@
-import indexPage from './index-page'
+import { combineReducers } from 'redux'
+import { posts } from './posts'
 import entities from './entities'
 import fieldNames from '../constants/redux-state-field-names'
-import posts from './posts'
-import { combineReducers } from 'redux'
+import indexPage from './index-page'
 
 const rootReducer = combineReducers({
   [fieldNames.indexPage]: indexPage,
