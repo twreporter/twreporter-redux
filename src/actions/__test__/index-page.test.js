@@ -5,7 +5,6 @@
     fetchIndexPageContent
 */
 
-
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import configureMockStore from 'redux-mock-store'
@@ -80,7 +79,9 @@ describe('Testing fetchIndexPageContent:', () => {
       })
       store.dispatch(actions.fetchIndexPageContent())
       expect(store.getActions().length).to.equal(0) // no action is dispatched
-      return expect(store.dispatch(actions.fetchIndexPageContent())).eventually.equal(undefined)
+      return expect(
+        store.dispatch(actions.fetchIndexPageContent())
+      ).eventually.equal(undefined)
     })
   })
   context('Lacks of contents', () => {
@@ -101,21 +102,24 @@ describe('Testing fetchIndexPageContent:', () => {
         .get(encodeURI('/v1/index_page'))
         .reply(200, mockApiResponse)
 
-      return store.dispatch(actions.fetchIndexPageContent())
-        .then(() => {
-          expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && SUCCESS
-          expect(store.getActions()[0].type).to.deep.equal(types.START_TO_GET_INDEX_PAGE_CONTENT)
-          expect(store.getActions()[1].type).to.equal(types.GET_CONTENT_FOR_INDEX_PAGE)
-          expect(store.getActions()[1].payload).to.deep.equal({
-            [fieldNames.sections.latestSection]: [post1, post2],
-            [fieldNames.sections.editorPicksSection]: [post3],
-            [fieldNames.sections.latestTopicSection]: [fullTopic],
-            [fieldNames.sections.reviewsSection]: [post4],
-            [fieldNames.sections.topicsSection]: [nonFullTopic],
-            [fieldNames.sections.photosSection]: [post2],
-            [fieldNames.sections.infographicsSection]: [post3],
-          })
+      return store.dispatch(actions.fetchIndexPageContent()).then(() => {
+        expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && SUCCESS
+        expect(store.getActions()[0].type).to.deep.equal(
+          types.START_TO_GET_INDEX_PAGE_CONTENT
+        )
+        expect(store.getActions()[1].type).to.equal(
+          types.GET_CONTENT_FOR_INDEX_PAGE
+        )
+        expect(store.getActions()[1].payload).to.deep.equal({
+          [fieldNames.sections.latestSection]: [post1, post2],
+          [fieldNames.sections.editorPicksSection]: [post3],
+          [fieldNames.sections.latestTopicSection]: [fullTopic],
+          [fieldNames.sections.reviewsSection]: [post4],
+          [fieldNames.sections.topicsSection]: [nonFullTopic],
+          [fieldNames.sections.photosSection]: [post2],
+          [fieldNames.sections.infographicsSection]: [post3],
         })
+      })
     })
   })
   context('If the api returns a failure', () => {
@@ -125,13 +129,16 @@ describe('Testing fetchIndexPageContent:', () => {
         .get('/v1/index_Page')
         .reply(404)
 
-      return store.dispatch(actions.fetchIndexPageContent())
-        .then(() => {
-          expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && FAILURE
-          expect(store.getActions()[0].type).to.deep.equal(types.START_TO_GET_INDEX_PAGE_CONTENT)
-          expect(store.getActions()[1].type).to.equal(types.ERROR_TO_GET_INDEX_PAGE_CONTENT)
-          expect(store.getActions()[1].errorMsg).to.not.equal('')
-        })
+      return store.dispatch(actions.fetchIndexPageContent()).then(() => {
+        expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && FAILURE
+        expect(store.getActions()[0].type).to.deep.equal(
+          types.START_TO_GET_INDEX_PAGE_CONTENT
+        )
+        expect(store.getActions()[1].type).to.equal(
+          types.ERROR_TO_GET_INDEX_PAGE_CONTENT
+        )
+        expect(store.getActions()[1].errorMsg).to.not.equal('')
+      })
     })
   })
 })

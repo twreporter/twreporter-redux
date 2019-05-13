@@ -53,11 +53,17 @@ function topics(state = {}, action = {}) {
       const total = _.get(payload, 'total')
       const offset = _.get(payload, 'offset')
       const limit = _.get(payload, 'limit')
-      const { page, nPerPage, totalPages } = offsetToPage({ limit, offset, total })
+      const { page, nPerPage, totalPages } = offsetToPage({
+        limit,
+        offset,
+        total,
+      })
       const pageItems = _.map(_.get(payload, 'items'), item => item.slug)
       /* If nPerPage changed, overwrite the items in state, otherwise merge items with which in state */
-      const items = (nPerPage !== state.nPerPage) ? { [page]: pageItems } :
-        _.merge({}, state.items, { [page]: pageItems })
+      const items =
+        nPerPage !== state.nPerPage
+          ? { [page]: pageItems }
+          : _.merge({}, state.items, { [page]: pageItems })
       return _.merge({}, state, {
         items,
         totalPages,
@@ -88,7 +94,4 @@ function topics(state = {}, action = {}) {
   }
 }
 
-export {
-  topic,
-  topics,
-}
+export { topic, topics }

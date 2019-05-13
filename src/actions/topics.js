@@ -24,7 +24,11 @@ const { pageToOffset } = pagination
 export function fetchAFullTopic(slug) {
   return (dispatch, getState) => {
     const state = getState()
-    const topic = _.get(state, `${fieldNames.entities}.${fieldNames.topicsInEntities}.${slug}`, {})
+    const topic = _.get(
+      state,
+      `${fieldNames.entities}.${fieldNames.topicsInEntities}.${slug}`,
+      {}
+    )
     if (_.get(topic, 'full', false)) {
       dispatch({
         type: types.CHANGE_SELECTED_TOPIC,
@@ -43,16 +47,17 @@ export function fetchAFullTopic(slug) {
       },
     })
 
-    return axios.get(formAPIURL(path), {
-      timeout: apiConfig.API_TIME_OUT,
-    })
-      .then((response) => {
+    return axios
+      .get(formAPIURL(path), {
+        timeout: apiConfig.API_TIME_OUT,
+      })
+      .then(response => {
         return dispatch({
           type: types.GET_A_FULL_TOPIC,
           payload: _.get(response, 'data.record', {}),
         })
       })
-      .catch((error) => {
+      .catch(error => {
         // Error to get topics
         return dispatch({
           type: types.ERROR_TO_GET_A_FULL_TOPIC,
@@ -73,10 +78,11 @@ function _fetchTopics(dispatch, path, successActionType) {
     url,
   })
 
-  return axios.get(url, {
-    timeout: apiConfig.API_TIME_OUT,
-  })
-    .then((response) => {
+  return axios
+    .get(url, {
+      timeout: apiConfig.API_TIME_OUT,
+    })
+    .then(response => {
       const meta = _.get(response, 'data.meta', {})
       const { total, offset, limit } = meta
       return dispatch({
@@ -89,7 +95,7 @@ function _fetchTopics(dispatch, path, successActionType) {
         },
       })
     })
-    .catch((e) => {
+    .catch(e => {
       // Error to get topics
       return dispatch({
         type: types.ERROR_TO_GET_TOPICS,
@@ -105,15 +111,19 @@ function _fetchTopics(dispatch, path, successActionType) {
  * @param {number} limit - the number of posts you want to get in one request
  */
 export function fetchTopics(page = 1, nPerPage = 5) {
-  return (dispatch) => {
+  return dispatch => {
     /* If nPerPage number is invalid, return a Promise.reject(err) */
     if (!_.isInteger(nPerPage) || nPerPage <= 0) {
-      const err = new BadRequestError(`nPerPage value must be an interger larger than 0, but is ${nPerPage}`)
+      const err = new BadRequestError(
+        `nPerPage value must be an interger larger than 0, but is ${nPerPage}`
+      )
       return Promise.reject(err)
     }
     /* If page number is invalid, , return a Promise.reject(err) */
     if (!_.isInteger(page) || page <= 0) {
-      const err = new BadRequestError(`page value must be an interger larger than 0, but is ${page}`)
+      const err = new BadRequestError(
+        `page value must be an interger larger than 0, but is ${page}`
+      )
       return Promise.reject(err)
     }
 
@@ -133,7 +143,11 @@ export function fetchTopics(page = 1, nPerPage = 5) {
 export function fetchTopicsOnIndexPage() {
   return (dispatch, getState) => {
     const state = getState()
-    const topics = _.get(state, `${fieldNames.indexPage}.${fieldNames.sections.topicsSection}`, [])
+    const topics = _.get(
+      state,
+      `${fieldNames.indexPage}.${fieldNames.sections.topicsSection}`,
+      []
+    )
     if (Array.isArray(topics) && topics.length > 0) {
       return Promise.resolve()
     }

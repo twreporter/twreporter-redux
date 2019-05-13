@@ -9,7 +9,6 @@
     fetchInfographicPostsOnIndexPage
 */
 
-
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import configureMockStore from 'redux-mock-store'
@@ -146,13 +145,14 @@ describe('Testing fetchAFullPost:', () => {
         .get(encodeURI(`/v1/posts/${mockSlug}?full=true`))
         .reply(200, mockApiResponse)
 
-      return store.dispatch(actions.fetchAFullPost(mockSlug))
-        .then(() => {
-          expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && SUCCESS
-          expect(store.getActions()[0]).to.deep.equal(expectedRequestAction)
-          expect(store.getActions()[1].type).to.equal(expectedSuccessAction.type)
-          expect(store.getActions()[1].payload).to.deep.equal(expectedSuccessAction.payload)
-        })
+      return store.dispatch(actions.fetchAFullPost(mockSlug)).then(() => {
+        expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && SUCCESS
+        expect(store.getActions()[0]).to.deep.equal(expectedRequestAction)
+        expect(store.getActions()[1].type).to.equal(expectedSuccessAction.type)
+        expect(store.getActions()[1].payload).to.deep.equal(
+          expectedSuccessAction.payload
+        )
+      })
     })
   })
   context('If the api returns a failure', () => {
@@ -169,13 +169,14 @@ describe('Testing fetchAFullPost:', () => {
         .get(encodeURI(`/v1/posts/${mockSlug}?full=true`))
         .reply(404)
 
-      return store.dispatch(actions.fetchAFullPost(mockSlug))
-        .then(() => {
-          expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && FAILURE
-          expect(store.getActions()[0]).to.deep.equal(expectedRequestAction)
-          expect(store.getActions()[1].type).to.equal(types.ERROR_TO_GET_A_FULL_POST)
-          expect(store.getActions()[1].payload.error).to.be.an.instanceof(Error)
-        })
+      return store.dispatch(actions.fetchAFullPost(mockSlug)).then(() => {
+        expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && FAILURE
+        expect(store.getActions()[0]).to.deep.equal(expectedRequestAction)
+        expect(store.getActions()[1].type).to.equal(
+          types.ERROR_TO_GET_A_FULL_POST
+        )
+        expect(store.getActions()[1].payload.error).to.be.an.instanceof(Error)
+      })
     })
   })
 })
@@ -196,8 +197,8 @@ describe('Testing fetchListedPosts:', () => {
   context('There is no more posts to load', () => {
     it('Should dispatch no actions and return Promise.resolve()', () => {
       const mockArgs = [
-        'mock_target_uuid',  // listID
-        'categories',  // type
+        'mock_target_uuid', // listID
+        'categories', // type
         10, // limit
       ]
       const store = mockStore({
@@ -210,12 +211,14 @@ describe('Testing fetchListedPosts:', () => {
       })
       store.dispatch(actions.fetchListedPosts(...mockArgs))
       expect(store.getActions().length).to.equal(0) // no action is dispatched
-      return expect(store.dispatch(actions.fetchListedPosts(...mockArgs))).eventually.equal(undefined)
+      return expect(
+        store.dispatch(actions.fetchListedPosts(...mockArgs))
+      ).eventually.equal(undefined)
     })
     it('Items of page are already fetched', () => {
       const mockArgs = [
-        'mock_target_uuid',  // listID
-        'categories',  // type
+        'mock_target_uuid', // listID
+        'categories', // type
         10, // limit
         1, // page
       ]
@@ -233,23 +236,26 @@ describe('Testing fetchListedPosts:', () => {
       })
       store.dispatch(actions.fetchListedPosts(...mockArgs))
       expect(store.getActions().length).to.equal(0) // no action is dispatched
-      return expect(store.dispatch(actions.fetchListedPosts(...mockArgs))).eventually.equal(undefined)
+      return expect(
+        store.dispatch(actions.fetchListedPosts(...mockArgs))
+      ).eventually.equal(undefined)
     })
   })
   context('It loads posts successfully', () => {
     it('Should load items when there is no items in the store', () => {
       const mockArgs = [
-        'mock_target_uuid',  // listID
-        'categories',  // type
+        'mock_target_uuid', // listID
+        'categories', // type
         1, // limit
         0, // page
       ]
       const store = mockStore({
         // empty lists
-        lists: {
-        },
+        lists: {},
       })
-      const mockUrl = formatUrl('posts?where={"categories":{"in":["mock_target_uuid"]}}&limit=1&offset=0')
+      const mockUrl = formatUrl(
+        'posts?where={"categories":{"in":["mock_target_uuid"]}}&limit=1&offset=0'
+      )
       const indexOfSlash = mockUrl.indexOf('/', 7)
       const mockHost = mockUrl.slice(0, indexOfSlash) // example: 'http://localhost:8080'
       const mockPath = mockUrl.slice(indexOfSlash) // example: '/posts?where=.....'
@@ -276,13 +282,15 @@ describe('Testing fetchListedPosts:', () => {
       const expectedSuccessAction = {
         type: types.GET_LISTED_POSTS,
         payload: {
-          items: [{
-            _id: 'mock_category_article_id_01',
-            title: 'mock_category_article_title',
-            slug: 'mock-category-article-slug',
-            style: 'article',
-            og_description: 'mock_category_article_title_og_description',
-          }],
+          items: [
+            {
+              _id: 'mock_category_article_id_01',
+              title: 'mock_category_article_title',
+              slug: 'mock-category-article-slug',
+              style: 'article',
+              og_description: 'mock_category_article_title_og_description',
+            },
+          ],
           total: 2,
           listID: 'mock_target_uuid',
           page: 0,
@@ -291,27 +299,29 @@ describe('Testing fetchListedPosts:', () => {
       nock(mockHost)
         .get(mockPath)
         .reply(200, mockApiResponse)
-      return store.dispatch(actions.fetchListedPosts(...mockArgs))
-        .then(() => {
-          expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && SUCCESS
-          expect(store.getActions()[0]).to.deep.equal(expectedRequestAction)
-          expect(store.getActions()[1].type).to.equal(expectedSuccessAction.type)
-          expect(store.getActions()[1].payload).to.deep.equal(expectedSuccessAction.payload)
-        })
+      return store.dispatch(actions.fetchListedPosts(...mockArgs)).then(() => {
+        expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && SUCCESS
+        expect(store.getActions()[0]).to.deep.equal(expectedRequestAction)
+        expect(store.getActions()[1].type).to.equal(expectedSuccessAction.type)
+        expect(store.getActions()[1].payload).to.deep.equal(
+          expectedSuccessAction.payload
+        )
+      })
     })
     it('Should load items when page is provided', () => {
       const mockArgs = [
-        'mock_target_uuid',  // listID
-        'categories',  // type
+        'mock_target_uuid', // listID
+        'categories', // type
         1, // limit
         2, // page
       ]
       const store = mockStore({
         // empty lists
-        lists: {
-        },
+        lists: {},
       })
-      const mockUrl = formatUrl('posts?where={"categories":{"in":["mock_target_uuid"]}}&limit=1&offset=1')
+      const mockUrl = formatUrl(
+        'posts?where={"categories":{"in":["mock_target_uuid"]}}&limit=1&offset=1'
+      )
       const indexOfSlash = mockUrl.indexOf('/', 7)
       const mockHost = mockUrl.slice(0, indexOfSlash) // example: 'http://localhost:8080'
       const mockPath = mockUrl.slice(indexOfSlash) // example: '/posts?where=.....'
@@ -338,13 +348,15 @@ describe('Testing fetchListedPosts:', () => {
       const expectedSuccessAction = {
         type: types.GET_LISTED_POSTS,
         payload: {
-          items: [{
-            _id: 'mock_category_article_id_01',
-            title: 'mock_category_article_title',
-            slug: 'mock-category-article-slug',
-            style: 'article',
-            og_description: 'mock_category_article_title_og_description',
-          }],
+          items: [
+            {
+              _id: 'mock_category_article_id_01',
+              title: 'mock_category_article_title',
+              slug: 'mock-category-article-slug',
+              style: 'article',
+              og_description: 'mock_category_article_title_og_description',
+            },
+          ],
           total: 2,
           listID: 'mock_target_uuid',
           page: 2,
@@ -353,28 +365,30 @@ describe('Testing fetchListedPosts:', () => {
       nock(mockHost)
         .get(mockPath)
         .reply(200, mockApiResponse)
-      return store.dispatch(actions.fetchListedPosts(...mockArgs))
-        .then(() => {
-          expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && SUCCESS
-          expect(store.getActions()[0]).to.deep.equal(expectedRequestAction)
-          expect(store.getActions()[1].type).to.equal(expectedSuccessAction.type)
-          expect(store.getActions()[1].payload).to.deep.equal(expectedSuccessAction.payload)
-        })
+      return store.dispatch(actions.fetchListedPosts(...mockArgs)).then(() => {
+        expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && SUCCESS
+        expect(store.getActions()[0]).to.deep.equal(expectedRequestAction)
+        expect(store.getActions()[1].type).to.equal(expectedSuccessAction.type)
+        expect(store.getActions()[1].payload).to.deep.equal(
+          expectedSuccessAction.payload
+        )
+      })
     })
   })
   context('If the api returns a failure', () => {
     it('Should dispatch types.START_TO_GET_POSTS and types.ERROR_TO_GET_POSTS', () => {
       const mockArgs = [
-        'mock_target_uuid',  // listID
-        'categories',  // type
+        'mock_target_uuid', // listID
+        'categories', // type
         1, // limit
       ]
       const store = mockStore({
         // empty lists
-        lists: {
-        },
+        lists: {},
       })
-      const mockUrl = formatUrl('posts?where={"categories":{"in":["mock_target_uuid"]}}&limit=1&offset=0')
+      const mockUrl = formatUrl(
+        'posts?where={"categories":{"in":["mock_target_uuid"]}}&limit=1&offset=0'
+      )
       const indexOfSlash = mockUrl.indexOf('/', 7)
       const mockHost = mockUrl.slice(0, indexOfSlash) // example: 'http://localhost:3030'
       const mockPath = mockUrl.slice(indexOfSlash) // example: '/mata?where=.....'
@@ -388,17 +402,15 @@ describe('Testing fetchListedPosts:', () => {
       nock(mockHost)
         .get(mockPath)
         .reply(404, {})
-      return store.dispatch(actions.fetchListedPosts(...mockArgs))
-        .then(() => {
-          expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && SUCCESS
-          expect(store.getActions()[0]).to.deep.equal(expectedRequestAction)
-          expect(store.getActions()[1].type).to.equal(expectedFailedAction.type)
-          expect(store.getActions()[1].error).to.be.an.instanceof(Error)
-        })
+      return store.dispatch(actions.fetchListedPosts(...mockArgs)).then(() => {
+        expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && SUCCESS
+        expect(store.getActions()[0]).to.deep.equal(expectedRequestAction)
+        expect(store.getActions()[1].type).to.equal(expectedFailedAction.type)
+        expect(store.getActions()[1].error).to.be.an.instanceof(Error)
+      })
     })
   })
 })
-
 
 /** Fetch those posts picked by editors
  */
@@ -414,13 +426,18 @@ describe('Testing fetchEditorPickedPosts:', () => {
       const store = mockStore({
         [fieldNames.indexPage]: {
           [fieldNames.sections.editorPicksSection]: [
-            post1, post2, post3, post4,
+            post1,
+            post2,
+            post3,
+            post4,
           ],
         },
       })
       store.dispatch(actions.fetchEditorPickedPosts())
       expect(store.getActions().length).to.equal(0) // no action is dispatched
-      return expect(store.dispatch(actions.fetchEditorPickedPosts())).eventually.equal(undefined)
+      return expect(
+        store.dispatch(actions.fetchEditorPickedPosts())
+      ).eventually.equal(undefined)
     })
   })
 
@@ -430,15 +447,23 @@ describe('Testing fetchEditorPickedPosts:', () => {
       nock('http://localhost:8080')
         .get(encodeURI('/v1/posts?where={"is_featured":true}&limit=6'))
         .reply(200, {
-          records: [{ slug: 'slug-1' }, { slug: 'slug-2' }, { slug: 'slug-3' }, { slug: 'slug-4' }, { slug: 'slug-5' }, { slug: 'slug-6' }],
+          records: [
+            { slug: 'slug-1' },
+            { slug: 'slug-2' },
+            { slug: 'slug-3' },
+            { slug: 'slug-4' },
+            { slug: 'slug-5' },
+            { slug: 'slug-6' },
+          ],
         })
 
-      return store.dispatch(actions.fetchEditorPickedPosts())
-        .then(() => {
-          expect(store.getActions().length).to.equal(2) // START and GET
-          expect(store.getActions()[1].type).to.equal(types.GET_EDITOR_PICKED_POSTS)
-          expect(store.getActions()[1].payload.items.length).to.equal(6)
-        })
+      return store.dispatch(actions.fetchEditorPickedPosts()).then(() => {
+        expect(store.getActions().length).to.equal(2) // START and GET
+        expect(store.getActions()[1].type).to.equal(
+          types.GET_EDITOR_PICKED_POSTS
+        )
+        expect(store.getActions()[1].payload.items.length).to.equal(6)
+      })
     })
   })
 })
@@ -459,14 +484,14 @@ describe('Testing fetchPhotographyPostsOnIndexPage:', () => {
     it('Should do nothing', () => {
       const store = mockStore({
         [fieldNames.indexPage]: {
-          [fieldNames.sections.photosSection]: [
-            post1, post2, post3, post4,
-          ],
+          [fieldNames.sections.photosSection]: [post1, post2, post3, post4],
         },
       })
       store.dispatch(actions.fetchPhotographyPostsOnIndexPage())
       expect(store.getActions().length).to.equal(0) // no action is dispatched
-      return expect(store.dispatch(actions.fetchPhotographyPostsOnIndexPage())).eventually.equal(undefined)
+      return expect(
+        store.dispatch(actions.fetchPhotographyPostsOnIndexPage())
+      ).eventually.equal(undefined)
     })
   })
 
@@ -474,15 +499,22 @@ describe('Testing fetchPhotographyPostsOnIndexPage:', () => {
     it('Should dispatch types.GET_PHOTOGRAPHY_POSTS_FOR_INDEX_PAGE', () => {
       const store = mockStore({})
       nock('http://localhost:8080')
-        .get(encodeURI(`/v1/posts?where={"style":"${postStyles.photography}"}&limit=6`))
+        .get(
+          encodeURI(
+            `/v1/posts?where={"style":"${postStyles.photography}"}&limit=6`
+          )
+        )
         .reply(200, {
           records: [{ slug: 'slug-1' }, { slug: 'slug-2' }, { slug: 'slug-3' }],
         })
 
-      return store.dispatch(actions.fetchPhotographyPostsOnIndexPage())
+      return store
+        .dispatch(actions.fetchPhotographyPostsOnIndexPage())
         .then(() => {
           expect(store.getActions().length).to.equal(2) // START and GET
-          expect(store.getActions()[1].type).to.equal(types.GET_PHOTOGRAPHY_POSTS_FOR_INDEX_PAGE)
+          expect(store.getActions()[1].type).to.equal(
+            types.GET_PHOTOGRAPHY_POSTS_FOR_INDEX_PAGE
+          )
           expect(store.getActions()[1].payload.items.length).to.equal(3)
         })
     })
@@ -506,13 +538,18 @@ describe('Testing fetchInfographicPostsOnIndexPage:', () => {
       const store = mockStore({
         [fieldNames.indexPage]: {
           [fieldNames.sections.infographicsSection]: [
-            post1, post2, post3, post4,
+            post1,
+            post2,
+            post3,
+            post4,
           ],
         },
       })
       store.dispatch(actions.fetchInfographicPostsOnIndexPage())
       expect(store.getActions().length).to.equal(0) // no action is dispatched
-      return expect(store.dispatch(actions.fetchInfographicPostsOnIndexPage())).eventually.equal(undefined)
+      return expect(
+        store.dispatch(actions.fetchInfographicPostsOnIndexPage())
+      ).eventually.equal(undefined)
     })
   })
 
@@ -520,15 +557,22 @@ describe('Testing fetchInfographicPostsOnIndexPage:', () => {
     it('Should dispatch types.GET_INFOGRAPHIC_POSTS_FOR_INDEX_PAGE)', () => {
       const store = mockStore({})
       nock('http://localhost:8080')
-        .get(encodeURI(`/v1/posts?where={"style":"${postStyles.infographic}"}&limit=10`))
+        .get(
+          encodeURI(
+            `/v1/posts?where={"style":"${postStyles.infographic}"}&limit=10`
+          )
+        )
         .reply(200, {
           records: [{ slug: 'slug-1' }, { slug: 'slug-2' }],
         })
 
-      return store.dispatch(actions.fetchInfographicPostsOnIndexPage())
+      return store
+        .dispatch(actions.fetchInfographicPostsOnIndexPage())
         .then(() => {
           expect(store.getActions().length).to.equal(2) // START and GET
-          expect(store.getActions()[1].type).to.equal(types.GET_INFOGRAPHIC_POSTS_FOR_INDEX_PAGE)
+          expect(store.getActions()[1].type).to.equal(
+            types.GET_INFOGRAPHIC_POSTS_FOR_INDEX_PAGE
+          )
           expect(store.getActions()[1].payload.items.length).to.equal(2)
         })
     })

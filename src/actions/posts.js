@@ -21,7 +21,11 @@ const _ = {
 export function fetchAFullPost(slug) {
   return (dispatch, getState) => {
     const state = getState()
-    const post = _.get(state, `${fieldNames.entities}.${fieldNames.postsInEntities}.${slug}`, {})
+    const post = _.get(
+      state,
+      `${fieldNames.entities}.${fieldNames.postsInEntities}.${slug}`,
+      {}
+    )
 
     // post is already fully fetched
     if (_.get(post, 'full', false)) {
@@ -33,8 +37,8 @@ export function fetchAFullPost(slug) {
           payload: post,
         })
       }
-        // current selected post is the post just been fetched,
-        // do nothing
+      // current selected post is the post just been fetched,
+      // do nothing
       return Promise.resolve()
     }
 
@@ -49,16 +53,17 @@ export function fetchAFullPost(slug) {
       },
     })
 
-    return axios.get(url, {
-      timeout: apiConfig.API_TIME_OUT,
-    })
-      .then((response) => {
+    return axios
+      .get(url, {
+        timeout: apiConfig.API_TIME_OUT,
+      })
+      .then(response => {
         return dispatch({
           type: types.GET_A_FULL_POST,
           payload: _.get(response, 'data.record', {}),
         })
       })
-      .catch((error) => {
+      .catch(error => {
         // Error to get topics
         return dispatch({
           type: types.ERROR_TO_GET_A_FULL_POST,
@@ -78,31 +83,46 @@ export function fetchAFullPost(slug) {
  * @param {string} failureActionType - action type
  * @param {object} defaultPayload
  */
-function _fetchPosts(dispatch, path, successActionType, failureActionType = types.ERROR_TO_GET_POSTS, defaultPayload = {}) {
+function _fetchPosts(
+  dispatch,
+  path,
+  successActionType,
+  failureActionType = types.ERROR_TO_GET_POSTS,
+  defaultPayload = {}
+) {
   const url = formAPIURL(path)
   dispatch({
     type: types.START_TO_GET_POSTS,
     url,
   })
 
-  return axios.get(url, {
-    timeout: apiConfig.API_TIME_OUT,
-  })
-    .then((response) => {
+  return axios
+    .get(url, {
+      timeout: apiConfig.API_TIME_OUT,
+    })
+    .then(response => {
       return dispatch({
         type: successActionType,
-        payload: _.merge({
-          items: _.get(response, 'data.records', []),
-          total: _.get(response, 'data.meta.total', 0),
-        }, defaultPayload),
+        payload: _.merge(
+          {
+            items: _.get(response, 'data.records', []),
+            total: _.get(response, 'data.meta.total', 0),
+          },
+          defaultPayload
+        ),
       })
     })
-    .catch((error) => {
+    .catch(error => {
       // Error to get topics
-      return dispatch(_.merge({
-        type: failureActionType,
-        error,
-      }, defaultPayload))
+      return dispatch(
+        _.merge(
+          {
+            type: failureActionType,
+            error,
+          },
+          defaultPayload
+        )
+      )
     })
 }
 
@@ -136,11 +156,20 @@ export function fetchListedPosts(listID, listType, limit = 10, page = 0) {
     // if page provided(should bigger than 0),
     // use page to count offset,
     // otherwise, use current length of items
-    const offset = page > 0 ? (page - 1) * limit : _.get(list, 'items.length', 0)
+    const offset =
+      page > 0 ? (page - 1) * limit : _.get(list, 'items.length', 0)
 
-    const path = `${apiEndpoints.posts}?where=${JSON.stringify(where)}&limit=${limit}&offset=${offset}`
+    const path = `${apiEndpoints.posts}?where=${JSON.stringify(
+      where
+    )}&limit=${limit}&offset=${offset}`
 
-    return _fetchPosts(dispatch, path, types.GET_LISTED_POSTS, types.ERROR_TO_GET_LISTED_POSTS, { listID, page })
+    return _fetchPosts(
+      dispatch,
+      path,
+      types.GET_LISTED_POSTS,
+      types.ERROR_TO_GET_LISTED_POSTS,
+      { listID, page }
+    )
   }
 }
 
@@ -149,7 +178,11 @@ export function fetchListedPosts(listID, listType, limit = 10, page = 0) {
 export function fetchEditorPickedPosts() {
   return (dispatch, getState) => {
     const state = getState()
-    const posts = _.get(state, `${fieldNames.indexPage}.${fieldNames.sections.editorPicksSection}`, [])
+    const posts = _.get(
+      state,
+      `${fieldNames.indexPage}.${fieldNames.sections.editorPicksSection}`,
+      []
+    )
 
     if (posts.length > 0) {
       return Promise.resolve()
@@ -169,14 +202,24 @@ export function fetchEditorPickedPosts() {
 export function fetchPhotographyPostsOnIndexPage() {
   return (dispatch, getState) => {
     const state = getState()
-    const posts = _.get(state, `${fieldNames.indexPage}.${fieldNames.sections.photosSection}`, [])
+    const posts = _.get(
+      state,
+      `${fieldNames.indexPage}.${fieldNames.sections.photosSection}`,
+      []
+    )
     if (Array.isArray(posts) && posts.length > 0) {
       return Promise.resolve()
     }
 
-    const path = `${apiEndpoints.posts}?where={"style":"${postStyles.photography}"}&limit=6`
+    const path = `${apiEndpoints.posts}?where={"style":"${
+      postStyles.photography
+    }"}&limit=6`
 
-    return _fetchPosts(dispatch, path, types.GET_PHOTOGRAPHY_POSTS_FOR_INDEX_PAGE)
+    return _fetchPosts(
+      dispatch,
+      path,
+      types.GET_PHOTOGRAPHY_POSTS_FOR_INDEX_PAGE
+    )
   }
 }
 
@@ -188,13 +231,23 @@ export function fetchPhotographyPostsOnIndexPage() {
 export function fetchInfographicPostsOnIndexPage() {
   return (dispatch, getState) => {
     const state = getState()
-    const posts = _.get(state, `${fieldNames.indexPage}.${fieldNames.sections.infographicsSection}`, [])
+    const posts = _.get(
+      state,
+      `${fieldNames.indexPage}.${fieldNames.sections.infographicsSection}`,
+      []
+    )
     if (Array.isArray(posts) && posts.length > 0) {
       return Promise.resolve()
     }
 
-    const path = `${apiEndpoints.posts}?where={"style":"${postStyles.infographic}"}&limit=10`
+    const path = `${apiEndpoints.posts}?where={"style":"${
+      postStyles.infographic
+    }"}&limit=10`
 
-    return _fetchPosts(dispatch, path, types.GET_INFOGRAPHIC_POSTS_FOR_INDEX_PAGE)
+    return _fetchPosts(
+      dispatch,
+      path,
+      types.GET_INFOGRAPHIC_POSTS_FOR_INDEX_PAGE
+    )
   }
 }

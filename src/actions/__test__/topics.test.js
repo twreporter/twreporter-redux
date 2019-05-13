@@ -7,7 +7,6 @@
     fetchTopicsOnIndexPage
 */
 
-
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import configureMockStore from 'redux-mock-store'
@@ -90,16 +89,17 @@ describe('Testing fetchAFullTopic:', () => {
         .get(encodeURI(`/v1/topics/${mockSlug}?full=true`))
         .reply(200, mockApiResponse)
 
-      return store.dispatch(actions.fetchAFullTopic(mockSlug))
-        .then(() => {
-          expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && SUCCESS
-          expect(store.getActions()[0].type).to.deep.equal(types.START_TO_GET_A_FULL_TOPIC)
-          expect(store.getActions()[0].payload).to.deep.equal({
-            slug: mockSlug,
-          })
-          expect(store.getActions()[1].type).to.equal(types.GET_A_FULL_TOPIC)
-          expect(store.getActions()[1].payload).to.deep.equal(mockTopic)
+      return store.dispatch(actions.fetchAFullTopic(mockSlug)).then(() => {
+        expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && SUCCESS
+        expect(store.getActions()[0].type).to.deep.equal(
+          types.START_TO_GET_A_FULL_TOPIC
+        )
+        expect(store.getActions()[0].payload).to.deep.equal({
+          slug: mockSlug,
         })
+        expect(store.getActions()[1].type).to.equal(types.GET_A_FULL_TOPIC)
+        expect(store.getActions()[1].payload).to.deep.equal(mockTopic)
+      })
     })
   })
   context('If the api returns a failure', () => {
@@ -110,13 +110,16 @@ describe('Testing fetchAFullTopic:', () => {
         .get(encodeURI(`/v1/topics/${mockSlug}?full=true`))
         .reply(404)
 
-      return store.dispatch(actions.fetchAFullTopic(mockSlug))
-        .then(() => {
-          expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && FAILURE
-          expect(store.getActions()[0].type).to.deep.equal(types.START_TO_GET_A_FULL_TOPIC)
-          expect(store.getActions()[1].type).to.equal(types.ERROR_TO_GET_A_FULL_TOPIC)
-          expect(store.getActions()[1].payload.error).to.be.an.instanceof(Error)
-        })
+      return store.dispatch(actions.fetchAFullTopic(mockSlug)).then(() => {
+        expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && FAILURE
+        expect(store.getActions()[0].type).to.deep.equal(
+          types.START_TO_GET_A_FULL_TOPIC
+        )
+        expect(store.getActions()[1].type).to.equal(
+          types.ERROR_TO_GET_A_FULL_TOPIC
+        )
+        expect(store.getActions()[1].payload.error).to.be.an.instanceof(Error)
+      })
     })
   })
 })
@@ -160,17 +163,16 @@ describe('Testing fetchTopics:', () => {
         .get(encodeURI(`/v1/topics?limit=${limit}&offset=${offset}`))
         .reply(200, mockApiResponse)
 
-      return store.dispatch(actions.fetchTopics(page, nPerPage))
-        .then(() => {
-          expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && SUCCESS
-          expect(store.getActions()[1].type).to.equal(types.GET_TOPICS)
-          expect(store.getActions()[1].payload).to.deep.equal({
-            items: [],
-            total,
-            limit,
-            offset,
-          })
+      return store.dispatch(actions.fetchTopics(page, nPerPage)).then(() => {
+        expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && SUCCESS
+        expect(store.getActions()[1].type).to.equal(types.GET_TOPICS)
+        expect(store.getActions()[1].payload).to.deep.equal({
+          items: [],
+          total,
+          limit,
+          offset,
         })
+      })
     })
   })
   context('It loads topics successfully', () => {
@@ -188,9 +190,7 @@ describe('Testing fetchTopics:', () => {
       const { limit, offset } = pageToOffset({ page, nPerPage })
       const total = 5
       const mockApiResponse = {
-        records: [
-          topic2,
-        ],
+        records: [topic2],
         meta: {
           limit,
           total,
@@ -201,18 +201,19 @@ describe('Testing fetchTopics:', () => {
         .get(encodeURI(`/v1/topics?limit=${limit}&offset=${offset}`))
         .reply(200, mockApiResponse)
 
-      return store.dispatch(actions.fetchTopics(page, nPerPage))
-        .then(() => {
-          expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && SUCCESS
-          expect(store.getActions()[0].type).to.deep.equal(types.START_TO_GET_TOPICS)
-          expect(store.getActions()[1].type).to.equal(types.GET_TOPICS)
-          expect(store.getActions()[1].payload).to.deep.equal({
-            items: [topic2],
-            total,
-            limit,
-            offset,
-          })
+      return store.dispatch(actions.fetchTopics(page, nPerPage)).then(() => {
+        expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && SUCCESS
+        expect(store.getActions()[0].type).to.deep.equal(
+          types.START_TO_GET_TOPICS
+        )
+        expect(store.getActions()[1].type).to.equal(types.GET_TOPICS)
+        expect(store.getActions()[1].payload).to.deep.equal({
+          items: [topic2],
+          total,
+          limit,
+          offset,
         })
+      })
     })
   })
   context('If the api returns a failure', () => {
@@ -223,13 +224,14 @@ describe('Testing fetchTopics:', () => {
       nock('http://localhost:8080')
         .get(encodeURI(`/v1/topics?limit=${limit}&offset=${offset}`))
         .reply(404)
-      return store.dispatch(actions.fetchTopics(limit))
-        .then(() => {
-          expect(store.getActions().length).to.equal(2)  // 2 actions: REQUEST && FAILURE
-          expect(store.getActions()[0].type).to.deep.equal(types.START_TO_GET_TOPICS)
-          expect(store.getActions()[1].type).to.equal(types.ERROR_TO_GET_TOPICS)
-          expect(store.getActions()[1].payload.error).to.be.an.instanceof(Error)
-        })
+      return store.dispatch(actions.fetchTopics(limit)).then(() => {
+        expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && FAILURE
+        expect(store.getActions()[0].type).to.deep.equal(
+          types.START_TO_GET_TOPICS
+        )
+        expect(store.getActions()[1].type).to.equal(types.ERROR_TO_GET_TOPICS)
+        expect(store.getActions()[1].payload.error).to.be.an.instanceof(Error)
+      })
     })
   })
   context('If the parameter nPerPage is invalid', () => {
@@ -237,8 +239,10 @@ describe('Testing fetchTopics:', () => {
       const store = mockStore({})
       const page = 1
       const nPerPage = -1
-      expect(store.dispatch(actions.fetchTopics(page, nPerPage))).eventually.to.be.an.instanceof(Error)
-      return expect(store.getActions().length).to.equal(0)  // no action
+      expect(
+        store.dispatch(actions.fetchTopics(page, nPerPage))
+      ).eventually.to.be.an.instanceof(Error)
+      return expect(store.getActions().length).to.equal(0) // no action
     })
   })
   context('If the parameter page is invalid', () => {
@@ -246,8 +250,10 @@ describe('Testing fetchTopics:', () => {
       const store = mockStore({})
       const page = -1
       const nPerPage = 10
-      expect(store.dispatch(actions.fetchTopics(page, nPerPage))).eventually.to.be.an.instanceof(Error)
-      return expect(store.getActions().length).to.equal(0)  // no action
+      expect(
+        store.dispatch(actions.fetchTopics(page, nPerPage))
+      ).eventually.to.be.an.instanceof(Error)
+      return expect(store.getActions().length).to.equal(0) // no action
     })
   })
 })
@@ -268,14 +274,14 @@ describe('Testing fetchTopicsOnIndexPage:', () => {
     it('Should do nothing', () => {
       const store = mockStore({
         [fieldNames.indexPage]: {
-          [fieldNames.sections.topicsSection]: [
-            topic1, topic2,
-          ],
+          [fieldNames.sections.topicsSection]: [topic1, topic2],
         },
       })
       store.dispatch(actions.fetchTopicsOnIndexPage())
       expect(store.getActions().length).to.equal(0) // no action is dispatched
-      return expect(store.dispatch(actions.fetchTopicsOnIndexPage())).eventually.equal(undefined)
+      return expect(
+        store.dispatch(actions.fetchTopicsOnIndexPage())
+      ).eventually.equal(undefined)
     })
   })
 
@@ -293,12 +299,13 @@ describe('Testing fetchTopicsOnIndexPage:', () => {
           },
         })
 
-      return store.dispatch(actions.fetchTopicsOnIndexPage())
-        .then(() => {
-          expect(store.getActions().length).to.equal(2) // START and GET
-          expect(store.getActions()[1].type).to.equal(types.GET_TOPICS_FOR_INDEX_PAGE)
-          expect(store.getActions()[1].payload.items.length).to.equal(2)
-        })
+      return store.dispatch(actions.fetchTopicsOnIndexPage()).then(() => {
+        expect(store.getActions().length).to.equal(2) // START and GET
+        expect(store.getActions()[1].type).to.equal(
+          types.GET_TOPICS_FOR_INDEX_PAGE
+        )
+        expect(store.getActions()[1].payload.items.length).to.equal(2)
+      })
     })
   })
 })

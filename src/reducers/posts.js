@@ -70,7 +70,7 @@ function posts(state = {}, action = {}) {
       // not support page = 0
       // page starts from 1, not 0
       if (page > 0) {
-        _.set(list.pages, page, [itemsNum, (itemsNum + (items.length - 1))])
+        _.set(list.pages, page, [itemsNum, itemsNum + (items.length - 1)])
       }
 
       return _.merge({}, state, {
@@ -100,7 +100,4 @@ function posts(state = {}, action = {}) {
   }
 }
 
-export {
-  post,
-  posts,
-}
+export { post, posts }

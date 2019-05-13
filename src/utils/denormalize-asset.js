@@ -13,19 +13,23 @@ const denormalizePosts = (slugs, entities = {}) => {
   if (!Array.isArray(slugs)) {
     _slugs = [slugs]
   }
-  const posts = _slugs.map((slug) => {
+  const posts = _slugs.map(slug => {
     return _.cloneDeep(entities[slug])
   })
 
   return posts
 }
 
-const denormalizeTopics = (topicSlugs, topicEntities = {}, postEntities = {}) => {
+const denormalizeTopics = (
+  topicSlugs,
+  topicEntities = {},
+  postEntities = {}
+) => {
   let slugs = topicSlugs
   if (!Array.isArray(topicSlugs)) {
     slugs = [topicSlugs]
   }
-  const topics = slugs.map((slug) => {
+  const topics = slugs.map(slug => {
     const topic = _.cloneDeep(topicEntities[slug])
     const relatedSlugs = _.get(topic, 'relateds', [])
     const relateds = denormalizePosts(relatedSlugs, postEntities)
@@ -36,7 +40,4 @@ const denormalizeTopics = (topicSlugs, topicEntities = {}, postEntities = {}) =>
   return topics
 }
 
-export {
-  denormalizePosts,
-  denormalizeTopics,
-}
+export { denormalizePosts, denormalizeTopics }
