@@ -30,6 +30,7 @@
   "dependencies": {
     "axios": "^0.16.1",
     "es6-error": "^4.0.2",
+    "localforage": "^1.7.3",
     "lodash": "^4.17.4",
     "redux": "^3.6.0"
   },
