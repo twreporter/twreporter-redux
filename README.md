@@ -26,7 +26,6 @@ CUSTOMER_FOLDER=../entry_project/ npm run dev
 
 ## Usage
 
-
 ```js
 // src/client.js
 /* global __DEVELOPMENT__ */
@@ -97,7 +96,7 @@ import get from 'lodash/get'
 import twreporterRedux from '@twreporter/redux'
 
 const _ = {
-  get
+  get,
 }
 
 /**
@@ -115,14 +114,17 @@ export default function loadData({ match, store }) {
   const slug = _.get(match, 'params.slug')
   return store.dispatch(store.actions.fetchAFullPost(slug)).then(() => {
     const state = store.getState()
-    const selectedPost = _.get(state, twreporterRedux.reduxStateFields.selectedPost, {})
+    const selectedPost = _.get(
+      state,
+      twreporterRedux.reduxStateFields.selectedPost,
+      {}
+    )
     if (_.get(selectedPost, 'error')) {
       return Promise.reject(_.get(selectedPost, 'error'))
     }
     return Promise.resolve()
   })
 }
-
 ```
 
 ## State

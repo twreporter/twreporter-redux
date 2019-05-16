@@ -30,9 +30,9 @@ Provider.propTypes = {
   store: PropTypes.shape({
     subscribe: PropTypes.func.isRequired,
     dispatch: PropTypes.func.isRequired,
-    getState: PropTypes.func.isRequired
+    getState: PropTypes.func.isRequired,
   }),
-  children: PropTypes.any
+  children: PropTypes.any,
 }
 
 export default Provider

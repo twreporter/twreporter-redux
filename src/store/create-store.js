@@ -1,4 +1,4 @@
-import { createStore as _createStore , applyMiddleware, compose } from 'redux'
+import { createStore as _createStore, applyMiddleware, compose } from 'redux'
 import axios from 'axios'
 import bindActionsToStore from './bind-actions-to-store'
 import bs from '../utils/browser-storage'
@@ -11,7 +11,6 @@ const _ = {
   throttle,
 }
 
-
 /**
  * Create a redux store with custom setting
  *
@@ -20,21 +19,24 @@ const _ = {
  * @param {boolean} [isDev=false]
  * @returns
  */
-export default async function createStore(initialState = {}, cookie = '', isDev = false) {
-  const httpClientWithToken = cookie ? 
-  // Take user cookie from the user's request coming to the server when doing SSR.
-  axios.create({
-    headers: { cookie }
-  }) :
-  // Take user cookie from the browser when making request on the client side directly
-  axios.create({
-    withCredentials: true
-  })
-  const composeEnhancers = (window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
+export default async function createStore(
+  initialState = {},
+  cookie = '',
+  isDev = false
+) {
+  const httpClientWithToken = cookie
+    ? // Take user cookie from the user's request coming to the server when doing SSR.
+      axios.create({
+        headers: { cookie },
+      })
+    : // Take user cookie from the browser when making request on the client side directly
+      axios.create({
+        withCredentials: true,
+      })
+  const composeEnhancers =
+    (window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
   const storeEnhancer = composeEnhancers(
-    applyMiddleware(
-      thunkMiddleware.withExtraArgument({ httpClientWithToken }),
-    ),
+    applyMiddleware(thunkMiddleware.withExtraArgument({ httpClientWithToken })),
     bindActionsToStore
   )
   if (detectEnv.isBrowser()) {
@@ -51,11 +53,13 @@ export default async function createStore(initialState = {}, cookie = '', isDev 
       }
       // Subscribe the redux store changes.
       // Sync the browser storage after redux state change.
-      store.subscribe(_.throttle(() => {
-        bs.syncReduxState(store.getState())
-      }, 1000))
+      store.subscribe(
+        _.throttle(() => {
+          bs.syncReduxState(store.getState())
+        }, 1000)
+      )
       return store
-    } catch(err) {
+    } catch (err) {
       console.error('Sync-ing with browser storage occurs error:', err)
       return _createStore(rootReducer, initialState, storeEnhancer)
     }

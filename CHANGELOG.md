@@ -1,6 +1,7 @@
 ### Unrelease
 
 ### 5.0.0
+
 - Update dev environment
   - Apply `prettier` to let it handle code style
     - Use `husky` and `lint-staged` to replace `precommit-hook`

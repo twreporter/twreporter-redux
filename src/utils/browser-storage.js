@@ -43,9 +43,7 @@ const cacheableProps = [
   When a value in new state has conflict with the one in cached state, we will take the new value by default.
   If there's any prop that we want it always take the cahched value first (except the whole cache was expired), add it to the array below.
 */
-const cachedFirstProps = [
-  reduxStatePropKey.nextNotifyPopupTS,
-]
+const cachedFirstProps = [reduxStatePropKey.nextNotifyPopupTS]
 
 /**
  * Check if the redux state copy in the browser storage expired or not
@@ -126,7 +124,11 @@ async function syncReduxState(newReduxState, maxAge = 600) {
     toCacheState = chacheableNewState
   } else {
     const oldCachedState = await getReduxState()
-    toCacheState = _.merge(oldCachedState, chacheableNewState, _.pick(oldCachedState, cachedFirstProps))
+    toCacheState = _.merge(
+      oldCachedState,
+      chacheableNewState,
+      _.pick(oldCachedState, cachedFirstProps)
+    )
   }
   const nextCachedState = await setReduxState(toCacheState)
   await setReduxStateExpires(maxAge)
