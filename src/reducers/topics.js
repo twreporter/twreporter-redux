@@ -17,7 +17,7 @@ const _ = {
 }
 const { offsetToPage } = pagination
 
-function topic(state = {}, action = {}) {
+export function topic(state = {}, action = {}) {
   switch (action.type) {
     case types.GET_A_FULL_TOPIC:
     case types.CHANGE_SELECTED_TOPIC: {
@@ -46,7 +46,7 @@ function topic(state = {}, action = {}) {
   }
 }
 
-function topics(state = {}, action = {}) {
+export function topics(state = {}, action = {}) {
   switch (action.type) {
     case types.GET_TOPICS: {
       const { payload } = action
@@ -93,5 +93,3 @@ function topics(state = {}, action = {}) {
       return state
   }
 }
-
-export { topic, topics }

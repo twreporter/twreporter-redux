@@ -15,7 +15,7 @@ const _ = {
   set,
 }
 
-function post(state = {}, action = {}) {
+export function post(state = {}, action = {}) {
   switch (action.type) {
     case types.GET_A_FULL_POST:
     case types.CHANGE_SELECTED_POST: {
@@ -40,7 +40,7 @@ function post(state = {}, action = {}) {
   }
 }
 
-function posts(state = {}, action = {}) {
+export function posts(state = {}, action = {}) {
   switch (action.type) {
     case types.GET_LISTED_POSTS: {
       const items = _.get(action, 'payload.items', [])
@@ -99,5 +99,3 @@ function posts(state = {}, action = {}) {
       return state
   }
 }
-
-export { post, posts }
