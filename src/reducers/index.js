@@ -17,7 +17,7 @@ import merge from 'lodash/merge'
 
 const _ = {
   get,
-  merge
+  merge,
 }
 
 const rootReducer = combineReducers({
@@ -48,7 +48,7 @@ const rootReducer = combineReducers({
     }
     return state
   },
-  [reduxStatePropKey.nextNotifyPopupTS]: (state=0, action) => {
+  [reduxStatePropKey.nextNotifyPopupTS]: (state = 0, action) => {
     if (action.type === types.SET_NEXT_POPUP_TIME_STAMP) {
       return action.payload
     }
