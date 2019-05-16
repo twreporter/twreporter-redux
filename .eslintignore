@@ -1,3 +1,2 @@
-bundle-server.js
-lib
-node_modules
+lib/
+node_modules/
