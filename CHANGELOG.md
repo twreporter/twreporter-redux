@@ -1,5 +1,17 @@
 ### Unrelease
 
+### 5.0.0
+
+- Update dev environment
+  - Apply `prettier` to let it handle code style
+    - Use `husky` and `lint-staged` to replace `precommit-hook`
+    - Upgrade `eslint` and update `.eslintrc`
+    - Modify source files to fit new eslint and prettier config
+  - Upgrade `babel` to `^7`
+  - Remove `gulp` and use `makefile` instead
+  - Update `.gitignore` and `.npmignore`
+- Add redux store
+
 ### 4.0.3
 
 - Bug fix. `fetchAFullTopic` should return a promise.
