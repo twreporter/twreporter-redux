@@ -30,7 +30,7 @@ function normalizeTopic(topic, postEntities, topicEntities) {
   if (topic.full) {
     const relatedPosts = _.get(topic, 'relateds', [])
 
-    topic.relateds = relatedPosts.map((post) => {
+    topic.relateds = relatedPosts.map(post => {
       if (typeof post === 'object') {
         if (!postEntities[post.slug] || post.full) {
           postEntities[post.slug] = post
@@ -69,7 +69,7 @@ function normalizePost(post, _postEntities, _topicEntities) {
     topicEntities = normalizedObj.topicEntities
     post.topics = _.get(topic, 'slug', topic)
 
-    post.relateds = _.map(post.relateds, (_post) => {
+    post.relateds = _.map(post.relateds, _post => {
       if (typeof _post === 'object') {
         if (!postEntities[_post.slug] || _post.full) {
           postEntities[_post.slug] = _post
@@ -101,7 +101,7 @@ function normalizeAssets(assets, _postEntities, _topicEntities, style) {
 
   const normalize = style === 'post' ? normalizePost : normalizeTopic
 
-  assets.forEach((asset) => {
+  assets.forEach(asset => {
     const normalizedObj = normalize(asset, postEntities, topicEntities)
     postEntities = normalizedObj.postEntities
     topicEntities = normalizedObj.topicEntities
@@ -200,24 +200,37 @@ function entities(state = {}, action = {}) {
     case types.GET_CONTENT_FOR_INDEX_PAGE: {
       payload = action.payload
 
-      const sections = _.filter(_.values(fieldNames.sections), (section) => {
-        return section !== fieldNames.sections.latestTopicSection &&
+      const sections = _.filter(_.values(fieldNames.sections), section => {
+        return (
+          section !== fieldNames.sections.latestTopicSection &&
           section !== fieldNames.sections.topicsSection
+        )
       })
       const categories = _.values(fieldNames.categories)
       const fields = _.concat(sections, categories)
 
-      fields.forEach((field) => {
+      fields.forEach(field => {
         const posts = _.get(payload, field, [])
-        normalizedObj = normalizeAssets(posts, normalizedObj.postEntities,
-          normalizedObj.topicEntities, 'post')
+        normalizedObj = normalizeAssets(
+          posts,
+          normalizedObj.postEntities,
+          normalizedObj.topicEntities,
+          'post'
+        )
       })
 
-      normalizedObj = normalizeTopic(_.get(payload, [fieldNames.sections.latestTopicSection, 0]),
-        normalizedObj.postEntities, normalizedObj.topicEntities)
+      normalizedObj = normalizeTopic(
+        _.get(payload, [fieldNames.sections.latestTopicSection, 0]),
+        normalizedObj.postEntities,
+        normalizedObj.topicEntities
+      )
 
-      normalizedObj = normalizeAssets(_.get(payload, fieldNames.sections.topicsSection, []),
-        normalizedObj.postEntities, normalizedObj.topicEntities, 'topic')
+      normalizedObj = normalizeAssets(
+        _.get(payload, fieldNames.sections.topicsSection, []),
+        normalizedObj.postEntities,
+        normalizedObj.topicEntities,
+        'topic'
+      )
 
       return _.merge({}, state, {
         [fieldNames.postsInEntities]: normalizedObj.postEntities,
@@ -229,8 +242,12 @@ function entities(state = {}, action = {}) {
     case types.GET_TOPICS_FOR_INDEX_PAGE: {
       payload = _.get(action, 'payload.items', [])
 
-      normalizedObj = normalizeAssets(payload, normalizedObj.postEntities,
-        normalizedObj.topicEntities, 'topic')
+      normalizedObj = normalizeAssets(
+        payload,
+        normalizedObj.postEntities,
+        normalizedObj.topicEntities,
+        'topic'
+      )
 
       return _.merge({}, state, {
         [fieldNames.postsInEntities]: normalizedObj.postEntities,
@@ -244,8 +261,12 @@ function entities(state = {}, action = {}) {
     case types.GET_LISTED_POSTS: {
       payload = _.get(action, 'payload.items', [])
 
-      normalizedObj = normalizeAssets(payload, normalizedObj.postEntities,
-        normalizedObj.topicEntities, 'post')
+      normalizedObj = normalizeAssets(
+        payload,
+        normalizedObj.postEntities,
+        normalizedObj.topicEntities,
+        'post'
+      )
 
       return _.merge({}, state, {
         [fieldNames.postsInEntities]: normalizedObj.postEntities,
@@ -255,8 +276,11 @@ function entities(state = {}, action = {}) {
 
     case types.GET_A_FULL_POST: {
       const post = _.get(action, 'payload', {})
-      normalizedObj = normalizePost(post, normalizedObj.postEntities,
-        normalizedObj.topicEntities)
+      normalizedObj = normalizePost(
+        post,
+        normalizedObj.postEntities,
+        normalizedObj.topicEntities
+      )
 
       return _.merge({}, state, {
         [fieldNames.postsInEntities]: normalizedObj.postEntities,
@@ -266,8 +290,11 @@ function entities(state = {}, action = {}) {
 
     case types.GET_A_FULL_TOPIC: {
       const topic = _.get(action, 'payload', {})
-      normalizedObj = normalizeTopic(topic, normalizedObj.postEntities,
-        normalizedObj.topicEntities)
+      normalizedObj = normalizeTopic(
+        topic,
+        normalizedObj.postEntities,
+        normalizedObj.topicEntities
+      )
 
       return _.merge({}, state, {
         [fieldNames.postsInEntities]: normalizedObj.postEntities,

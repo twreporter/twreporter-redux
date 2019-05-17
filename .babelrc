@@ -1,10 +1,13 @@
 {
   "presets": [
-    "env",
-    "stage-0"
+    "@babel/env"
   ],
   "comments": false,
   "ignore": [
-    "src/**/*.json"
+    "src/**/*.json",
+    "node_modules"
+  ],
+  "plugins": [
+    "@babel/plugin-proposal-class-properties"
   ]
 }

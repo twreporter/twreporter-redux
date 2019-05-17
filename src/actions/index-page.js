@@ -23,26 +23,29 @@ function _fetch(dispatch, path) {
     url,
   })
 
-  return axios.get(url, {
-    timeout: apiConfig.API_TIME_OUT,
-  })
-  // Get content successfully
-    .then((response) => {
-      const items = _.get(response, 'data.records', {})
+  return (
+    axios
+      .get(url, {
+        timeout: apiConfig.API_TIME_OUT,
+      })
+      // Get content successfully
+      .then(response => {
+        const items = _.get(response, 'data.records', {})
 
-      // dispatch content for each sections
-      return dispatch({
-        type: types.GET_CONTENT_FOR_INDEX_PAGE,
-        payload: items,
+        // dispatch content for each sections
+        return dispatch({
+          type: types.GET_CONTENT_FOR_INDEX_PAGE,
+          payload: items,
+        })
       })
-    })
-    .catch((error) => {
-      // Error to get topics
-      return dispatch({
-        type: types.ERROR_TO_GET_INDEX_PAGE_CONTENT,
-        error,
+      .catch(error => {
+        // Error to get topics
+        return dispatch({
+          type: types.ERROR_TO_GET_INDEX_PAGE_CONTENT,
+          error,
+        })
       })
-    })
+  )
 }
 
 /**
@@ -61,7 +64,7 @@ export function fetchIndexPageContent() {
     const sections = _.values(fieldNames.sections)
     let isContentReady = true
 
-    sections.forEach((section) => {
+    sections.forEach(section => {
       if (!Object.prototype.hasOwnProperty.call(indexPage, section)) {
         isContentReady = false
       }
@@ -88,7 +91,7 @@ export function fetchCategoriesPostsOnIndexPage() {
     const categories = _.values(fieldNames.categories)
     let isContentReady = true
 
-    categories.forEach((category) => {
+    categories.forEach(category => {
       if (_.get(indexPage, [category, 'length'], 0) === 0) {
         isContentReady = false
       }

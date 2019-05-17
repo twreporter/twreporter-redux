@@ -11,14 +11,15 @@ const firstItemMarginLeft = 42
 const itemWidthPct = `${(itemWidth / mockupWidth) * 100}`
 
 // item + padding width pct
-const itemPlusPaddingWidthPct = `${((itemWidth + itemPaddingRight) / mockupWidth) * 100}`
+const itemPlusPaddingWidthPct = `${((itemWidth + itemPaddingRight) /
+  mockupWidth) *
+  100}`
 
 // First item has 42px margin-left in mockup.
 const firstItemMarginLeftPct = `${(firstItemMarginLeft / mockupWidth) * 100}`
 
 // Each item has the padding-right:26px in mockup.
 const itemPaddingRightPct = `${(itemPaddingRight / mockupWidth) * 100}`
-
 
 export {
   itemWidthPct,

@@ -1,8 +1,4 @@
-# Dependency directory
-# Commenting this out is preferred by some people, see
-# https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git-node_modules
-
-# source files
+# Development
 .editorconfig
 .eslintignore
 .eslintrc
@@ -10,15 +6,21 @@
 .jshintignore
 .jshintrc
 .npmignore
+.prettierrc
+makefile
+CHANGELOG.md
+yarn.lock
+__test__
 
-err.log
-README.md
-
-# source folders
-constributors/
+# Packages
 node_modules/
-spec/
-__test__/
 
-# NPM debug
-npm-debug.log
+# Source
+src/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

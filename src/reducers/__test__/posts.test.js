@@ -27,19 +27,20 @@ const post4 = {
 
 describe('post reducer', () => {
   it('should return the initial state', () => {
-    expect(
-      post({}, {}),
-    ).to.deep.equal({})
+    expect(post({}, {})).to.deep.equal({})
   })
 
   it('should handle START_TO_GET_A_FULL_POST', () => {
     expect(
-      post({}, {
-        type: types.START_TO_GET_A_FULL_POST,
-        payload: {
-          slug: 'mock-slug',
-        },
-      }),
+      post(
+        {},
+        {
+          type: types.START_TO_GET_A_FULL_POST,
+          payload: {
+            slug: 'mock-slug',
+          },
+        }
+      )
     ).to.deep.equal({
       isFetching: true,
       slug: 'mock-slug',
@@ -49,10 +50,13 @@ describe('post reducer', () => {
 
   it('should handle GET_A_FULL_POST', () => {
     expect(
-      post({}, {
-        type: types.GET_A_FULL_POST,
-        payload: post1,
-      }),
+      post(
+        {},
+        {
+          type: types.GET_A_FULL_POST,
+          payload: post1,
+        }
+      )
     ).to.deep.equal({
       slug: post1.slug,
       error: null,
@@ -63,13 +67,16 @@ describe('post reducer', () => {
   it('should handle ERROR_TO_GET_A_FULL_POST', () => {
     const err = new Error('error occurs')
     expect(
-      post({}, {
-        type: types.ERROR_TO_GET_A_FULL_POST,
-        payload: {
-          slug: 'mock-slug',
-          error: err,
-        },
-      }),
+      post(
+        {},
+        {
+          type: types.ERROR_TO_GET_A_FULL_POST,
+          payload: {
+            slug: 'mock-slug',
+            error: err,
+          },
+        }
+      )
     ).to.deep.equal({
       slug: 'mock-slug',
       error: err,
@@ -79,23 +86,23 @@ describe('post reducer', () => {
 
 describe('posts reducer', () => {
   it('should return the initial state', () => {
-    expect(
-      posts({}, {}),
-    ).to.deep.equal({})
+    expect(posts({}, {})).to.deep.equal({})
   })
 
   it('should handle GET_LISTED_POSTS', () => {
     expect(
-      posts({
-      }, {
-        type: types.GET_LISTED_POSTS,
-        payload: {
-          items: [post1, post2, post3, post4],
-          total: 10,
-          listID: 'mock-list-id',
-          page: 0,
-        },
-      }),
+      posts(
+        {},
+        {
+          type: types.GET_LISTED_POSTS,
+          payload: {
+            items: [post1, post2, post3, post4],
+            total: 10,
+            listID: 'mock-list-id',
+            page: 0,
+          },
+        }
+      )
     ).to.deep.equal({
       'mock-list-id': {
         items: [post1.slug, post2.slug, post3.slug, post4.slug],
@@ -107,16 +114,18 @@ describe('posts reducer', () => {
 
     // page is provided
     expect(
-      posts({
-      }, {
-        type: types.GET_LISTED_POSTS,
-        payload: {
-          items: [post1, post2, post3, post4],
-          total: 10,
-          listID: 'mock-list-id',
-          page: 2,
-        },
-      }),
+      posts(
+        {},
+        {
+          type: types.GET_LISTED_POSTS,
+          payload: {
+            items: [post1, post2, post3, post4],
+            total: 10,
+            listID: 'mock-list-id',
+            page: 2,
+          },
+        }
+      )
     ).to.deep.equal({
       'mock-list-id': {
         items: [post1.slug, post2.slug, post3.slug, post4.slug],
@@ -132,17 +141,20 @@ describe('posts reducer', () => {
   it('should handle ERROR_TO_GET_LISTED_POSTS', () => {
     const err = new Error('error occurs')
     expect(
-      posts({
-        'mock-list-id': {
-          items: [post1],
-          total: 5,
-          error: null,
+      posts(
+        {
+          'mock-list-id': {
+            items: [post1],
+            total: 5,
+            error: null,
+          },
         },
-      }, {
-        type: types.ERROR_TO_GET_LISTED_POSTS,
-        error: err,
-        listID: 'mock-list-id',
-      }),
+        {
+          type: types.ERROR_TO_GET_LISTED_POSTS,
+          error: err,
+          listID: 'mock-list-id',
+        }
+      )
     ).to.deep.equal({
       'mock-list-id': {
         items: [post1],
