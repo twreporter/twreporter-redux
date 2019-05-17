@@ -76,12 +76,13 @@ class ArticleContainer extends React.Component {
     })
   }
   componentDidMount() {
-    const store = this.context
+    const { store } = this.context
     const slug = _.get(this.props, 'match.params.slug')
     store.actions.fetchAFullPost(slug)
   }
   render() {
-    const { entities, selectedPost } = this.context
+    const { store } = this.context
+    const { entities, selectedPost } = store.getState()
     const post = _.get(entities, [ reduxStateFields.postsInEntities, selectedPost.slug ], {})
     return (
       <Article post={post}/>
