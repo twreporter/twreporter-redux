@@ -34,7 +34,9 @@ export default async function createStore(
         withCredentials: true,
       })
   const composeEnhancers =
-    (window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
+    (typeof window !== 'undefined' &&
+      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
+    compose
   const storeEnhancer = composeEnhancers(
     applyMiddleware(thunkMiddleware.withExtraArgument({ httpClientWithToken })),
     bindActionsToStore
