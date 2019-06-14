@@ -11,6 +11,8 @@
   - Remove `gulp` and use `makefile` instead
   - Update `.gitignore` and `.npmignore`
 - Add redux store
+- Move actions and reducers from `twreporter-react` to this package
+- Remove header reducer and actions
 
 ### 4.0.3
 
