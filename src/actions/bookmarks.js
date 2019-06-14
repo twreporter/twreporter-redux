@@ -116,7 +116,7 @@ export function createSingleBookmark(jwt, uesrID, bookmarkToBeCreated) {
   /* go-api takes `published_date` as an unix timestamp (in secs) int */
   // eslint-disable-next-line camelcase
   const { published_date, ...passedBookmarkProperties } = bookmarkToBeCreated
-  return function(dispatch, getState, axiosInstanceWithUserCookie) {
+  return function(dispatch, getState, { httpClientWithToken }) {
     const url = formAPIURL(apiEndpoints.createSingleBookmark(uesrID), false)
     const axiosConfig = {
       timeout: apiConfig.timeout,
@@ -125,23 +125,21 @@ export function createSingleBookmark(jwt, uesrID, bookmarkToBeCreated) {
         Authorization: `Bearer ${jwt}`,
       },
     }
-    const interceptor = axiosInstanceWithUserCookie.interceptors.request.use(
-      config => {
-        const { method, url, headers, data } = config
-        dispatch({
-          type: types.singleBookmark.create.request,
-          payload: {
-            method,
-            url,
-            headers,
-            body: data,
-          },
-        })
-        axiosInstanceWithUserCookie.interceptors.request.eject(interceptor)
-        return config
-      }
-    )
-    return axiosInstanceWithUserCookie
+    const interceptor = httpClientWithToken.interceptors.request.use(config => {
+      const { method, url, headers, data } = config
+      dispatch({
+        type: types.singleBookmark.create.request,
+        payload: {
+          method,
+          url,
+          headers,
+          body: data,
+        },
+      })
+      httpClientWithToken.interceptors.request.eject(interceptor)
+      return config
+    })
+    return httpClientWithToken
       .post(
         url,
         {
@@ -179,7 +177,7 @@ export function createSingleBookmark(jwt, uesrID, bookmarkToBeCreated) {
  * @returns
  */
 export function getMultipleBookmarks(jwt, userID, offset, limit, sort) {
-  return function(dispatch, getState, axiosInstanceWithUserCookie) {
+  return function(dispatch, getState, { httpClientWithToken }) {
     const url = formAPIURL(
       `${apiEndpoints.getBookmarks(
         userID
@@ -192,23 +190,21 @@ export function getMultipleBookmarks(jwt, userID, offset, limit, sort) {
         Authorization: `Bearer ${jwt}`,
       },
     }
-    const interceptor = axiosInstanceWithUserCookie.interceptors.request.use(
-      config => {
-        const { method, url, headers, data } = config
-        dispatch({
-          type: types.multipleBookMarks.read.request,
-          payload: {
-            method,
-            url,
-            headers,
-            body: data,
-          },
-        })
-        axiosInstanceWithUserCookie.interceptors.request.eject(interceptor)
-        return config
-      }
-    )
-    return axiosInstanceWithUserCookie
+    const interceptor = httpClientWithToken.interceptors.request.use(config => {
+      const { method, url, headers, data } = config
+      dispatch({
+        type: types.multipleBookMarks.read.request,
+        payload: {
+          method,
+          url,
+          headers,
+          body: data,
+        },
+      })
+      httpClientWithToken.interceptors.request.eject(interceptor)
+      return config
+    })
+    return httpClientWithToken
       .get(url, axiosConfig)
       .then(res => {
         const successAction = buildSuccessActionFromRes(
@@ -238,7 +234,8 @@ export function getMultipleBookmarks(jwt, userID, offset, limit, sort) {
  * @returns
  */
 export function getSingleBookmark(jwt, userID, bookmarkSlug, bookmarkHost) {
-  return function(dispatch, getState, axiosInstanceWithUserCookie) {
+  return function(dispatch, getState, { httpClientWithToken }) {
+    console.log(httpClientWithToken)
     let url = formAPIURL(
       `${apiEndpoints.getSingleBookmark(userID, bookmarkSlug, bookmarkHost)}`,
       false
@@ -249,23 +246,21 @@ export function getSingleBookmark(jwt, userID, bookmarkSlug, bookmarkHost) {
         Authorization: `Bearer ${jwt}`,
       },
     }
-    const interceptor = axiosInstanceWithUserCookie.interceptors.request.use(
-      config => {
-        const { method, url, headers, data } = config
-        dispatch({
-          type: types.singleBookmark.read.request,
-          payload: {
-            method,
-            url,
-            headers,
-            body: data,
-          },
-        })
-        axiosInstanceWithUserCookie.interceptors.request.eject(interceptor)
-        return config
-      }
-    )
-    return axiosInstanceWithUserCookie
+    const interceptor = httpClientWithToken.interceptors.request.use(config => {
+      const { method, url, headers, data } = config
+      dispatch({
+        type: types.singleBookmark.read.request,
+        payload: {
+          method,
+          url,
+          headers,
+          body: data,
+        },
+      })
+      httpClientWithToken.interceptors.request.eject(interceptor)
+      return config
+    })
+    return httpClientWithToken
       .get(url, axiosConfig)
       .then(res => {
         const successAction = buildSuccessActionFromRes(
@@ -294,7 +289,7 @@ export function getSingleBookmark(jwt, userID, bookmarkSlug, bookmarkHost) {
  * @returns
  */
 export function deleteSingleBookmark(jwt, userID, bookmarkID) {
-  return function(dispatch, getState, axiosInstanceWithUserCookie) {
+  return function(dispatch, getState, { httpClientWithToken }) {
     const url = formAPIURL(
       apiEndpoints.deleteSingleBookmark(userID, bookmarkID),
       false
@@ -305,23 +300,21 @@ export function deleteSingleBookmark(jwt, userID, bookmarkID) {
         Authorization: `Bearer ${jwt}`,
       },
     }
-    const interceptor = axiosInstanceWithUserCookie.interceptors.request.use(
-      config => {
-        const { method, url, headers, data } = config
-        dispatch({
-          type: types.singleBookmark.delete.request,
-          payload: {
-            method,
-            url,
-            headers,
-            body: data,
-          },
-        })
-        axiosInstanceWithUserCookie.interceptors.request.eject(interceptor)
-        return config
-      }
-    )
-    return axiosInstanceWithUserCookie
+    const interceptor = httpClientWithToken.interceptors.request.use(config => {
+      const { method, url, headers, data } = config
+      dispatch({
+        type: types.singleBookmark.delete.request,
+        payload: {
+          method,
+          url,
+          headers,
+          body: data,
+        },
+      })
+      httpClientWithToken.interceptors.request.eject(interceptor)
+      return config
+    })
+    return httpClientWithToken
       .delete(url, axiosConfig)
       .then(res => {
         const successAction = buildSuccessActionFromRes(
