@@ -62,6 +62,14 @@ const topicList = 'topic_list'
 const selectedPost = 'selected_post'
 const selectedTopic = 'selected_topic'
 
+const articlesByAuthor = 'articlesByAuthor'
+const auth = 'auth'
+const authorsList = 'authorsList'
+const bookmarks = 'bookmarks'
+const bookmarkWidget = 'bookmarkWidget'
+const entitiesForAuthors = 'entitiesForAuthors'
+const searchedAuthorsList = 'searchedAuthorsList'
+
 // sections in index_page
 const editorPicksSection = 'editor_picks_section'
 const infographicsSection = 'infographics_section'
@@ -78,6 +86,9 @@ const politicsAndEconomy = 'politics_economy'
 const cultureAndArt = 'culture_art'
 const international = 'international'
 const livingAndMedicalCare = 'living_medical_care'
+
+// time stamp for next popup
+const nextNotifyPopupTS = 'nextNotifyPopupTS'
 
 /**
  * fields in the `entities` field
@@ -111,4 +122,13 @@ export default {
   topicList,
   postsInEntities,
   topicsInEntities,
+  // twreporter-react
+  articlesByAuthor,
+  auth,
+  authorsList,
+  bookmarks,
+  bookmarkWidget,
+  entitiesForAuthors,
+  nextNotifyPopupTS,
+  searchedAuthorsList,
 }
