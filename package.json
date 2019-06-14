@@ -1,6 +1,6 @@
 {
   "name": "@twreporter/redux",
-  "version": "4.0.3",
+  "version": "5.0.0-beta.2",
   "description": "redux actions and reducers for twreporter website",
   "main": "lib/index.js",
   "scripts": {
@@ -38,8 +38,8 @@
     "redux": "^3.6.0"
   },
   "peerDependencies": {
-    "prop-types": "^15.7.2",
-    "react": "^16.8.6"
+    "prop-types": "^15.0.0",
+    "react": "^16.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",
@@ -65,8 +65,8 @@
     "mocha": "^6.1.4",
     "nock": "10.0.6",
     "prettier": "^1.17.1",
-    "prop-types": "^15.7.2",
-    "react": "^16.8.6",
+    "prop-types": "^15.0.0",
+    "react": "^16.3.0",
     "redux-mock-store": "^1.2.3",
     "redux-thunk": "^2.2.0",
     "rimraf": "^2.6.1"
