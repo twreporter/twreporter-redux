@@ -1,4 +1,4 @@
-import config from '../conf/api-config.json'
+import config from '../conf/api-config'
 
 const formAPIURL = (path, toEncode = true) => {
   let protocol

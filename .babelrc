@@ -7,7 +7,6 @@
   ],
   "comments": false,
   "ignore": [
-    "src/**/*.json",
     "node_modules"
   ],
   "plugins": [

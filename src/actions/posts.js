@@ -1,4 +1,4 @@
-import apiConfig from '../conf/api-config.json'
+import apiConfig from '../conf/api-config'
 import apiEndpoints from '../constants/api-endpoints'
 import axios from 'axios'
 import fieldNames from '../constants/redux-state-field-names'
