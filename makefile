@@ -22,7 +22,7 @@ clean:
 	@echo "$(P) Clean lib"
 	$(BIN_DIR)/rimraf lib/
 
-publish: build
+publish: build test
 	npm publish
 
 prettier:
