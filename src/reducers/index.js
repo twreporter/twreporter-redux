@@ -7,7 +7,6 @@ import authReducer from './auth'
 import bookmarks from './bookmarks'
 import bookmarkWidget from './bookmark-widget'
 import entities from './entities'
-import header from './header'
 import indexPage from './index-page'
 import reduxStatePropKey from '../constants/redux-state-field-names'
 import types from '../constants/action-types'
@@ -27,7 +26,6 @@ const rootReducer = combineReducers({
   [reduxStatePropKey.bookmarks]: bookmarks,
   [reduxStatePropKey.bookmarkWidget]: bookmarkWidget,
   [reduxStatePropKey.entities]: entities,
-  [reduxStatePropKey.header]: header,
   [reduxStatePropKey.indexPage]: indexPage,
   [reduxStatePropKey.lists]: posts,
   [reduxStatePropKey.searchedAuthorsList]: searchedAuthorsList,
