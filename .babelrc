@@ -2,7 +2,8 @@
   "presets": [
     ["@babel/env", {
       "debug": true
-    }]
+    }],
+    "@babel/preset-react"
   ],
   "comments": false,
   "ignore": [
