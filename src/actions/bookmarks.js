@@ -1,3 +1,4 @@
+import apiConfig from '../conf/api-config'
 import types from '../constants/action-types'
 import failActionCreators from './error-action-creators'
 import formAPIURL from '../utils/form-api-url'
@@ -8,9 +9,7 @@ const _ = {
   get,
 }
 
-const apiConfig = {
-  timeout: 5000,
-}
+const apiTimeout = apiConfig.API_TIME_OUT
 
 const apiEndpoints = {
   getBookmarks: userID => `users/${userID}/bookmarks`,
@@ -119,7 +118,7 @@ export function createSingleBookmark(jwt, uesrID, bookmarkToBeCreated) {
   return function(dispatch, getState, { httpClientWithToken }) {
     const url = formAPIURL(apiEndpoints.createSingleBookmark(uesrID), false)
     const axiosConfig = {
-      timeout: apiConfig.timeout,
+      timeout: apiTimeout,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${jwt}`,
@@ -185,7 +184,7 @@ export function getMultipleBookmarks(jwt, userID, offset, limit, sort) {
       false
     )
     const axiosConfig = {
-      timeout: apiConfig.timeout,
+      timeout: apiTimeout,
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
@@ -241,7 +240,7 @@ export function getSingleBookmark(jwt, userID, bookmarkSlug, bookmarkHost) {
       false
     )
     const axiosConfig = {
-      timeout: apiConfig.timeout,
+      timeout: apiTimeout,
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
@@ -295,7 +294,7 @@ export function deleteSingleBookmark(jwt, userID, bookmarkID) {
       false
     )
     const axiosConfig = {
-      timeout: apiConfig.timeout,
+      timeout: apiTimeout,
       headers: {
         Authorization: `Bearer ${jwt}`,
       },

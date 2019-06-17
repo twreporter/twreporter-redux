@@ -1,8 +1,8 @@
+import apiConfig from '../conf/api-config'
 import actionTypes from '../constants/action-types'
 import axios from 'axios'
 import errorActionCreators from './error-action-creators'
 import formAPIURL from '../utils/form-api-url'
-import httpConsts from '../constants/http-protocol'
 // lodash
 import get from 'lodash/get'
 
@@ -10,7 +10,7 @@ const _ = {
   get,
 }
 
-const timeout = 5000
+const timeout = apiConfig.API_TIME_OUT
 
 /**
  *  Send POST method request with Cookie in the headers
@@ -35,18 +35,23 @@ export function getAccessToken(cookieList, releaseBranch) {
       withCredentials: true,
     }
 
-    dispatch({
-      type: actionTypes.REQUEST_AUTH,
-      payload: {
-        body: null,
-        config: {
-          timeout: options.timeout,
-          withCredentials: options.withCredentials,
+    const interceptor = axios.interceptors.request.use(config => {
+      const { method, url, headers, data, withCredentials, timeout } = config
+      dispatch({
+        type: actionTypes.REQUEST_AUTH,
+        payload: {
+          method,
+          config: {
+            timeout,
+            withCredentials,
+          },
+          url,
+          headers,
+          body: data,
         },
-        headers: options.headers,
-        method: httpConsts.method.post,
-        url: endpoint,
-      },
+      })
+      axios.interceptors.request.eject(interceptor)
+      return config
     })
 
     return axios
