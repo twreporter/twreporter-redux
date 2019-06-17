@@ -2,6 +2,7 @@ import { denormalizePosts, denormalizeTopics } from './utils/denormalize-asset'
 import { post, posts } from './reducers/posts'
 import { topic, topics } from './reducers/topics'
 import actions from './actions'
+import actionTypes from './constants/action-types'
 import createStore from './store/create-store'
 import entities from './reducers/entities'
 import formAPIURL from './utils/form-api-url'
@@ -12,10 +13,9 @@ import ReduxStoreContext from './context/redux-store'
 import ReduxStoreProvider from './component/provider'
 
 export default {
-  createStore,
-  ReduxStoreProvider,
-  ReduxStoreContext,
   actions,
+  actionTypes,
+  createStore,
   reducers: {
     entities,
     post,
@@ -25,6 +25,8 @@ export default {
     indexPage,
   },
   reduxStateFields,
+  ReduxStoreContext,
+  ReduxStoreProvider,
   utils: {
     denormalizePosts,
     denormalizeTopics,
