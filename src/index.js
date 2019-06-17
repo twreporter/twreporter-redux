@@ -1,11 +1,11 @@
 import { denormalizePosts, denormalizeTopics } from './utils/denormalize-asset'
+import { formURL } from './utils/url'
 import { post, posts } from './reducers/posts'
 import { topic, topics } from './reducers/topics'
 import actions from './actions'
 import actionTypes from './constants/action-types'
 import createStore from './store/create-store'
 import entities from './reducers/entities'
-import formAPIURL from './utils/form-api-url'
 import indexPage from './reducers/index-page'
 import pagination from './utils/pagination'
 import reduxStateFields from './constants/redux-state-field-names'
@@ -30,7 +30,7 @@ export default {
   utils: {
     denormalizePosts,
     denormalizeTopics,
-    formAPIURL,
+    formURL,
     pagination,
   },
 }

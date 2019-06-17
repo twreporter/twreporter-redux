@@ -1,9 +1,9 @@
-import apiConfig from '../conf/api-config'
+import { formURL } from '../utils/url'
+import apiConfig from '../constants/api-config'
 import apiEndpoints from '../constants/api-endpoints'
 import axios from 'axios'
-import fieldNames from '../constants/redux-state-field-names'
-import formAPIURL from '../utils/form-api-url'
 import postStyles from '../constants/post-styles'
+import stateFieldNames from '../constants/redux-state-field-names'
 import types from '../constants/action-types'
 
 // lodash
@@ -23,7 +23,7 @@ export function fetchAFullPost(slug) {
     const state = getState()
     const post = _.get(
       state,
-      `${fieldNames.entities}.${fieldNames.postsInEntities}.${slug}`,
+      `${stateFieldNames.entities}.${stateFieldNames.postsInEntities}.${slug}`,
       {}
     )
 
@@ -31,7 +31,7 @@ export function fetchAFullPost(slug) {
     if (_.get(post, 'full', false)) {
       // current selected post is not the post just been fetched,
       // change the selected post
-      if (slug !== _.get(state, `${fieldNames.selectedPost}.slug`)) {
+      if (slug !== _.get(state, `${stateFieldNames.selectedPost}.slug`)) {
         return dispatch({
           type: types.CHANGE_SELECTED_POST,
           payload: post,
@@ -41,10 +41,9 @@ export function fetchAFullPost(slug) {
       // do nothing
       return Promise.resolve()
     }
-
-    const path = `${apiEndpoints.posts}/${slug}?full=true`
-
-    const url = formAPIURL(path)
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
+    const path = `/v1/${apiEndpoints.posts}/${slug}`
+    const url = formURL(apiOrigin, path, { full: 'true' })
     // Start to get topics
     dispatch({
       type: types.START_TO_GET_A_FULL_POST,
@@ -55,7 +54,7 @@ export function fetchAFullPost(slug) {
 
     return axios
       .get(url, {
-        timeout: apiConfig.API_TIME_OUT,
+        timeout: apiConfig.timeout,
       })
       .then(response => {
         return dispatch({
@@ -76,21 +75,25 @@ export function fetchAFullPost(slug) {
   }
 }
 
-/*
- * @param {function} dispatch - dispatch of redux
- * @param {string} path - uri
+/**
+ * @param {Function} dispatch - dispatch of redux
+ * @param {string} path - url path
+ * @param {Object} params - url query params
  * @param {string} successActionType - action type
  * @param {string} failureActionType - action type
- * @param {object} defaultPayload
- */
+ * @param {Object} defaultPayload
+ **/
+
 function _fetchPosts(
   dispatch,
-  path,
+  origin,
+  path = '',
+  params = {},
   successActionType,
   failureActionType = types.ERROR_TO_GET_POSTS,
   defaultPayload = {}
 ) {
-  const url = formAPIURL(path)
+  const url = formURL(origin, path, params)
   dispatch({
     type: types.START_TO_GET_POSTS,
     url,
@@ -98,7 +101,7 @@ function _fetchPosts(
 
   return axios
     .get(url, {
-      timeout: apiConfig.API_TIME_OUT,
+      timeout: apiConfig.timeout,
     })
     .then(response => {
       return dispatch({
@@ -135,7 +138,7 @@ function _fetchPosts(
 export function fetchListedPosts(listID, listType, limit = 10, page = 0) {
   return (dispatch, getState) => {
     const state = getState()
-    const list = _.get(state, [fieldNames.lists, listID])
+    const list = _.get(state, [stateFieldNames.lists, listID])
 
     // if list is already existed and there is nothing more to load
     if (list && _.get(list, 'total', 0) <= _.get(list, 'items.length', 0)) {
@@ -158,14 +161,18 @@ export function fetchListedPosts(listID, listType, limit = 10, page = 0) {
     // otherwise, use current length of items
     const offset =
       page > 0 ? (page - 1) * limit : _.get(list, 'items.length', 0)
-
-    const path = `${apiEndpoints.posts}?where=${JSON.stringify(
-      where
-    )}&limit=${limit}&offset=${offset}`
-
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
+    const path = `/v1/${apiEndpoints.posts}`
+    const params = {
+      where: JSON.stringify(where),
+      limit,
+      offset,
+    }
     return _fetchPosts(
       dispatch,
+      apiOrigin,
       path,
+      params,
       types.GET_LISTED_POSTS,
       types.ERROR_TO_GET_LISTED_POSTS,
       { listID, page }
@@ -180,17 +187,28 @@ export function fetchEditorPickedPosts() {
     const state = getState()
     const posts = _.get(
       state,
-      `${fieldNames.indexPage}.${fieldNames.sections.editorPicksSection}`,
+      `${stateFieldNames.indexPage}.${
+        stateFieldNames.sections.editorPicksSection
+      }`,
       []
     )
 
     if (posts.length > 0) {
       return Promise.resolve()
     }
-
-    const path = `${apiEndpoints.posts}?where={"is_featured":true}&limit=6`
-
-    return _fetchPosts(dispatch, path, types.GET_EDITOR_PICKED_POSTS)
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
+    const path = `/v1/${apiEndpoints.posts}`
+    const params = {
+      where: '{"is_featured":true}',
+      limit: 6,
+    }
+    return _fetchPosts(
+      dispatch,
+      apiOrigin,
+      path,
+      params,
+      types.GET_EDITOR_PICKED_POSTS
+    )
   }
 }
 
@@ -204,20 +222,23 @@ export function fetchPhotographyPostsOnIndexPage() {
     const state = getState()
     const posts = _.get(
       state,
-      `${fieldNames.indexPage}.${fieldNames.sections.photosSection}`,
+      `${stateFieldNames.indexPage}.${stateFieldNames.sections.photosSection}`,
       []
     )
     if (Array.isArray(posts) && posts.length > 0) {
       return Promise.resolve()
     }
-
-    const path = `${apiEndpoints.posts}?where={"style":"${
-      postStyles.photography
-    }"}&limit=6`
-
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
+    const path = `/v1/${apiEndpoints.posts}`
+    const params = {
+      where: `{"style":"${postStyles.photography}"}`,
+      limit: 6,
+    }
     return _fetchPosts(
       dispatch,
+      apiOrigin,
       path,
+      params,
       types.GET_PHOTOGRAPHY_POSTS_FOR_INDEX_PAGE
     )
   }
@@ -233,20 +254,26 @@ export function fetchInfographicPostsOnIndexPage() {
     const state = getState()
     const posts = _.get(
       state,
-      `${fieldNames.indexPage}.${fieldNames.sections.infographicsSection}`,
+      `${stateFieldNames.indexPage}.${
+        stateFieldNames.sections.infographicsSection
+      }`,
       []
     )
     if (Array.isArray(posts) && posts.length > 0) {
       return Promise.resolve()
     }
-
-    const path = `${apiEndpoints.posts}?where={"style":"${
-      postStyles.infographic
-    }"}&limit=10`
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
+    const path = `/v1/${apiEndpoints.posts}`
+    const params = {
+      where: `{"style":"${postStyles.infographic}"}`,
+      limit: 10,
+    }
 
     return _fetchPosts(
       dispatch,
+      apiOrigin,
       path,
+      params,
       types.GET_INFOGRAPHIC_POSTS_FOR_INDEX_PAGE
     )
   }

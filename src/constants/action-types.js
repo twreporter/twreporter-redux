@@ -22,7 +22,7 @@ export default {
   // actions fetching posts
   START_TO_GET_POSTS: 'START_TO_GET_POSTS',
   ERROR_TO_GET_POSTS: 'ERROR_TO_GET_POSTS',
-  GET_EDITOR_PICKED_POSTS: 'G∂ET_EDITOR_PICKED_POSTS',
+  GET_EDITOR_PICKED_POSTS: 'GET_EDITOR_PICKED_POSTS',
   GET_LISTED_POSTS: 'GET_LISTED_POSTS',
   ERROR_TO_GET_LISTED_POSTS: 'ERROR_TO_GET_LISTED_POSTS',
   ERROR_TO_GET_EDITOR_PICKED_POSTS: 'ERROR_TO_GET_EDITOR_PICKED_POSTS',
@@ -80,5 +80,9 @@ export default {
       success: 'succes to fetch multiple bookmarks',
       failure: 'fail to fetch multiple bookmarks',
     },
+  },
+
+  origins: {
+    update: 'update request origins',
   },
 }

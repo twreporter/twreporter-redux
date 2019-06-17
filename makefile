@@ -38,6 +38,6 @@ lint: prettier eslint
 	
 test:
 	@echo "$(P) Run tests"
-	NODE_ENV=development $(BIN_DIR)/mocha --file $(TEST_SCRIPTS_FILES) --require @babel/register
+	NODE_ENV=development RELEASE_BRANCH=test $(BIN_DIR)/mocha --file $(TEST_SCRIPTS_FILES) --require @babel/register
  
 .PHONY: build clean lint prettier dev

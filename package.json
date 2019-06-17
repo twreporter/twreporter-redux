@@ -35,6 +35,7 @@
     "localforage": "^1.7.3",
     "lodash": "^4.17.4",
     "normalizr": "^3.2.4",
+    "qs": "^6.5.1",
     "redux": "^3.6.0"
   },
   "peerDependencies": {

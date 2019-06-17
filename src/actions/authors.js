@@ -6,12 +6,12 @@ import {
   NUMBER_OF_FIRST_RESPONSE_PAGE,
   RETURN_DELAY_TIME,
 } from '../constants/authors-list'
+import { formURL } from '../utils/url'
 import { schema, normalize } from 'normalizr'
 import actionTypes from '../constants/action-types'
 import fetch from 'isomorphic-fetch'
-import formAPIURL from '../utils/form-api-url'
 import httpConsts from '../constants/http-protocol'
-import qs from 'qs'
+import stateFieldNames from '../constants/redux-state-field-names'
 // lodash
 import assign from 'lodash/assign'
 import get from 'lodash/get'
@@ -76,9 +76,9 @@ export function searchAuthors({ keywords, targetPage, returnDelay }) {
         keywords === '' ? MAX_RESULTS_PER_FETCH : MAX_RESULTS_PER_SEARCH,
       page: targetPage,
     }
-    // Trans searchParas object to url parameters:
-    let urlParasString = qs.stringify(searchParas)
-    let url = formAPIURL(`search/authors?${urlParasString}`, false)
+    const state = getState()
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
+    const url = formURL(apiOrigin, '/v1/search/authors', searchParas, false)
     dispatch(requestSearchAuthors(keywords))
     // Call our API server to fetch the data
     return fetch(url)

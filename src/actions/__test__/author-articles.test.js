@@ -5,6 +5,7 @@ import { mockResponse, items } from './mocks/author-articles'
 import * as actions from '../../../src/actions/author-articles'
 import actionTypes from '../../constants/action-types'
 import configureMockStore from 'redux-mock-store'
+import fieldNames from '../../constants/redux-state-field-names'
 import nock from 'nock'
 import thunk from 'redux-thunk'
 
@@ -18,6 +19,9 @@ const mockDefaultState = {
       isFetching: false,
     },
     articles: {},
+  },
+  [fieldNames.origins]: {
+    api: 'http://localhost:8080',
   },
 }
 const authorId = 'theAurhtorId'

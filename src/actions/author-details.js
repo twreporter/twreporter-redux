@@ -1,15 +1,17 @@
 import { author as authorSchema } from '../schemas/article-schema'
 import { camelizeKeys } from 'humps'
+import { formURL } from '../utils/url'
 import { normalize } from 'normalizr'
 import actionTypes from '../constants/action-types'
 import fetch from 'isomorphic-fetch'
-import formAPIURL from '../utils/form-api-url'
-import qs from 'qs'
+import stateFieldNames from '../constants/redux-state-field-names'
 // lodash
 import assign from 'lodash/assign'
+import get from 'lodash/get'
 
 const _ = {
   assign,
+  get,
 }
 
 export function requestFetchAuthorDetails(authorId) {
@@ -34,14 +36,16 @@ export function receiveFetchAuthorDetails(normalizedData) {
 }
 
 export function fetchAuthorDetails(authorId) {
-  return function(dispatch) {
+  return function(dispatch, getState) {
     const searchParas = {
       keywords: authorId,
       filters: 'articlesCount>0',
       hitsPerPage: 1,
       page: 0,
     }
-    const url = formAPIURL(`search/authors?${qs.stringify(searchParas)}`, false)
+    const state = getState()
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
+    const url = formURL(apiOrigin, '/v1/search/authors', searchParas, false)
     dispatch(requestFetchAuthorDetails(authorId))
     return fetch(url)
       .then(res => {

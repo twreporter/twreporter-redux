@@ -1,6 +1,5 @@
 /* global describe, afterEach, it, context */
 import { expect } from 'chai'
-// import { urlParasToString } from '../../utils/index'
 import * as actions from '../../../src/actions/authors'
 import types from '../../constants/action-types'
 import configureMockStore from 'redux-mock-store'

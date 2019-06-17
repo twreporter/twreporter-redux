@@ -76,6 +76,9 @@ describe('Testing fetchIndexPageContent:', () => {
           [fieldNames.sections.photosSection]: [post2],
           [fieldNames.sections.infographicsSection]: [post3],
         },
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
       })
       store.dispatch(actions.fetchIndexPageContent())
       expect(store.getActions().length).to.equal(0) // no action is dispatched
@@ -86,7 +89,11 @@ describe('Testing fetchIndexPageContent:', () => {
   })
   context('Lacks of contents', () => {
     it('Should dispatch types.GET_CONTENT_FOR_INDEX_PAGE', () => {
-      const store = mockStore()
+      const store = mockStore({
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
+      })
       const mockApiResponse = {
         records: {
           [fieldNames.sections.latestSection]: [post1, post2],
@@ -124,7 +131,11 @@ describe('Testing fetchIndexPageContent:', () => {
   })
   context('If the api returns a failure', () => {
     it('Should dispatch types.ERROR_TO_GET_INDEX_PAGE_CONTENT', () => {
-      const store = mockStore()
+      const store = mockStore({
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
+      })
       nock('http://localhost:8080')
         .get('/v1/index_Page')
         .reply(404)

@@ -5,12 +5,12 @@ import {
   NUMBER_OF_FIRST_RESPONSE_PAGE,
   RETURN_DELAY_TIME,
 } from '../constants/author-page'
+import { formURL } from '../utils/url'
 import { schema, normalize } from 'normalizr'
 import actionTypes from '../constants/action-types'
 import fetch from 'isomorphic-fetch'
-import formAPIURL from '../utils/form-api-url'
 import httpConsts from '../constants/http-protocol'
-import qs from 'qs'
+import stateFieldNames from '../constants/redux-state-field-names'
 // lodash
 import get from 'lodash/get'
 import omit from 'lodash/omit'
@@ -67,9 +67,9 @@ export function fetchAuthorCollection({ targetPage, authorId, returnDelay }) {
       hitsPerPage: MAX_ARTICLES_PER_FETCH,
       page: targetPage,
     }
-    // Trans searchParas object to url parameters:
-    const urlParasString = qs.stringify(searchParas)
-    const url = formAPIURL(`search/posts?${urlParasString}`, false)
+    const state = getState()
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
+    const url = formURL(apiOrigin, `/v1/search/posts`, searchParas, false)
     dispatch(requestAuthorCollection(authorId))
     // Call our API server to fetch the data
     return fetch(url)

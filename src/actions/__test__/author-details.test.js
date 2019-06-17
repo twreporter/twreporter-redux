@@ -1,5 +1,4 @@
 /* global describe, it */
-
 import { author as authorSchema } from '../../schemas/article-schema'
 import { camelizeKeys } from 'humps'
 import { expect } from 'chai'
@@ -7,6 +6,7 @@ import { normalize } from 'normalizr'
 import * as actions from '../author-details'
 import actionTypes from '../../constants/action-types'
 import configureStore from 'redux-mock-store'
+import fieldNames from '../../constants/redux-state-field-names'
 import nock from 'nock'
 import thunk from 'redux-thunk'
 
@@ -73,7 +73,11 @@ describe('Test action creators of author-details', function() {
     })
   })
   describe('Test action creator `fetchAuthorDetails`', function() {
-    const store = mockStore({})
+    const store = mockStore({
+      [fieldNames.origins]: {
+        api: 'http://localhost:8080',
+      },
+    })
     this.afterEach(function() {
       store.clearActions()
       nock.cleanAll()

@@ -1,7 +1,8 @@
-import apiConfig from '../conf/api-config'
-import types from '../constants/action-types'
+import { formURL } from '../utils/url'
+import apiConfig from '../constants/api-config'
 import failActionCreators from './error-action-creators'
-import formAPIURL from '../utils/form-api-url'
+import stateFieldNames from '../constants/redux-state-field-names'
+import types from '../constants/action-types'
 // lodash
 import get from 'lodash/get'
 
@@ -9,16 +10,7 @@ const _ = {
   get,
 }
 
-const apiTimeout = apiConfig.API_TIME_OUT
-
-const apiEndpoints = {
-  getBookmarks: userID => `users/${userID}/bookmarks`,
-  getSingleBookmark: (userID, bookmarkSlug, bookmarkHost) =>
-    `users/${userID}/bookmarks/${bookmarkSlug}?host=${bookmarkHost}`,
-  createSingleBookmark: userID => `users/${userID}/bookmarks`,
-  deleteSingleBookmark: (userID, bookmarkID) =>
-    `users/${userID}/bookmarks/${bookmarkID}`,
-}
+const apiTimeout = apiConfig.timeout
 
 /**
  * @typedef {Object} userData
@@ -107,16 +99,18 @@ function buildSuccessActionFromRes(axiosResponse, actionType) {
  *
  * @export
  * @param {string} jwt - access_token granted for the user
- * @param {number} uesrID - id of user
+ * @param {number} userID - id of user
  * @param {BookmarkToBeCreated} bookmarkToBeCreated
  * @returns
  */
-export function createSingleBookmark(jwt, uesrID, bookmarkToBeCreated) {
+export function createSingleBookmark(jwt, userID, bookmarkToBeCreated) {
   /* go-api takes `published_date` as an unix timestamp (in secs) int */
   // eslint-disable-next-line camelcase
   const { published_date, ...passedBookmarkProperties } = bookmarkToBeCreated
   return function(dispatch, getState, { httpClientWithToken }) {
-    const url = formAPIURL(apiEndpoints.createSingleBookmark(uesrID), false)
+    const state = getState()
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
+    const url = formURL(apiOrigin, `/v1/users/${userID}/bookmarks`, {}, false)
     const axiosConfig = {
       timeout: apiTimeout,
       headers: {
@@ -177,10 +171,10 @@ export function createSingleBookmark(jwt, uesrID, bookmarkToBeCreated) {
  */
 export function getMultipleBookmarks(jwt, userID, offset, limit, sort) {
   return function(dispatch, getState, { httpClientWithToken }) {
-    const url = formAPIURL(
-      `${apiEndpoints.getBookmarks(
-        userID
-      )}?offset=${offset}&limit=${limit}&sort=${sort}`,
+    const url = formURL(
+      `/v1/users/${userID}/bookmarks`,
+      { offset, limit, sort },
+      undefined,
       false
     )
     const axiosConfig = {
@@ -234,8 +228,10 @@ export function getMultipleBookmarks(jwt, userID, offset, limit, sort) {
  */
 export function getSingleBookmark(jwt, userID, bookmarkSlug, bookmarkHost) {
   return function(dispatch, getState, { httpClientWithToken }) {
-    let url = formAPIURL(
-      `${apiEndpoints.getSingleBookmark(userID, bookmarkSlug, bookmarkHost)}`,
+    const url = formURL(
+      `/v1/users/${userID}/bookmarks/${bookmarkSlug}`,
+      { host: bookmarkHost },
+      undefined,
       false
     )
     const axiosConfig = {
@@ -288,8 +284,10 @@ export function getSingleBookmark(jwt, userID, bookmarkSlug, bookmarkHost) {
  */
 export function deleteSingleBookmark(jwt, userID, bookmarkID) {
   return function(dispatch, getState, { httpClientWithToken }) {
-    const url = formAPIURL(
-      apiEndpoints.deleteSingleBookmark(userID, bookmarkID),
+    const url = formURL(
+      `/v1/users/${userID}/bookmarks/${bookmarkID}`,
+      {},
+      undefined,
       false
     )
     const axiosConfig = {

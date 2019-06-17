@@ -8,6 +8,7 @@ import bookmarks from './bookmarks'
 import bookmarkWidget from './bookmark-widget'
 import entities from './entities'
 import indexPage from './index-page'
+import origins from './origins'
 import reduxStatePropKey from '../constants/redux-state-field-names'
 import types from '../constants/action-types'
 // lodash
@@ -52,6 +53,7 @@ const rootReducer = combineReducers({
     }
     return state
   },
+  [reduxStatePropKey.origins]: origins,
 })
 
 export default rootReducer

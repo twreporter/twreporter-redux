@@ -96,6 +96,9 @@ const nextNotifyPopupTS = 'nextNotifyPopupTS'
 const postsInEntities = 'posts'
 const topicsInEntities = 'topics'
 
+// origins
+const origins = 'origins'
+
 export default {
   categories: {
     humanRightsAndSociety,
@@ -122,6 +125,7 @@ export default {
   topicList,
   postsInEntities,
   topicsInEntities,
+  origins,
   // twreporter-react
   articlesByAuthor,
   auth,

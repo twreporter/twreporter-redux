@@ -6,6 +6,7 @@ import {
   MAX_RESULTS_PER_FETCH,
   MAX_RESULTS_PER_SEARCH,
 } from '../../../constants/authors-list'
+import fieldNames from '../../../constants/redux-state-field-names'
 
 export const currentDate = Date.now()
 export const constKeywords = 'testKeywords'
@@ -77,8 +78,10 @@ export const mockDefaultStates = {
       error: null,
       lastUpdated: 0,
     },
+    [fieldNames.origins]: {
+      api: 'http://localhost:8080',
+    },
   },
-
   afterFirstPageState: {
     authorsList: {
       isFetching: false,
@@ -87,6 +90,9 @@ export const mockDefaultStates = {
       items: [],
       error: null,
       lastUpdated: currentDate,
+    },
+    [fieldNames.origins]: {
+      api: 'http://localhost:8080',
     },
   },
 
@@ -99,6 +105,9 @@ export const mockDefaultStates = {
       error: null,
       lastUpdated: currentDate,
     },
+    [fieldNames.origins]: {
+      api: 'http://localhost:8080',
+    },
   },
 
   hasNoPreviousKeywords: {
@@ -110,6 +119,9 @@ export const mockDefaultStates = {
       error: null,
       lastUpdated: 0,
     },
+    [fieldNames.origins]: {
+      api: 'http://localhost:8080',
+    },
   },
 
   hasPreviousKeywords: {
@@ -120,6 +132,9 @@ export const mockDefaultStates = {
       items: [],
       error: null,
       lastUpdated: currentDate,
+    },
+    [fieldNames.origins]: {
+      api: 'http://localhost:8080',
     },
   },
 }

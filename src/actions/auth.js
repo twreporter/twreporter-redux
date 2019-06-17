@@ -1,8 +1,9 @@
-import apiConfig from '../conf/api-config'
+import { formURL } from '../utils/url'
 import actionTypes from '../constants/action-types'
+import apiConfig from '../constants/api-config'
 import axios from 'axios'
 import errorActionCreators from './error-action-creators'
-import formAPIURL from '../utils/form-api-url'
+import stateFieldNames from '../constants/redux-state-field-names'
 // lodash
 import get from 'lodash/get'
 
@@ -10,7 +11,7 @@ const _ = {
   get,
 }
 
-const timeout = apiConfig.API_TIME_OUT
+const timeout = apiConfig.timeout
 
 /**
  *  Send POST method request with Cookie in the headers
@@ -20,9 +21,11 @@ const timeout = apiConfig.API_TIME_OUT
  *  @param {string} releaseBranch - should be one of 'master', 'test', 'staging' and 'release'
  *  @return {Function} returned function will get executed by the Redux Thunk middleware
  */
-export function getAccessToken(cookieList, releaseBranch) {
-  return dispatch => {
-    const endpoint = formAPIURL(releaseBranch, '/v2/auth/token')
+export function getAccessToken(cookieList) {
+  return (dispatch, getState) => {
+    const state = getState()
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
+    const url = formURL(apiOrigin, '/v2/auth/token')
     const headers = {}
 
     if (cookieList) {
@@ -55,7 +58,7 @@ export function getAccessToken(cookieList, releaseBranch) {
     })
 
     return axios
-      .post(endpoint, null, options)
+      .post(url, null, options)
       .then(axiosRes => {
         dispatch({
           type: actionTypes.AUTH_SUCCESS,
