@@ -234,7 +234,6 @@ export function getMultipleBookmarks(jwt, userID, offset, limit, sort) {
  */
 export function getSingleBookmark(jwt, userID, bookmarkSlug, bookmarkHost) {
   return function(dispatch, getState, { httpClientWithToken }) {
-    console.log(httpClientWithToken)
     let url = formAPIURL(
       `${apiEndpoints.getSingleBookmark(userID, bookmarkSlug, bookmarkHost)}`,
       false
