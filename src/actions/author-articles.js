@@ -9,8 +9,8 @@ import { schema, normalize } from 'normalizr'
 import actionTypes from '../constants/action-types'
 import fetch from 'isomorphic-fetch'
 import formAPIURL from '../utils/form-api-url'
+import httpConsts from '../constants/http-protocol'
 import qs from 'qs'
-import statusCode from '../constants/status-code'
 // lodash
 import get from 'lodash/get'
 import omit from 'lodash/omit'
@@ -19,6 +19,8 @@ const _ = {
   get,
   omit,
 }
+
+const { statusCode } = httpConsts
 
 export function requestAuthorCollection(authorId) {
   return {

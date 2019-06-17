@@ -1,11 +1,14 @@
+import httpConsts from '../constants/http-protocol'
+// lodash
 import get from 'lodash/get'
 import merge from 'lodash/merge'
-import statusCode from '../constants/status-code'
 
 const _ = {
   get,
   merge,
 }
+
+const { statusCode } = httpConsts
 
 /**
  *  actionError type definition

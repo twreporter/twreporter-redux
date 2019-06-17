@@ -10,8 +10,8 @@ import { schema, normalize } from 'normalizr'
 import actionTypes from '../constants/action-types'
 import fetch from 'isomorphic-fetch'
 import formAPIURL from '../utils/form-api-url'
+import httpConsts from '../constants/http-protocol'
 import qs from 'qs'
-import statusCode from '../constants/status-code'
 // lodash
 import assign from 'lodash/assign'
 import get from 'lodash/get'
@@ -24,6 +24,8 @@ const _ = {
   map,
   omit,
 }
+
+const { statusCode } = httpConsts
 
 export function requestSearchAuthors(keywords = '') {
   return {
