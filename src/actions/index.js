@@ -1,3 +1,4 @@
+import { getAccessToken } from './auth'
 import { fetchAuthorCollectionIfNeeded } from './author-articles'
 import { fetchAuthorDetails } from './author-details'
 import { searchAuthorsIfNeeded } from './authors'
@@ -35,6 +36,7 @@ export default {
   fetchPhotographyPostsOnIndexPage,
   fetchTopics,
   fetchTopicsOnIndexPage,
+  getAccessToken,
   getMultipleBookmarks,
   getSingleBookmark,
   searchAuthorsIfNeeded,
