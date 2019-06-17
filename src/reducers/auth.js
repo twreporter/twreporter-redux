@@ -1,9 +1,19 @@
 import actionTypes from '../constants/action-types'
-import get from 'lodash/get'
 import jwtUtils from '../utils/jwt'
+// lodash
+import get from 'lodash/get'
 
 const _ = {
   get,
+}
+
+const initState = {
+  accessToken: '',
+  actionType: '',
+  debugDetails: null,
+  isAuthed: false,
+  isRequesting: false,
+  userInfo: null,
 }
 
 /**
@@ -21,43 +31,42 @@ const _ = {
  *  @param {Object} action.payload - response of API server
  *  @param {string} action.message - error message
  */
-function auth(state = {}, action) {
+export default function auth(state = initState, action) {
   switch (action.type) {
     case actionTypes.AUTH_CLEAR: {
       // return empty state
-      return {
-        actionType: action.type,
-        isAuthed: false,
-        isRequesting: false,
-      }
+      return initState
     }
     case actionTypes.REQUEST_AUTH: {
       return {
+        accessToken: initState.accessToken,
         actionType: action.type,
+        debugDetails: action.payload,
         isAuthed: false,
         isRequesting: true,
-        debugDetails: action.payload,
+        userInfo: initState.userInfo,
       }
     }
     case actionTypes.AUTH_FAILURE: {
       return {
+        accessToken: initState.accessToken,
         actionType: action.type,
+        debugDetails: action.payload,
         isAuthed: false,
         isRequesting: false,
-        debugDetails: action.payload,
+        userInfo: initState.userInfo,
       }
     }
     case actionTypes.AUTH_SUCCESS: {
       const jwt = _.get(action, 'payload.data.jwt', '')
       const userInfo = jwtUtils.decodePayload(jwt)
-
       return {
+        accessToken: jwt,
         actionType: action.type,
+        debugDetails: action.payload,
         isAuthed: true,
         isRequesting: false,
         userInfo,
-        accessToken: jwt,
-        debugDetails: action.payload,
       }
     }
     default: {
@@ -65,5 +74,3 @@ function auth(state = {}, action) {
     }
   }
 }
-
-export default auth
