@@ -4,23 +4,23 @@ import bindActionsToStore from './bind-actions-to-store'
 import bs from '../utils/browser-storage'
 import detectEnv from '../utils/detect-env'
 import rootReducer from '../reducers'
-import throttle from 'lodash/throttle'
+import debounce from 'lodash/debounce'
 import thunkMiddleware from 'redux-thunk'
 
 const _ = {
-  throttle,
+  debounce,
 }
 
 /**
  * Create a redux store with custom setting
  *
- * @param {Object} [initialState={}]
- * @param {string} [cookie='']
+ * @param {Object} [preloadedState={}] The initial state. Must be a plain object with the same shape as the keys of root reducer.
+ * @param {string} [cookie=''] The cookie string that will pass to the httpclient, so that the client can send request with given cookie.
  * @param {boolean} [isDev=false]
  * @returns
  */
 export default async function createStore(
-  initialState = {},
+  preloadedState = {},
   cookie = '',
   isDev = false
 ) {
@@ -44,27 +44,29 @@ export default async function createStore(
   if (detectEnv.isBrowser()) {
     try {
       // sync redux state with browser storage
-      const reduxState = await bs.syncReduxState(initialState)
+      const reduxState = await bs.syncReduxState(preloadedState)
       const store = _createStore(rootReducer, reduxState, storeEnhancer)
       if (isDev && module.hot) {
         // Enable Webpack hot module replacement for reducers
+        // Or it will cause multiple store instances to show in Redux Dev Tools.
         module.hot.accept('../reducers', () => {
-          const nextRootReducer = require('../reducers').default
-          store.replaceReducer(nextRootReducer)
+          store.replaceReducer(require('../reducers').default)
         })
       }
       // Subscribe the redux store changes.
       // Sync the browser storage after redux state change.
+      // Use `debounce` (instead of throttle) to save the last result in duration into storage
       store.subscribe(
-        _.throttle(() => {
+        _.debounce(() => {
           bs.syncReduxState(store.getState())
-        }, 1000)
+        }, 3000)
       )
       return store
     } catch (err) {
       console.error('Sync-ing with browser storage occurs error:', err)
-      return _createStore(rootReducer, initialState, storeEnhancer)
+      return _createStore(rootReducer, preloadedState, storeEnhancer)
     }
   }
-  return _createStore(rootReducer, initialState, storeEnhancer)
+  const store = _createStore(rootReducer, preloadedState, storeEnhancer)
+  return store
 }

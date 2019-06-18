@@ -56,6 +56,8 @@ export default {
   FETCH_AUTHOR_COLLECTION_FAILURE: 'FETCH_AUTHOR_COLLECTION_FAILURE',
   FETCH_AUTHOR_COLLECTION_SUCCESS: 'FETCH_AUTHOR_COLLECTION_SUCCESS',
 
+  SET_NEXT_POPUP_TIME_STAMP: 'SET_NEXT_POPUP_TIME_STAMP',
+
   singleBookmark: {
     read: {
       request: 'request to fetch single bookmark',

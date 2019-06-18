@@ -61,7 +61,7 @@ async function isReduxStateExpired() {
   if (typeof expires !== 'number' || typeof now !== 'number') {
     return true
   }
-  return now >= expires
+  return now > expires
 }
 
 /**
@@ -101,10 +101,12 @@ async function setReduxStateExpires(maxAge = 600) {
  *
  * @returns {Promise<Object>}  A Promise, resolve with a redux state copy in the browser storage
  */
-function getReduxState() {
+function getStateFromStorage() {
   if (!detectEnv.isBrowser()) {
     return Promise.reject(
-      new Error('getReduxState function should be executed on client side')
+      new Error(
+        '`getStateFromStorage` function should be executed on client side'
+      )
     )
   }
   return localForage.getItem(keys.state)
@@ -118,25 +120,27 @@ function getReduxState() {
  * @returns {Promise<Object>} A Promise, resovle with redux state merged with the copy in the browser storage
  */
 async function syncReduxState(newReduxState, maxAge = 600) {
-  const chacheableNewState = _.pick(newReduxState, cacheableProps)
-  let toCacheState
-  if (await isReduxStateExpired()) {
-    toCacheState = chacheableNewState
-  } else {
-    const oldCachedState = await getReduxState()
-    toCacheState = _.merge(
-      oldCachedState,
-      chacheableNewState,
-      _.pick(oldCachedState, cachedFirstProps)
-    )
-  }
-  const nextCachedState = await setReduxState(toCacheState)
-  await setReduxStateExpires(maxAge)
-  return nextCachedState
+  const isCacheExpired = await isReduxStateExpired()
+  const cachedState = await getStateFromStorage()
+  const cacheFirstState = _.pick(cachedState, cachedFirstProps)
+  // If the cache is expired, we will not take the cached state in storage.
+  // But we will always take `cacgeFirstState` if it exists.
+  const nextReduxState = _.merge(
+    {},
+    isCacheExpired ? null : cachedState,
+    newReduxState,
+    cacheFirstState
+  )
+  const toCacheState = _.pick(nextReduxState, cacheableProps)
+  // Save state to storage asynchronously. So it will not block other tasks.
+  setReduxState(toCacheState).then(() => {
+    return setReduxStateExpires(maxAge)
+  })
+  return nextReduxState
 }
 
 export default {
-  getReduxState,
+  getStateFromStorage,
   isReduxStateExpired,
   syncReduxState,
 }
