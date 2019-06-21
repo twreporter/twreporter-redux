@@ -171,10 +171,12 @@ export function createSingleBookmark(jwt, userID, bookmarkToBeCreated) {
  */
 export function getMultipleBookmarks(jwt, userID, offset, limit, sort) {
   return function(dispatch, getState, { httpClientWithToken }) {
+    const state = getState()
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
     const url = formURL(
+      apiOrigin,
       `/v1/users/${userID}/bookmarks`,
       { offset, limit, sort },
-      undefined,
       false
     )
     const axiosConfig = {
@@ -228,10 +230,12 @@ export function getMultipleBookmarks(jwt, userID, offset, limit, sort) {
  */
 export function getSingleBookmark(jwt, userID, bookmarkSlug, bookmarkHost) {
   return function(dispatch, getState, { httpClientWithToken }) {
+    const state = getState()
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
     const url = formURL(
+      apiOrigin,
       `/v1/users/${userID}/bookmarks/${bookmarkSlug}`,
       { host: bookmarkHost },
-      undefined,
       false
     )
     const axiosConfig = {
@@ -284,10 +288,12 @@ export function getSingleBookmark(jwt, userID, bookmarkSlug, bookmarkHost) {
  */
 export function deleteSingleBookmark(jwt, userID, bookmarkID) {
   return function(dispatch, getState, { httpClientWithToken }) {
+    const state = getState()
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
     const url = formURL(
+      apiOrigin,
       `/v1/users/${userID}/bookmarks/${bookmarkID}`,
       {},
-      undefined,
       false
     )
     const axiosConfig = {
