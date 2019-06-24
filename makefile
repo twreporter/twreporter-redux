@@ -22,7 +22,7 @@ clean:
 	@echo "$(P) Clean lib"
 	$(BIN_DIR)/rimraf lib/
 
-publish: build
+publish: build test
 	npm publish
 
 prettier:
@@ -38,6 +38,6 @@ lint: prettier eslint
 	
 test:
 	@echo "$(P) Run tests"
-	$(BIN_DIR)/mocha --file $(TEST_SCRIPTS_FILES) --require babel-core/register
+	NODE_ENV=development RELEASE_BRANCH=test $(BIN_DIR)/mocha --file $(TEST_SCRIPTS_FILES) --require @babel/register
  
 .PHONY: build clean lint prettier dev

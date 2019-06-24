@@ -1,11 +1,11 @@
-import apiConfig from '../conf/api-config.json'
-import axios from 'axios'
-import fieldNames from '../constants/redux-state-field-names'
-import apiEndpoints from '../constants/api-endpoints'
-import formAPIURL from '../utils/form-api-url'
-import types from '../constants/action-types'
-import pagination from '../utils/pagination'
 import { BadRequestError } from '../utils/error'
+import { formURL } from '../utils/url'
+import apiConfig from '../constants/api-config'
+import apiEndpoints from '../constants/api-endpoints'
+import axios from 'axios'
+import pagination from '../utils/pagination'
+import stateFieldNames from '../constants/redux-state-field-names'
+import types from '../constants/action-types'
 
 // lodash
 import get from 'lodash/get'
@@ -26,7 +26,7 @@ export function fetchAFullTopic(slug) {
     const state = getState()
     const topic = _.get(
       state,
-      `${fieldNames.entities}.${fieldNames.topicsInEntities}.${slug}`,
+      [stateFieldNames.entities, stateFieldNames.topicsInEntities, slug],
       {}
     )
     if (_.get(topic, 'full', false)) {
@@ -36,8 +36,11 @@ export function fetchAFullTopic(slug) {
       })
       return Promise.resolve()
     }
-
-    const path = `${apiEndpoints.topics}/${slug}?full=true`
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
+    const path = `/v1/${apiEndpoints.topics}/${slug}`
+    const params = {
+      full: 'true',
+    }
 
     // Start to get topics
     dispatch({
@@ -48,8 +51,8 @@ export function fetchAFullTopic(slug) {
     })
 
     return axios
-      .get(formAPIURL(path), {
-        timeout: apiConfig.API_TIME_OUT,
+      .get(formURL(apiOrigin, path, params), {
+        timeout: apiConfig.timeout,
       })
       .then(response => {
         return dispatch({
@@ -70,9 +73,9 @@ export function fetchAFullTopic(slug) {
   }
 }
 
-function _fetchTopics(dispatch, path, successActionType) {
+function _fetchTopics(dispatch, origin, path, params, successActionType) {
   // Start to get topics
-  const url = formAPIURL(path)
+  const url = formURL(origin, path, params)
   dispatch({
     type: types.START_TO_GET_TOPICS,
     url,
@@ -80,7 +83,7 @@ function _fetchTopics(dispatch, path, successActionType) {
 
   return axios
     .get(url, {
-      timeout: apiConfig.API_TIME_OUT,
+      timeout: apiConfig.timeout,
     })
     .then(response => {
       const meta = _.get(response, 'data.meta', {})
@@ -111,7 +114,7 @@ function _fetchTopics(dispatch, path, successActionType) {
  * @param {number} limit - the number of posts you want to get in one request
  */
 export function fetchTopics(page = 1, nPerPage = 5) {
-  return dispatch => {
+  return (dispatch, getState) => {
     /* If nPerPage number is invalid, return a Promise.reject(err) */
     if (!_.isInteger(nPerPage) || nPerPage <= 0) {
       const err = new BadRequestError(
@@ -129,9 +132,15 @@ export function fetchTopics(page = 1, nPerPage = 5) {
 
     /* construct request path */
     const { limit, offset } = pageToOffset({ page, nPerPage })
-    const path = `${apiEndpoints.topics}?limit=${limit}&offset=${offset}`
+    const state = getState()
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
+    const path = `/v1/${apiEndpoints.topics}`
+    const params = {
+      limit,
+      offset,
+    }
 
-    return _fetchTopics(dispatch, path, types.GET_TOPICS)
+    return _fetchTopics(dispatch, apiOrigin, path, params, types.GET_TOPICS)
   }
 }
 
@@ -145,15 +154,24 @@ export function fetchTopicsOnIndexPage() {
     const state = getState()
     const topics = _.get(
       state,
-      `${fieldNames.indexPage}.${fieldNames.sections.topicsSection}`,
+      `${stateFieldNames.indexPage}.${stateFieldNames.sections.topicsSection}`,
       []
     )
     if (Array.isArray(topics) && topics.length > 0) {
       return Promise.resolve()
     }
-
-    const path = `${apiEndpoints.topics}?offset=1&limit=4`
-
-    return _fetchTopics(dispatch, path, types.GET_TOPICS_FOR_INDEX_PAGE)
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
+    const path = `/v1/${apiEndpoints.topics}`
+    const params = {
+      offset: 1,
+      limit: 4,
+    }
+    return _fetchTopics(
+      dispatch,
+      apiOrigin,
+      path,
+      params,
+      types.GET_TOPICS_FOR_INDEX_PAGE
+    )
   }
 }

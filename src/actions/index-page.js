@@ -1,9 +1,9 @@
-import apiConfig from '../conf/api-config.json'
-import axios from 'axios'
-import types from '../constants/action-types'
-import fieldNames from '../constants/redux-state-field-names'
+import { formURL } from '../utils/url'
+import apiConfig from '../constants/api-config'
 import apiEndpoints from '../constants/api-endpoints'
-import formAPIURL from '../utils/form-api-url'
+import axios from 'axios'
+import stateFieldNames from '../constants/redux-state-field-names'
+import types from '../constants/action-types'
 
 // lodash
 import get from 'lodash/get'
@@ -14,9 +14,8 @@ const _ = {
   values,
 }
 
-function _fetch(dispatch, path) {
-  const url = formAPIURL(path)
-
+function _fetch(dispatch, origin, path, params) {
+  const url = formURL(origin, path, params)
   // Start to get content
   dispatch({
     type: types.START_TO_GET_INDEX_PAGE_CONTENT,
@@ -26,7 +25,7 @@ function _fetch(dispatch, path) {
   return (
     axios
       .get(url, {
-        timeout: apiConfig.API_TIME_OUT,
+        timeout: apiConfig.timeout,
       })
       // Get content successfully
       .then(response => {
@@ -58,10 +57,10 @@ function _fetch(dispatch, path) {
 export function fetchIndexPageContent() {
   return (dispatch, getState) => {
     const state = getState()
-    const indexPage = _.get(state, fieldNames.indexPage, {})
+    const indexPage = _.get(state, stateFieldNames.indexPage, {})
 
     // categories_section is not part of the result
-    const sections = _.values(fieldNames.sections)
+    const sections = _.values(stateFieldNames.sections)
     let isContentReady = true
 
     sections.forEach(section => {
@@ -73,10 +72,8 @@ export function fetchIndexPageContent() {
     if (isContentReady) {
       return Promise.resolve()
     }
-
-    const path = `${apiEndpoints.indexPage}`
-
-    return _fetch(dispatch, path)
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
+    return _fetch(dispatch, apiOrigin, `/v1/${apiEndpoints.indexPage}`)
   }
 }
 
@@ -87,8 +84,8 @@ export function fetchIndexPageContent() {
 export function fetchCategoriesPostsOnIndexPage() {
   return (dispatch, getState) => {
     const state = getState()
-    const indexPage = _.get(state, fieldNames.indexPage, {})
-    const categories = _.values(fieldNames.categories)
+    const indexPage = _.get(state, stateFieldNames.indexPage, {})
+    const categories = _.values(stateFieldNames.categories)
     let isContentReady = true
 
     categories.forEach(category => {
@@ -100,9 +97,11 @@ export function fetchCategoriesPostsOnIndexPage() {
     if (isContentReady) {
       return Promise.resolve()
     }
-
-    const path = `${apiEndpoints.indexPageCategories}`
-
-    return _fetch(dispatch, path)
+    const apiOrigin = _.get(state, [stateFieldNames.origins, 'api'])
+    return _fetch(
+      dispatch,
+      apiOrigin,
+      `/v1/${apiEndpoints.indexPageCategories}`
+    )
   }
 }

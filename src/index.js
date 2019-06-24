@@ -1,47 +1,21 @@
-import entities from './reducers/entities'
-import formAPIURL from './utils/form-api-url'
+import { denormalizePosts, denormalizeTopics } from './utils/denormalize-asset'
+import { formURL } from './utils/url'
+import { post, posts } from './reducers/posts'
+import { topic, topics } from './reducers/topics'
+import actions from './actions'
+import actionTypes from './constants/action-types'
 import createStore from './store/create-store'
+import entities from './reducers/entities'
 import indexPage from './reducers/index-page'
 import pagination from './utils/pagination'
 import reduxStateFields from './constants/redux-state-field-names'
 import ReduxStoreContext from './context/redux-store'
 import ReduxStoreProvider from './component/provider'
-import { denormalizePosts, denormalizeTopics } from './utils/denormalize-asset'
-import { post, posts } from './reducers/posts'
-import { topic, topics } from './reducers/topics'
-import {
-  fetchIndexPageContent,
-  fetchCategoriesPostsOnIndexPage,
-} from './actions/index-page'
-import {
-  fetchAFullPost,
-  fetchListedPosts,
-  fetchEditorPickedPosts,
-  fetchInfographicPostsOnIndexPage,
-  fetchPhotographyPostsOnIndexPage,
-} from './actions/posts'
-import {
-  fetchAFullTopic,
-  fetchTopics,
-  fetchTopicsOnIndexPage,
-} from './actions/topics'
 
 export default {
+  actions,
+  actionTypes,
   createStore,
-  ReduxStoreProvider,
-  ReduxStoreContext,
-  actions: {
-    fetchEditorPickedPosts,
-    fetchCategoriesPostsOnIndexPage,
-    fetchTopics,
-    fetchAFullPost,
-    fetchAFullTopic,
-    fetchListedPosts,
-    fetchIndexPageContent,
-    fetchTopicsOnIndexPage,
-    fetchInfographicPostsOnIndexPage,
-    fetchPhotographyPostsOnIndexPage,
-  },
   reducers: {
     entities,
     post,
@@ -51,10 +25,12 @@ export default {
     indexPage,
   },
   reduxStateFields,
+  ReduxStoreContext,
+  ReduxStoreProvider,
   utils: {
     denormalizePosts,
     denormalizeTopics,
-    formAPIURL,
+    formURL,
     pagination,
   },
 }

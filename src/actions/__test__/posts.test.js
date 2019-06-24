@@ -9,16 +9,16 @@
     fetchInfographicPostsOnIndexPage
 */
 
+import { formURL } from '../../utils/url'
+import * as actions from '../posts'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import configureMockStore from 'redux-mock-store'
 import fieldNames from '../../constants/redux-state-field-names'
-import formatUrl from '../../utils/form-api-url'
 import nock from 'nock'
 import postStyles from '../../constants/post-styles'
 import thunk from 'redux-thunk'
 import types from '../../constants/action-types'
-import * as actions from '../posts'
 
 chai.use(chaiAsPromised)
 const expect = chai.expect
@@ -44,6 +44,8 @@ const post4 = {
   id: 'post-id-4',
   slug: 'post-slug-4',
 }
+
+const mockApiHost = 'http://localhost:8080'
 
 process.env.NODE_ENV = 'development'
 
@@ -72,6 +74,9 @@ describe('Testing fetchAFullPost:', () => {
             'mock-slug': mockPost,
           },
         },
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
       })
       store.dispatch(actions.fetchAFullPost(mockSlug))
       expect(store.getActions().length).to.equal(1)
@@ -97,6 +102,9 @@ describe('Testing fetchAFullPost:', () => {
           slug: 'mock-slug',
           isFetching: false,
         },
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
       })
       store.dispatch(actions.fetchAFullPost(mockSlug))
       expect(store.getActions().length).to.equal(0)
@@ -115,6 +123,9 @@ describe('Testing fetchAFullPost:', () => {
               full: false,
             },
           },
+        },
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
         },
       })
       const mockApiResponse = {
@@ -141,8 +152,8 @@ describe('Testing fetchAFullPost:', () => {
           full: false,
         },
       }
-      nock('http://localhost:8080')
-        .get(encodeURI(`/v1/posts/${mockSlug}?full=true`))
+      nock(mockApiHost)
+        .get(`/v1/posts/${mockSlug}?full=true`)
         .reply(200, mockApiResponse)
 
       return store.dispatch(actions.fetchAFullPost(mockSlug)).then(() => {
@@ -157,7 +168,11 @@ describe('Testing fetchAFullPost:', () => {
   })
   context('If the api returns a failure', () => {
     it('Should dispatch types.START_TO_GET_POSTS and types.ERROR_TO_GET_POSTS', () => {
-      const store = mockStore()
+      const store = mockStore({
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
+      })
       const mockSlug = 'mock-slug'
       const expectedRequestAction = {
         type: types.START_TO_GET_A_FULL_POST,
@@ -165,8 +180,8 @@ describe('Testing fetchAFullPost:', () => {
           slug: mockSlug,
         },
       }
-      nock('http://localhost:8080')
-        .get(encodeURI(`/v1/posts/${mockSlug}?full=true`))
+      nock(mockApiHost)
+        .get(`/v1/posts/${mockSlug}?full=true`)
         .reply(404)
 
       return store.dispatch(actions.fetchAFullPost(mockSlug)).then(() => {
@@ -208,6 +223,9 @@ describe('Testing fetchListedPosts:', () => {
             items: [post1, post2, post3, post4],
           },
         },
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
       })
       store.dispatch(actions.fetchListedPosts(...mockArgs))
       expect(store.getActions().length).to.equal(0) // no action is dispatched
@@ -233,6 +251,9 @@ describe('Testing fetchListedPosts:', () => {
             },
           },
         },
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
       })
       store.dispatch(actions.fetchListedPosts(...mockArgs))
       expect(store.getActions().length).to.equal(0) // no action is dispatched
@@ -252,13 +273,17 @@ describe('Testing fetchListedPosts:', () => {
       const store = mockStore({
         // empty lists
         lists: {},
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
       })
-      const mockUrl = formatUrl(
-        'posts?where={"categories":{"in":["mock_target_uuid"]}}&limit=1&offset=0'
-      )
-      const indexOfSlash = mockUrl.indexOf('/', 7)
-      const mockHost = mockUrl.slice(0, indexOfSlash) // example: 'http://localhost:8080'
-      const mockPath = mockUrl.slice(indexOfSlash) // example: '/posts?where=.....'
+      const mockPath = '/v1/posts'
+      const mockQuery = {
+        where: '{"categories":{"in":["mock_target_uuid"]}}',
+        limit: 1,
+        offset: 0,
+      }
+      const mockUrl = formURL('http://localhost:8080', mockPath, mockQuery)
       const mockApiResponse = {
         records: [
           {
@@ -296,8 +321,9 @@ describe('Testing fetchListedPosts:', () => {
           page: 0,
         },
       }
-      nock(mockHost)
+      nock(mockApiHost)
         .get(mockPath)
+        .query(mockQuery)
         .reply(200, mockApiResponse)
       return store.dispatch(actions.fetchListedPosts(...mockArgs)).then(() => {
         expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && SUCCESS
@@ -318,13 +344,17 @@ describe('Testing fetchListedPosts:', () => {
       const store = mockStore({
         // empty lists
         lists: {},
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
       })
-      const mockUrl = formatUrl(
-        'posts?where={"categories":{"in":["mock_target_uuid"]}}&limit=1&offset=1'
-      )
-      const indexOfSlash = mockUrl.indexOf('/', 7)
-      const mockHost = mockUrl.slice(0, indexOfSlash) // example: 'http://localhost:8080'
-      const mockPath = mockUrl.slice(indexOfSlash) // example: '/posts?where=.....'
+      const mockQuery = {
+        where: '{"categories":{"in":["mock_target_uuid"]}}',
+        limit: 1,
+        offset: 1,
+      }
+      const mockPath = '/v1/posts'
+      const mockUrl = formURL('http://localhost:8080', mockPath, mockQuery)
       const mockApiResponse = {
         records: [
           {
@@ -362,8 +392,9 @@ describe('Testing fetchListedPosts:', () => {
           page: 2,
         },
       }
-      nock(mockHost)
+      nock(mockApiHost)
         .get(mockPath)
+        .query(mockQuery)
         .reply(200, mockApiResponse)
       return store.dispatch(actions.fetchListedPosts(...mockArgs)).then(() => {
         expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && SUCCESS
@@ -385,13 +416,17 @@ describe('Testing fetchListedPosts:', () => {
       const store = mockStore({
         // empty lists
         lists: {},
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
       })
-      const mockUrl = formatUrl(
-        'posts?where={"categories":{"in":["mock_target_uuid"]}}&limit=1&offset=0'
-      )
-      const indexOfSlash = mockUrl.indexOf('/', 7)
-      const mockHost = mockUrl.slice(0, indexOfSlash) // example: 'http://localhost:3030'
-      const mockPath = mockUrl.slice(indexOfSlash) // example: '/mata?where=.....'
+      const mockPath = '/v1/posts'
+      const mockQuery = {
+        where: '{"categories":{"in":["mock_target_uuid"]}}',
+        limit: 1,
+        offset: 0,
+      }
+      const mockUrl = formURL('http://localhost:8080', mockPath, mockQuery)
       const expectedRequestAction = {
         type: types.START_TO_GET_POSTS,
         url: mockUrl,
@@ -399,8 +434,9 @@ describe('Testing fetchListedPosts:', () => {
       const expectedFailedAction = {
         type: types.ERROR_TO_GET_LISTED_POSTS,
       }
-      nock(mockHost)
+      nock(mockApiHost)
         .get(mockPath)
+        .query(mockQuery)
         .reply(404, {})
       return store.dispatch(actions.fetchListedPosts(...mockArgs)).then(() => {
         expect(store.getActions().length).to.equal(2) // 2 actions: REQUEST && SUCCESS
@@ -432,6 +468,9 @@ describe('Testing fetchEditorPickedPosts:', () => {
             post4,
           ],
         },
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
       })
       store.dispatch(actions.fetchEditorPickedPosts())
       expect(store.getActions().length).to.equal(0) // no action is dispatched
@@ -443,9 +482,17 @@ describe('Testing fetchEditorPickedPosts:', () => {
 
   context('Load posts picked by editor', () => {
     it('Should dispatch types.GET_EDITOR_PICKED_POSTS', () => {
-      const store = mockStore({})
-      nock('http://localhost:8080')
-        .get(encodeURI('/v1/posts?where={"is_featured":true}&limit=6'))
+      const store = mockStore({
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
+      })
+      nock(mockApiHost)
+        .get('/v1/posts')
+        .query({
+          where: '{"is_featured":true}',
+          limit: 6,
+        })
         .reply(200, {
           records: [
             { slug: 'slug-1' },
@@ -486,6 +533,9 @@ describe('Testing fetchPhotographyPostsOnIndexPage:', () => {
         [fieldNames.indexPage]: {
           [fieldNames.sections.photosSection]: [post1, post2, post3, post4],
         },
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
       })
       store.dispatch(actions.fetchPhotographyPostsOnIndexPage())
       expect(store.getActions().length).to.equal(0) // no action is dispatched
@@ -497,13 +547,17 @@ describe('Testing fetchPhotographyPostsOnIndexPage:', () => {
 
   context('Load posts if needed', () => {
     it('Should dispatch types.GET_PHOTOGRAPHY_POSTS_FOR_INDEX_PAGE', () => {
-      const store = mockStore({})
-      nock('http://localhost:8080')
-        .get(
-          encodeURI(
-            `/v1/posts?where={"style":"${postStyles.photography}"}&limit=6`
-          )
-        )
+      const store = mockStore({
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
+      })
+      nock(mockApiHost)
+        .get('/v1/posts')
+        .query({
+          where: `{"style":"${postStyles.photography}"}`,
+          limit: 6,
+        })
         .reply(200, {
           records: [{ slug: 'slug-1' }, { slug: 'slug-2' }, { slug: 'slug-3' }],
         })
@@ -544,6 +598,9 @@ describe('Testing fetchInfographicPostsOnIndexPage:', () => {
             post4,
           ],
         },
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
       })
       store.dispatch(actions.fetchInfographicPostsOnIndexPage())
       expect(store.getActions().length).to.equal(0) // no action is dispatched
@@ -555,13 +612,17 @@ describe('Testing fetchInfographicPostsOnIndexPage:', () => {
 
   context('Load posts if needed', () => {
     it('Should dispatch types.GET_INFOGRAPHIC_POSTS_FOR_INDEX_PAGE)', () => {
-      const store = mockStore({})
-      nock('http://localhost:8080')
-        .get(
-          encodeURI(
-            `/v1/posts?where={"style":"${postStyles.infographic}"}&limit=10`
-          )
-        )
+      const store = mockStore({
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
+      })
+      nock(mockApiHost)
+        .get('/v1/posts')
+        .query({
+          where: `{"style":"${postStyles.infographic}"}`,
+          limit: 10,
+        })
         .reply(200, {
           records: [{ slug: 'slug-1' }, { slug: 'slug-2' }],
         })

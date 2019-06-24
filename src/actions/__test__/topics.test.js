@@ -7,15 +7,15 @@
     fetchTopicsOnIndexPage
 */
 
+import * as actions from '../topics'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import configureMockStore from 'redux-mock-store'
 import fieldNames from '../../constants/redux-state-field-names'
 import nock from 'nock'
+import pagination from '../../utils/pagination'
 import thunk from 'redux-thunk'
 import types from '../../constants/action-types'
-import * as actions from '../topics'
-import pagination from '../../utils/pagination'
 
 const { pageToOffset } = pagination
 
@@ -59,6 +59,9 @@ describe('Testing fetchAFullTopic:', () => {
             [mockSlug]: mockTopic,
           },
         },
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
       })
       store.dispatch(actions.fetchAFullTopic(mockSlug))
       expect(store.getActions().length).to.equal(1) // dispatch types.CHANGE_SELECTED_TOPIC
@@ -79,6 +82,9 @@ describe('Testing fetchAFullTopic:', () => {
           topics: {
             [mockSlug]: mockTopic,
           },
+        },
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
         },
       })
       const mockApiResponse = {
@@ -104,7 +110,11 @@ describe('Testing fetchAFullTopic:', () => {
   })
   context('If the api returns a failure', () => {
     it('Should dispatch types.START_TO_GET_A_FULL_TOPIC and types.ERROR_TO_GET_A_FULL_TOPIC', () => {
-      const store = mockStore()
+      const store = mockStore({
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
+      })
       const mockSlug = 'mock-slug'
       nock('http://localhost:8080')
         .get(encodeURI(`/v1/topics/${mockSlug}?full=true`))
@@ -146,6 +156,9 @@ describe('Testing fetchTopics:', () => {
             2: [topic2.slug],
           },
         },
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
       })
       const page = 3
       const nPerPage = 1
@@ -184,6 +197,9 @@ describe('Testing fetchTopics:', () => {
           },
           totalPages: 5,
         },
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
       })
       const page = 2
       const nPerPage = 1
@@ -220,7 +236,11 @@ describe('Testing fetchTopics:', () => {
     it('Should dispatch types.ERROR_TO_GET_TOPICS', () => {
       const limit = 1
       const offset = 1
-      const store = mockStore()
+      const store = mockStore({
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
+      })
       nock('http://localhost:8080')
         .get(encodeURI(`/v1/topics?limit=${limit}&offset=${offset}`))
         .reply(404)
@@ -236,7 +256,11 @@ describe('Testing fetchTopics:', () => {
   })
   context('If the parameter nPerPage is invalid', () => {
     it('Should dispatch no action and return a Promise.reject(err)', () => {
-      const store = mockStore({})
+      const store = mockStore({
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
+      })
       const page = 1
       const nPerPage = -1
       expect(
@@ -247,7 +271,11 @@ describe('Testing fetchTopics:', () => {
   })
   context('If the parameter page is invalid', () => {
     it('Should dispatch no action and return a Promise.reject(err)', () => {
-      const store = mockStore({})
+      const store = mockStore({
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
+      })
       const page = -1
       const nPerPage = 10
       expect(
@@ -276,6 +304,9 @@ describe('Testing fetchTopicsOnIndexPage:', () => {
         [fieldNames.indexPage]: {
           [fieldNames.sections.topicsSection]: [topic1, topic2],
         },
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
       })
       store.dispatch(actions.fetchTopicsOnIndexPage())
       expect(store.getActions().length).to.equal(0) // no action is dispatched
@@ -287,7 +318,11 @@ describe('Testing fetchTopicsOnIndexPage:', () => {
 
   context('Load topics if needed', () => {
     it('Should dispatch types.GET_TOPICS_FOR_INDEX_PAGE)', () => {
-      const store = mockStore({})
+      const store = mockStore({
+        [fieldNames.origins]: {
+          api: 'http://localhost:8080',
+        },
+      })
       nock('http://localhost:8080')
         .get(encodeURI('/v1/topics?offset=1&limit=4'))
         .reply(200, {
