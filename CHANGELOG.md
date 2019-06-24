@@ -1,4 +1,4 @@
-### Unrelease
+## Unrelease
 
 ### 5.0.0
 
@@ -13,6 +13,8 @@
 - Add redux store
 - Move actions and reducers from `twreporter-react` to this package
 - Remove unused reducers and actions
+
+## Release
 
 ### 4.0.3
 
