@@ -105,7 +105,7 @@ function getStateFromStorage() {
   if (!detectEnv.isBrowser()) {
     return Promise.reject(
       new Error(
-        '`getStateFromStorage` function should be executed on client side'
+        'Method `browser-storage.getStateFromStorage` should be executed on client side'
       )
     )
   }

@@ -12,7 +12,7 @@
   - Update `.gitignore` and `.npmignore`
 - Add redux store
 - Move actions and reducers from `twreporter-react` to this package
-- Remove header reducer and actions
+- Remove unused reducers and actions
 
 ### 4.0.3
 
