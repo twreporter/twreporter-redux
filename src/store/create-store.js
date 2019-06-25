@@ -1,7 +1,7 @@
 import { createStore as _createStore, applyMiddleware, compose } from 'redux'
 import axios from 'axios'
 import bindActionsToStore from './bind-actions-to-store'
-import bs from '../utils/browser-storage'
+import * as bs from '../utils/browser-storage'
 import detectEnv from '../utils/detect-env'
 import rootReducer from '../reducers'
 import debounce from 'lodash/debounce'
@@ -57,9 +57,16 @@ export default async function createStore(
       // Sync the browser storage after redux state change.
       // Use `debounce` (instead of throttle) to save the last result in duration into storage
       store.subscribe(
-        _.debounce(() => {
-          bs.syncReduxState(store.getState())
-        }, 3000)
+        _.debounce(
+          () =>
+            bs.saveCacheableStateToStorage(store.getState()).catch(error => {
+              console.error(
+                'Try to cache new redux state but there is an error on saving state to browser storage:',
+                error
+              )
+            }),
+          3000
+        )
       )
       return store
     } catch (err) {

@@ -9,6 +9,8 @@ import reduxStatePropKey from '../constants/redux-state-field-names'
   The following functions are built for client side rendering, do not use them on the server side.
 */
 
+const defaultMaxAge = 600
+
 const _ = {
   merge,
   pick,
@@ -18,6 +20,12 @@ const keys = {
   expires: 'redux_state_expires',
   state: 'redux_state',
 }
+
+/*
+  When a value in new state has conflict with the one in cached state, we will take the new value by default.
+  If there's any prop that we want it always take the cahched value first (except the whole cache was expired), add it to the array below.
+*/
+const cachedFirstProps = [reduxStatePropKey.nextNotifyPopupTS]
 
 /*
   Only properties in white list `cacheableProps` will be stored into the browser storage. 
@@ -31,19 +39,13 @@ const cacheableProps = [
   reduxStatePropKey.selectedPost,
   reduxStatePropKey.selectedTopic,
   reduxStatePropKey.entitiesForAuthors,
-  reduxStatePropKey.nextNotifyPopupTS,
+  ...cachedFirstProps,
   // TODO: author list page and author page have some bugs
   // after merging browser storage data. Hence, comment it just for now.
   // reduxStatePropKey.searchedAuthorsList,
   // reduxStatePropKey.authorsList,
   // reduxStatePropKey.articlesByAuthor,
 ]
-
-/*
-  When a value in new state has conflict with the one in cached state, we will take the new value by default.
-  If there's any prop that we want it always take the cahched value first (except the whole cache was expired), add it to the array below.
-*/
-const cachedFirstProps = [reduxStatePropKey.nextNotifyPopupTS]
 
 /**
  * Check if the redux state copy in the browser storage expired or not
@@ -85,7 +87,7 @@ async function setReduxState(reduxState) {
  * @param {number} [maxAge=600] - measure in seconds
  * @returns {Promise<number>} A Promise, resolve with a Number representing the milliseconds elapsed since the UNIX epoch
  */
-async function setReduxStateExpires(maxAge = 600) {
+async function setReduxStateExpires(maxAge = defaultMaxAge) {
   if (!detectEnv.isBrowser()) {
     throw new Error(
       'setReduxStateExpires function should be executed on client side'
@@ -115,32 +117,44 @@ function getStateFromStorage() {
 /**
  * Synchronize the redux state in the store with its copy in the browser storage.
  *
- * @param {Object} reduxState - redux state you want to set into browser storage
+ * @export
+ * @param {Object} newReduxState - redux state you want to set into browser storage
  * @param {number} [maxAge=600] - default value is 600 seconds. Date.now() + maxAge = expire time
- * @returns {Promise<Object>} A Promise, resovle with redux state merged with the copy in the browser storage
+ * @returns {Object} - return synced state
  */
-async function syncReduxState(newReduxState, maxAge = 600) {
+export async function syncReduxState(newReduxState, maxAge = defaultMaxAge) {
   const isCacheExpired = await isReduxStateExpired()
   const cachedState = await getStateFromStorage()
   const cacheFirstState = _.pick(cachedState, cachedFirstProps)
   // If the cache is expired, we will not take the cached state in storage.
   // But we will always take `cacgeFirstState` if it exists.
-  const nextReduxState = _.merge(
+  const syncedState = _.merge(
     {},
     isCacheExpired ? null : cachedState,
     newReduxState,
     cacheFirstState
   )
-  const toCacheState = _.pick(nextReduxState, cacheableProps)
+  const toCacheState = _.pick(syncedState, cacheableProps)
   // Save state to storage asynchronously. So it will not block other tasks.
   setReduxState(toCacheState).then(() => {
     return setReduxStateExpires(maxAge)
   })
-  return nextReduxState
+  return syncedState
 }
 
-export default {
-  getStateFromStorage,
-  isReduxStateExpired,
-  syncReduxState,
+/**
+ * Pick cacheable state and save it to browser storage
+ *
+ * @export
+ * @param {Object} newReduxState - redux state you want to set into browser storage
+ * @param {number} [maxAge=600] - default value is 600 seconds. Date.now() + maxAge = expire time
+ * @returns {Promise<undefined>} - void promise resolved to undefined
+ */
+export async function saveCacheableStateToStorage(
+  newReduxState,
+  maxAge = defaultMaxAge
+) {
+  const toCacheState = _.pick(newReduxState, cacheableProps)
+  await setReduxState(toCacheState)
+  await setReduxStateExpires(maxAge)
 }
