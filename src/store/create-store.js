@@ -65,7 +65,19 @@ export default async function createStore(
                 error
               )
             }),
-          3000
+          3000,
+          /*
+            According to lodash document, if `option.leading` and `option.trailing` are both true,
+            the func is invoked on the trailing edge of the timeout only if the debounced function
+            is invoked more than once during the wait timeout.
+            So we can guarantee that the final state change will be cached.
+            And we set `option.maxWait` to ensure that it will save chache once at least in every 10 secs.
+          */
+          {
+            maxWait: 10000,
+            leading: true,
+            trailing: true,
+          }
         )
       )
       return store
