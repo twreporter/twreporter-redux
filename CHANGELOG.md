@@ -2,6 +2,10 @@
 
 ## Release
 
+### 5.0.1
+
+- Update state caching debounce option
+
 ### 5.0.0
 
 - Update dev environment
