@@ -16,7 +16,7 @@ build: clean lint
 	@echo "$(P) Check dependencies of the project"
 	yarn
 	@echo "$(P) Build distribution package files"
-	NODE_ENV=production $(BIN_DIR)/babel src --out-dir lib
+	NODE_ENV=production $(BIN_DIR)/babel src --ignore **/__test__ --out-dir lib
 
 clean:
 	@echo "$(P) Clean lib"
