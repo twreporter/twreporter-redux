@@ -25,7 +25,10 @@ const keys = {
   When a value in new state has conflict with the one in cached state, we will take the new value by default.
   If there's any prop that we want it always take the cahched value first (except the whole cache was expired), add it to the array below.
 */
-const cachedFirstProps = [reduxStatePropKey.nextNotifyPopupTS]
+const cachedFirstProps = [
+  reduxStatePropKey.nextNotifyPopupTS,
+  reduxStatePropKey.settings,
+]
 
 /*
   Only properties in white list `cacheableProps` will be stored into the browser storage.
@@ -39,7 +42,6 @@ const cacheableProps = [
   reduxStatePropKey.selectedPost,
   reduxStatePropKey.selectedTopic,
   reduxStatePropKey.entitiesForAuthors,
-  reduxStatePropKey.settings,
   ...cachedFirstProps,
   // TODO: author list page and author page have some bugs
   // after merging browser storage data. Hence, comment it just for now.

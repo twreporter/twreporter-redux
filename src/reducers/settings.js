@@ -18,7 +18,7 @@ export default function settings(state = defaultState, action = {}) {
     case actionTypes.settings.changeFontLevel: {
       const { payload } = action
 
-      switch(payload) {
+      switch (payload) {
         case _fontLevels.small:
         case _fontLevels.medium:
         case _fontLevels.large: {
