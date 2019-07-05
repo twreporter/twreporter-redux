@@ -10,6 +10,7 @@ import entities from './entities'
 import indexPage from './index-page'
 import origins from './origins'
 import reduxStatePropKey from '../constants/redux-state-field-names'
+import settings from './settings'
 import types from '../constants/action-types'
 // lodash
 import get from 'lodash/get'
@@ -54,6 +55,7 @@ const rootReducer = combineReducers({
     return state
   },
   [reduxStatePropKey.origins]: origins,
+  [reduxStatePropKey.settings]: settings,
 })
 
 export default rootReducer

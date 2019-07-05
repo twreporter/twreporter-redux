@@ -99,6 +99,9 @@ const topicsInEntities = 'topics'
 // origins
 const origins = 'origins'
 
+// settings
+const settings = 'settings'
+
 export default {
   categories: {
     humanRightsAndSociety,
@@ -135,4 +138,5 @@ export default {
   entitiesForAuthors,
   nextNotifyPopupTS,
   searchedAuthorsList,
+  settings,
 }

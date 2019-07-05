@@ -4,7 +4,7 @@ import merge from 'lodash/merge'
 import pick from 'lodash/pick'
 import reduxStatePropKey from '../constants/redux-state-field-names'
 
-/* 
+/*
   WARNING:
   The following functions are built for client side rendering, do not use them on the server side.
 */
@@ -28,7 +28,7 @@ const keys = {
 const cachedFirstProps = [reduxStatePropKey.nextNotifyPopupTS]
 
 /*
-  Only properties in white list `cacheableProps` will be stored into the browser storage. 
+  Only properties in white list `cacheableProps` will be stored into the browser storage.
   WARNING: do not select those properties related to personal data, such as bookmarks, auth ...etc.
 */
 const cacheableProps = [
@@ -39,6 +39,7 @@ const cacheableProps = [
   reduxStatePropKey.selectedPost,
   reduxStatePropKey.selectedTopic,
   reduxStatePropKey.entitiesForAuthors,
+  reduxStatePropKey.settings,
   ...cachedFirstProps,
   // TODO: author list page and author page have some bugs
   // after merging browser storage data. Hence, comment it just for now.
