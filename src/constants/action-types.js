@@ -87,4 +87,8 @@ export default {
   origins: {
     update: 'update request origins',
   },
+
+  settings: {
+    changeFontLevel: 'change font level',
+  },
 }

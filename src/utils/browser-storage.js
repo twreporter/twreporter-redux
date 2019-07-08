@@ -4,7 +4,7 @@ import merge from 'lodash/merge'
 import pick from 'lodash/pick'
 import reduxStatePropKey from '../constants/redux-state-field-names'
 
-/* 
+/*
   WARNING:
   The following functions are built for client side rendering, do not use them on the server side.
 */
@@ -25,10 +25,13 @@ const keys = {
   When a value in new state has conflict with the one in cached state, we will take the new value by default.
   If there's any prop that we want it always take the cahched value first (except the whole cache was expired), add it to the array below.
 */
-const cachedFirstProps = [reduxStatePropKey.nextNotifyPopupTS]
+const cachedFirstProps = [
+  reduxStatePropKey.nextNotifyPopupTS,
+  reduxStatePropKey.settings,
+]
 
 /*
-  Only properties in white list `cacheableProps` will be stored into the browser storage. 
+  Only properties in white list `cacheableProps` will be stored into the browser storage.
   WARNING: do not select those properties related to personal data, such as bookmarks, auth ...etc.
 */
 const cacheableProps = [
