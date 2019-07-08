@@ -2,6 +2,12 @@
 
 ## Release
 
+### 5.0.2
+
+- Add settings action/recuder for redux store
+- Ignore test files while make build
+- Add `settings` into `cacheFirstProps` array
+
 ### 5.0.1
 
 - Update state caching debounce option
