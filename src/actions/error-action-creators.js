@@ -60,7 +60,6 @@ function handleAxiosError(err = {}, failActionType) {
       type: failActionType,
       payload: {
         message: 'A request was made but no response was received.',
-        request: _.get(err, 'request'),
         config: _.get(err, 'config'),
       },
     }
